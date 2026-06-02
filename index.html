@@ -1034,7 +1034,8 @@
                 e.preventDefault(); 
                 deferredPrompt = e;
                 if (!sessionStorage.getItem('pwa_closed')) {
-                    setTimeout(() => { document.getElementById('pwa-overlay-android').classList.add('show'); }, 1500); 
+                    // Diubah menjadi 500ms (0.5 detik) agar lebih agresif
+                    setTimeout(() => { document.getElementById('pwa-overlay-android').classList.add('show'); }, 500); 
                 }
             });
 
@@ -1042,7 +1043,8 @@
             const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
             
             if (isIos() && !isInStandaloneMode() && !sessionStorage.getItem('pwa_closed')) {
-                setTimeout(() => { document.getElementById('pwa-overlay-ios').classList.add('show'); }, 1500);
+                // Diubah menjadi 500ms (0.5 detik) untuk pengguna iPhone/iOS
+                setTimeout(() => { document.getElementById('pwa-overlay-ios').classList.add('show'); }, 500);
             }
         }
 
