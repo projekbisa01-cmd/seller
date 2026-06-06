@@ -22,10 +22,20 @@
   ],
   "lang": "id",
   "dir": "ltr",
+  "iarc_rating_id": "123456",
   "prefer_related_applications": false,
-  "related_applications": [],
-  "iarc_rating_id": "",
-  "scope_extensions": [],
+  "related_applications": [
+      {
+        "platform": "play",
+        "url": "https://play.google.com/store/apps/details?id=com.projekgo.mitra",
+        "id": "com.projekgo.mitra"
+      }
+  ],
+  "scope_extensions": [
+      {
+        "origin": "*.projekgo.id"
+      }
+  ],
   "launch_handler": {
     "client_mode": ["navigate-existing", "auto"]
   },
@@ -43,7 +53,7 @@
       "purpose": "any"
     },
     {
-      "src": "https://i.ibb.co.com/SwBS54WX/Desain-tanpa-judul-40.png" ,
+      "src": "https://i.ibb.co.com/SwBS54WX/Desain-tanpa-judul-40.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -66,14 +76,14 @@
   ],
   "screenshots": [
     {
-      "src": "https://i.ibb.co.com/SwBS54WX/Desain-tanpa-judul-40.png" ,
+      "src": "https://i.ibb.co.com/SwBS54WX/Desain-tanpa-judul-40.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Tampilan Beranda Mitra"
     },
     {
-      "src": "https://i.ibb.co.com/SwBS54WX/Desain-tanpa-judul-40.png" ,
+      "src": "https://i.ibb.co.com/SwBS54WX/Desain-tanpa-judul-40.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "wide",
@@ -134,4 +144,4 @@
   "note_taking": {
     "new_note_url": "/index.html"
   }
-}  
+}
