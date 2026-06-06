@@ -978,58 +978,26 @@
         let globalMenuGroups = {};
         let currentMenuFilter = 'Semua';
 
-        // --- SISTEM PWA (DINAMIS & SENSITIF) ---
+        // --- SISTEM PWA (FILE EKSTERNAL) ---
         let deferredPrompt;
         function initPWA() {
-            // 1. Membuat Manifest Dinamis dengan Icon Baru
-            const manifest = {
-                "name": "Mitra Projekgo",
-                "short_name": "Projekgo",
-                "description": "Aplikasi Mitra Penjual Projekgo",
-                "start_url": ".",
-                "display": "standalone",
-                "background_color": "#ffffff",
-                "theme_color": "#FF6600",
-                "icons": [
-                    {
-                        "src": "https://i.ibb.co.com/zHHqtYQD/Mitra-Seller.png",
-                        "sizes": "192x192",
-                        "type": "image/png"
-                    },
-                    {
-                        "src": "https://i.ibb.co.com/zHHqtYQD/Mitra-Seller.png",
-                        "sizes": "512x512",
-                        "type": "image/png"
-                    }
-                ]
-            };
-
-            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-            const manifestURL = URL.createObjectURL(manifestBlob);
-            
-            // Mengganti link manifest lama dengan yang dinamis
+            // 1. Memanggil Manifest dari file manifest.json
             let oldManifest = document.querySelector('link[rel="manifest"]');
-            if (oldManifest) oldManifest.remove();
-            
-            const link = document.createElement('link');
-            link.rel = 'manifest';
-            link.href = manifestURL;
-            document.head.appendChild(link);
-
-            // 2. Membuat Service Worker Dinamis
-            if ('serviceWorker' in navigator) {
-                const swCode = `
-                    self.addEventListener('install', (e) => self.skipWaiting());
-                    self.addEventListener('activate', (e) => self.clients.claim());
-                    self.addEventListener('fetch', (e) => {});
-                `;
-                const swBlob = new Blob([swCode], {type: 'application/javascript'});
-                const swUrl = URL.createObjectURL(swBlob);
-                
-                navigator.serviceWorker.register(swUrl).catch(err => console.log('SW Error', err));
+            if (!oldManifest) {
+                const link = document.createElement('link');
+                link.rel = 'manifest';
+                link.href = 'manifest.json'; // Pastikan file manifest.json ada di folder yang sama
+                document.head.appendChild(link);
             }
 
-            // 3. Trigger / Pemicu Popup Install
+            // 2. Mendaftarkan Service Worker dari file sw.js
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js') // Pastikan file sw.js ada di folder yang sama
+                    .then(() => console.log('Service Worker berhasil didaftarkan.'))
+                    .catch(err => console.log('SW Error:', err));
+            }
+
+            // 3. Trigger / Pemicu Popup Install Android
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault(); 
                 deferredPrompt = e;
@@ -1039,6 +1007,7 @@
                 }
             });
 
+            // 4. Trigger / Pemicu Popup Install iOS
             const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
             const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
             
