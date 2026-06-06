@@ -1,65 +1,115 @@
 {
-"id": "projekgo-mitra-app",
-"name": "Mitra Projekgo - Kelola Warung",
-"short_name": "Projekgo",
-"description": "Aplikasi Mitra Penjual Projekgo untuk mengelola warung, mengatur menu, dan menerima pesanan tanpa komisi.",
-"start_url": "/index.html",
-"scope": "/",
-"display": "standalone",
-"display_override": ["standalone", "minimal-ui", "window-controls-overlay"],
-"background_color": "#F5F6F8",
-"theme_color": "#FF6600",
-"orientation": "portrait-primary",
-"categories": ["business", "food", "productivity"],
-"lang": "id",
-"dir": "ltr",
-"prefer_related_applications": false,
-"related_applications": [],
-"iarc_rating_id": "",
-"scope_extensions": [],
-"icons": [
-{
-"src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
-"sizes": "192x192",
-"type": "image/png",
-"purpose": "any"
-},
-{
-"src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
-"sizes": "512x512",
-"type": "image/png",
-"purpose": "maskable"
+  "id": "projekgo-mitra-app",
+  "name": "Mitra Projekgo - Kelola Warung",
+  "short_name": "Projekgo",
+  "description": "Aplikasi Mitra Penjual Projekgo untuk mengelola warung, mengatur menu, dan menerima pesanan tanpa komisi.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["tabbed", "window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#F5F6F8",
+  "theme_color": "#FF6600",
+  "orientation": "portrait-primary",
+  "categories": ["business", "food", "productivity"],
+  "lang": "id",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "scope_extensions": [],
+  "icons": [
+    {
+      "src": "https://i.ibb.co.com/fzwdLsH6/Desain-tanpa-judul-38.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buka Pesanan",
+      "short_name": "Pesanan",
+      "description": "Lihat daftar pesanan masuk",
+      "url": "/index.html",
+      "icons": [
+        {
+          "src": "https://i.ibb.co.com/fzwdLsH6/Desain-tanpa-judul-38.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tampilan Beranda Mitra"
+    },
+    {
+      "src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tampilan Beranda Desktop"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/index.html",
+      "accept": {
+        "image/png": [".png"],
+        "image/jpeg": [".jpg", ".jpeg"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+projekgo",
+      "url": "/index.html?uri=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/index.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "widgets": [
+    {
+      "name": "Projekgo Ringkasan",
+      "short_name": "Ringkasan",
+      "description": "Menampilkan ringkasan pesanan warung Anda",
+      "tag": "projekgo-widget",
+      "ms_ac_template": "/index.html",
+      "ms_ac_data": "/index.html",
+      "auth": false,
+      "update": 86400,
+      "icons": [
+        {
+          "src": "https://i.ibb.co.com/fzwdLsH6/Desain-tanpa-judul-38.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "note_taking": {
+    "new_note_url": "/index.html"
+  }
 }
-],
-"shortcuts": [
-{
-"name": "Buka Pesanan",
-"short_name": "Pesanan",
-"description": "Lihat daftar pesanan masuk",
-"url": "/index.html",
-"icons": [
-{
-"src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
-"sizes": "192x192",
-"type": "image/png"
-}
-]
-}
-],
-"screenshots": [
-{
-"src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
-"sizes": "512x512",
-"type": "image/png",
-"form_factor": "narrow",
-"label": "Tampilan Beranda Mitra"
-},
-{
-"src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
-"sizes": "512x512",
-"type": "image/png",
-"form_factor": "wide",
-"label": "Tampilan Beranda Desktop"
-}
-]
-}
+```
