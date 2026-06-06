@@ -12,6 +12,21 @@
     "standalone",
     "minimal-ui"
   ],
+  "tab_strip": {
+    "home_tab": {
+      "icons": [
+        {
+          "src": "https://i.ibb.co.com/Z53DPY5/Desain-tanpa-judul-39.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "visibility": "auto"
+    },
+    "new_tab_button": {
+      "url": "/index.html"
+    }
+  },
   "background_color": "#F5F6F8",
   "theme_color": "#FF6600",
   "orientation": "portrait-primary",
@@ -33,7 +48,10 @@
   ],
   "scope_extensions": [
     {
-      "origin": "*.projekgo.id"
+      "origin": "https://*.projekgo.id"
+    },
+    {
+      "origin": "https://projekgo.id"
     }
   ],
   "launch_handler": {
