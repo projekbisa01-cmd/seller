@@ -6,21 +6,39 @@
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["tabbed", "window-controls-overlay", "standalone", "minimal-ui"],
+  "display_override": [
+    "tabbed",
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#F5F6F8",
   "theme_color": "#FF6600",
   "orientation": "portrait-primary",
-  "categories": ["business", "food", "productivity"],
+  "categories": [
+    "business",
+    "food",
+    "productivity"
+  ],
   "lang": "id",
   "dir": "ltr",
   "prefer_related_applications": false,
   "related_applications": [],
   "iarc_rating_id": "",
   "scope_extensions": [],
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
   "icons": [
     {
-      "src": "https://i.ibb.co.com/fzwdLsH6/Desain-tanpa-judul-38.png",
+      "src": "https://i.ibb.co.com/Z53DPY5/Desain-tanpa-judul-39.png",
       "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.ibb.co.com/HD1XDyHF/Desain-tanpa-judul-37.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
@@ -39,9 +57,9 @@
       "url": "/index.html",
       "icons": [
         {
-          "src": "https://i.ibb.co.com/fzwdLsH6/Desain-tanpa-judul-38.png",
+          "src": "https://i.ibb.co.com/PZQLg7dz/Desain-tanpa-judul-1.jpg",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/jpeg"
         }
       ]
     }
@@ -66,8 +84,13 @@
     {
       "action": "/index.html",
       "accept": {
-        "image/png": [".png"],
-        "image/jpeg": [".jpg", ".jpeg"]
+        "image/png": [
+          ".png"
+        ],
+        "image/jpeg": [
+          ".jpg",
+          ".jpeg"
+        ]
       }
     }
   ],
@@ -98,9 +121,9 @@
       "update": 86400,
       "icons": [
         {
-          "src": "https://i.ibb.co.com/fzwdLsH6/Desain-tanpa-judul-38.png",
+          "src": "https://i.ibb.co.com/PZQLg7dz/Desain-tanpa-judul-1.jpg",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/jpeg"
         }
       ]
     }
@@ -112,4 +135,3 @@
     "new_note_url": "/index.html"
   }
 }
-```
