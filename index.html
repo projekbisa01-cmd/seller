@@ -1339,21 +1339,6 @@
             document.getElementById('btn-edit-cat').style.display = 'none';
         };
 
-        window.saveShopCategory = async () => {
-            const selected = [];
-            document.querySelectorAll('.cat-checkbox:checked').forEach(cb => selected.push(cb.value));
-            if(selected.length === 0) return showToast("Pilih minimal 1 kategori!", false);
-            const btn = document.getElementById('btn-save-cat');
-            btn.innerText = "Menyimpan..."; btn.disabled = true;
-            try {
-                await updateDoc(doc(db, "vendors", currentUser.id), { kategori_utama: selected, updated_at: new Date().toISOString() });
-                currentUser.kategori_utama = selected; isEditingCategory = false;
-                renderCategoryUI(); showToast("Kategori disimpan!");
-                document.getElementById('btn-save-cat').style.display = 'none';
-                document.getElementById('btn-edit-cat').style.display = 'block';
-            } catch(e) { showToast("Gagal simpan.", false); } finally { btn.innerText = "Simpan Kategori"; btn.disabled = false; }
-        };
-
         // --- FUNGSI RENDER BADGE HALAL (DIPERBARUI DENGAN KLIK) ---
         window.renderHalalBadges = (isHalal, hasSertifikat) => {
             const container = document.getElementById('profile-halal-badges');
@@ -1361,11 +1346,12 @@
             container.innerHTML = '';
             
             if (isHalal) {
-                // Tambahkan aksi klik untuk membuka modal upgrade sertifikat (hanya jika penjual belum punya sertifikat)
-                const clickAction = !hasSertifikat ? `onclick="openUpgradeSertifikatModal()"` : ``;
-                const cursorStyle = !hasSertifikat ? `cursor: pointer;` : ``;
+                // PERBAIKAN: Badge SELALU bisa diklik untuk edit status, baik sudah bersertifikat maupun belum.
+                // Akan membuka modal Update Halal utama untuk mengedit kembali statusnya.
+                const clickAction = `onclick="openUpdateHalalModal()"`;
+                const cursorStyle = `cursor: pointer;`;
 
-                let badgeHTML = `<div ${clickAction} style="display: flex; flex-direction: column; align-items: center; gap: 5px; ${cursorStyle}">
+                let badgeHTML = `<div ${clickAction} style="display: flex; flex-direction: column; align-items: center; gap: 5px; ${cursorStyle}" title="Klik untuk ubah status halal">
                     <img src="https://i.ibb.co.com/KjN0Wf2G/Desain-tanpa-judul-44.png" alt="Badge Halal" style="height: 45px; object-fit: contain; drop-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
                 
                 // Tambahkan teks bersertifikat di bawah gambar jika sudah punya sertifikat
@@ -1375,6 +1361,9 @@
                 
                 badgeHTML += `</div>`;
                 container.innerHTML = badgeHTML;
+            } else if (isHalal === false) {
+                // Tambahan: Jika diset Tidak Halal, tampilkan tombol agar bisa diedit kembali ke Halal
+                container.innerHTML = `<div onclick="openUpdateHalalModal()" style="cursor:pointer; font-size:11px; color:#E65100; border:1px solid #FFE0B2; background:#FFF3E0; padding:6px 12px; border-radius:12px; font-weight:700;"><i class="ph-fill ph-pencil-simple"></i> Edit Status Halal</div>`;
             }
         };
 
@@ -2187,7 +2176,11 @@
             btn.disabled = true;
 
             try {
-                let sertifikatUrl = "";
+                // PERBAIKAN: Siapkan objek data untuk update
+                let updateData = {
+                    is_halal: (halal === 'Ya' || halal === 'Bersertifikat'),
+                    has_sertifikat_halal: halal === 'Bersertifikat'
+                };
                 
                 if (halal === 'Bersertifikat' && fileHalal) {
                     btn.innerHTML = "Mengunggah Sertifikat...";
@@ -2197,17 +2190,16 @@
                         reader.onerror = (e) => reject(e);
                         reader.readAsDataURL(fileHalal);
                     });
-                    sertifikatUrl = await uploadToFirebaseStorage(base64Data, `vendors/${currentUser.id}/sertifikat_halal_${Date.now()}.jpg`);
+                    updateData.url_sertifikat_halal = await uploadToFirebaseStorage(base64Data, `vendors/${currentUser.id}/sertifikat_halal_${Date.now()}.jpg`);
+                } else if (halal !== 'Bersertifikat') {
+                    // Jika di-downgrade jadi tanpa sertifikat atau tidak halal, hapus URL sertifikatnya
+                    updateData.url_sertifikat_halal = "";
                 }
 
                 btn.innerHTML = "Menyelesaikan...";
 
                 // Update data vendor di Firestore
-                await updateDoc(doc(db, "vendors", currentUser.id), {
-                    is_halal: (halal === 'Ya' || halal === 'Bersertifikat'),
-                    has_sertifikat_halal: halal === 'Bersertifikat',
-                    url_sertifikat_halal: sertifikatUrl
-                });
+                await updateDoc(doc(db, "vendors", currentUser.id), updateData);
 
                 showToast("Data Halal berhasil disimpan!");
                 closeUpdateHalalModal();
