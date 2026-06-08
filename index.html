@@ -933,6 +933,59 @@
                 <textarea id="reg-alamat" class="form-textarea" placeholder="Detail alamat jalan, RT/RW, dan patokan..." style="min-height: 80px;"></textarea>
             </div>
             
+            <!-- TAMBAHAN BARU: Penjelasan Produk -->
+            <div class="form-group">
+                <label class="form-label">Jelaskan produk apa yang Anda jual</label>
+                <textarea id="reg-produk" class="form-textarea" placeholder="Contoh: Ketoprak, ayam goreng, es teh manis, dll..." style="min-height: 60px;"></textarea>
+            </div>
+            
+            <!-- KUESIONER KELAYAKAN MERCHANT -->
+            <div class="form-group" style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
+                <label class="form-label" style="color: var(--primary); font-size: 14px;"><i class="ph-fill ph-shield-check"></i> Kuesioner Standar Kualitas</label>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Apakah Anda menjamin kebersihan, keamanan pangan, dan kualitas bahan baku?</label>
+                <select id="reg-kualitas" class="form-input" style="background: #f9f9f9;">
+                    <option value="">Pilih Jawaban</option>
+                    <option value="Ya">Ya, saya menjamin 100%</option>
+                    <option value="Tidak">Belum bisa menjamin</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Bagaimana standar kemasan yang digunakan?</label>
+                <select id="reg-kemasan" class="form-input" style="background: #f9f9f9;">
+                    <option value="">Pilih Jawaban</option>
+                    <option value="Aman dan Rapi">Aman, bersih, tertutup rapi</option>
+                    <option value="Biasa">Biasa saja (Plastik/Kertas standar)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Apakah produk yang dijual 100% Halal?</label>
+                <select id="reg-halal" class="form-input" style="background: #f9f9f9;" onchange="toggleSertifikatHalal()">
+                    <option value="">Pilih Jawaban</option>
+                    <option value="Ya">Ya, 100% Halal (Belum Bersertifikat)</option>
+                    <option value="Bersertifikat">Ya, 100% Halal & Punya Sertifikat</option>
+                    <option value="Tidak">Tidak / Ada produk Non-Halal</option>
+                </select>
+            </div>
+
+            <!-- MUNCUL JIKA PILIH HALAL & BERSERTIFIKAT -->
+            <div class="form-group" id="wrap-upload-sertifikat" style="display: none; background: #FFF3E0; border: 1px solid #FFE0B2; padding: 12px; border-radius: 10px;">
+                <label class="form-label" style="color: #E65100;">Upload Foto/Scan Sertifikat Halal</label>
+                <input type="file" id="reg-file-halal" accept="image/*" class="form-input" style="padding: 8px; background: white;">
+            </div>
+
+            <!-- PERSETUJUAN TNC -->
+            <div class="form-group tnc-checkbox-item" style="display: flex; gap: 10px; align-items: flex-start; background: #f0fdf4; padding: 12px; border-radius: 10px; border: 1px solid #bbf7d0; margin-top: 15px;">
+                <input type="checkbox" id="reg-tnc" style="width: 20px; height: 20px; accent-color: #16a34a; flex-shrink: 0; margin-top: 2px;">
+                <label for="reg-tnc" style="font-size: 11px; font-weight: 600; color: #166534; line-height: 1.4; cursor: pointer;">
+                    Saya bersedia mematuhi <b>Syarat & Ketentuan Kemitraan Projekgo</b>, menjual dengan harga jujur (tanpa mark-up), serta selalu menjaga kualitas makanan.
+                </label>
+            </div>
+            
             <button class="btn-submit" id="btn-submit-register" onclick="submitRegistration()" style="margin-top: 10px;">Selesai & Kirim Pengajuan</button>
         </div>
     </div>
@@ -940,8 +993,8 @@
     <!-- JAVASCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -964,7 +1017,7 @@
             if (user) {
                 isFirebaseAuthReady = true;
             } else {
-                signInAnonymously(auth).catch(error => console.error("Error Auth Anonim:", error));
+                isFirebaseAuthReady = false;
             }
         });
 
@@ -1060,55 +1113,57 @@
             btn.innerHTML = "Memeriksa..."; btn.disabled = true;
             
             try {
-                const q = query(collection(db, "vendors"), where("email", "==", emailInput));
+                // 1. Login langsung menggunakan sistem asli Firebase Auth
+                await signInWithEmailAndPassword(auth, emailInput, pinInput);
                 
-                const unsub = onSnapshot(q, async (querySnapshot) => {
-                    unsub(); 
-                    
-                    if (!querySnapshot.empty) {
-                        let loginSuccess = false;
-                        
-                        querySnapshot.forEach((docSnap) => {
-                            if (docSnap.data().pin === pinInput) {
-                                currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
-                                localStorage.setItem('vendor_user', JSON.stringify(currentUser));
-                                loginSuccess = true;
-                            }
-                        });
-                        
-                        if (loginSuccess) {
-                            initDashboard();
-                        } else {
-                            showToast("PIN salah!", false);
-                            btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false;
-                        }
+                // 2. Jika berhasil, cari data detail warung di database Firestore
+                const q = query(collection(db, "vendors"), where("email", "==", emailInput));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const docSnap = querySnapshot.docs[0];
+                    currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
+                    localStorage.setItem('vendor_user', JSON.stringify(currentUser));
+                    initDashboard();
+                } else {
+                    // Fallback jika id dokumen adalah alamat email itu sendiri
+                    const docSnap = await getDoc(doc(db, "vendors", emailInput));
+                    if (docSnap.exists()) {
+                        currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
+                        localStorage.setItem('vendor_user', JSON.stringify(currentUser));
+                        initDashboard();
                     } else {
-                        try {
-                            const docSnap = await getDoc(doc(db, "vendors", emailInput));
-                            if (docSnap.exists() && docSnap.data().pin === pinInput) {
-                                currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
-                                localStorage.setItem('vendor_user', JSON.stringify(currentUser));
-                                initDashboard();
-                            } else {
-                                showToast("Email tidak terdaftar atau PIN salah!", false);
-                                btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false;
-                            }
-                        } catch(err) {
-                            showToast("Terjadi kesalahan sistem", false);
-                            btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false;
-                        }
+                        // Jika login auth sukses tapi data warung tidak ada di database
+                        await signOut(auth);
+                        showToast("Akun terdaftar, tapi data warung tidak ditemukan!", false);
+                        btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false;
                     }
-                }, (error) => {
-                    showToast("Gagal terhubung ke server", false);
-                    btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false;
-                });
-            } catch (e) { 
-                showToast("Gagal Login", false); 
+                }
+            } catch (error) { 
+                console.error("Login Error:", error);
+                // Menangani pesan error spesifik dari Firebase Auth
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    showToast("Email atau PIN salah!", false);
+                } else if (error.code === 'auth/too-many-requests') {
+                    showToast("Terlalu banyak percobaan gagal. Coba lagi nanti.", false);
+                } else {
+                    showToast("Gagal Login: " + error.message, false); 
+                }
                 btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false; 
             }
         };
 
-        window.logout = () => { if(confirm("Keluar dari aplikasi?")) { localStorage.removeItem('vendor_user'); location.reload(); }};
+        window.logout = async () => { 
+            if(confirm("Keluar dari aplikasi?")) { 
+                try {
+                    await signOut(auth); // Putuskan sesi dari Firebase Auth
+                    localStorage.removeItem('vendor_user'); 
+                    location.reload(); 
+                } catch(e) {
+                    showToast("Gagal keluar dari sesi.", false);
+                }
+            }
+        };
 
         window.switchTab = (tab) => {
             if (tab === 'home') {
@@ -1441,15 +1496,10 @@
             placeholder.innerHTML = 'Memproses...';
             
             try {
-                const auth = getAuth();
+                // Memastikan sesi login Firebase masih aktif sebelum upload
                 if (!auth.currentUser) {
-                     placeholder.innerHTML = `<div style="color:orange; font-size:10px; padding:5px;">Sedang menghubungkan koneksi ke server...</div>`;
-                     try {
-                         await signInAnonymously(auth);
-                     } catch(authErr) {
-                         placeholder.innerHTML = `<div style="color:red; font-size:10px; padding:5px; word-break:break-all; text-align:left;"><b>Err Koneksi:</b><br>Tidak bisa terhubung ke server Firebase. Cek koneksi Anda.</div>`;
-                         return;
-                     }
+                     placeholder.innerHTML = `<div style="color:red; font-size:10px; padding:5px; word-break:break-all; text-align:left;"><b>Akses Ditolak:</b><br>Sesi login Anda sudah habis. Silakan muat ulang halaman dan login kembali.</div>`;
+                     return;
                 }
 
                 const reader = new FileReader();
@@ -1899,14 +1949,43 @@
             document.getElementById('modal-register').style.display = 'none';
         };
 
+        // FUNGSI TOGGLE UNTUK KUESIONER HALAL
+        window.toggleSertifikatHalal = () => {
+            const val = document.getElementById('reg-halal').value;
+            const wrapUpload = document.getElementById('wrap-upload-sertifikat');
+            
+            if(val === 'Bersertifikat') {
+                wrapUpload.style.display = 'block';
+            } else {
+                wrapUpload.style.display = 'none';
+                document.getElementById('reg-file-halal').value = '';
+            }
+        };
+
+        // FUNGSI SUBMIT PENDAFTARAN YANG DIPERBARUI
         window.submitRegistration = async () => {
+            // Data Dasar
             const pemilik = document.getElementById('reg-pemilik').value.trim();
             const warung = document.getElementById('reg-warung').value.trim();
             let wa = document.getElementById('reg-wa').value.trim();
             const alamat = document.getElementById('reg-alamat').value.trim();
+            const produk = document.getElementById('reg-produk').value.trim(); // TAMBAHAN: Tangkap input produk
 
-            if (!pemilik || !warung || !wa || !alamat) {
-                return showToast("Harap isi semua formulir pendaftaran!", false);
+            // Data Kuesioner
+            const kualitas = document.getElementById('reg-kualitas').value;
+            const kemasan = document.getElementById('reg-kemasan').value;
+            const halal = document.getElementById('reg-halal').value;
+            const tnc = document.getElementById('reg-tnc').checked;
+            const fileHalal = document.getElementById('reg-file-halal').files[0];
+
+            // Validasi Input Kosong
+            if (!pemilik || !warung || !wa || !alamat || !produk || !kualitas || !kemasan || !halal) {
+                return showToast("Harap isi semua formulir pendaftaran dan kuesioner!", false);
+            }
+
+            // Validasi Persetujuan Syarat
+            if (!tnc) {
+                return showToast("Anda wajib menyetujui Syarat & Ketentuan Kemitraan!", false);
             }
 
             if(wa.startsWith('0')) wa = '62' + wa.substring(1);
@@ -1916,24 +1995,60 @@
             btn.disabled = true;
 
             try {
+                let sertifikatUrl = "";
+                
+                // Jika pilih Punya Sertifikat Halal, upload fotonya ke Firebase Storage
+                if (halal === 'Bersertifikat' && fileHalal) {
+                    btn.innerHTML = "Mengunggah Sertifikat...";
+                    const base64Data = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.onerror = (e) => reject(e);
+                        reader.readAsDataURL(fileHalal);
+                    });
+                    // Memanfaatkan fungsi uploadToFirebaseStorage yang sudah ada
+                    sertifikatUrl = await uploadToFirebaseStorage(base64Data, `pengajuan_mitra/${Date.now()}_sertifikat_halal.jpg`);
+                }
+
+                btn.innerHTML = "Menyelesaikan...";
+
+                // Simpan ke Firestore beserta status kelayakan
                 await addDoc(collection(db, "pengajuan_mitra"), {
                     nama_pemilik: pemilik,
                     nama_warung: warung,
                     no_wa: wa,
                     alamat: alamat,
+                    deskripsi_produk: produk, // TAMBAHAN: Simpan jenis produk ke database
+                    // Field Kuesioner (Bisa digunakan untuk Badge di aplikasi nantinya)
+                    kualitas_terjamin: kualitas === 'Ya',
+                    standar_kemasan: kemasan,
+                    is_halal: (halal === 'Ya' || halal === 'Bersertifikat'),
+                    has_sertifikat_halal: halal === 'Bersertifikat',
+                    url_sertifikat_halal: sertifikatUrl,
+                    setuju_tnc: tnc,
                     tanggal_pengajuan: new Date().toISOString(),
                     status: "Menunggu Tinjauan"
                 });
 
                 showToast("Pendaftaran berhasil dikirim!");
                 
+                // Reset semua isian form
                 document.getElementById('reg-pemilik').value = '';
                 document.getElementById('reg-warung').value = '';
                 document.getElementById('reg-wa').value = '';
                 document.getElementById('reg-alamat').value = '';
+                document.getElementById('reg-produk').value = ''; // TAMBAHAN: Kosongkan field
+                document.getElementById('reg-kualitas').value = '';
+                document.getElementById('reg-kemasan').value = '';
+                document.getElementById('reg-halal').value = '';
+                document.getElementById('reg-file-halal').value = '';
+                document.getElementById('reg-tnc').checked = false;
+                window.toggleSertifikatHalal(); // Reset UI halal toggle
+                
                 closeRegisterModal();
 
-                const text = `Halo Admin, saya sudah mengisi form pendaftaran sebagai mitra merchant untuk warung *${warung}*, tolong ditinjau yah.`;
+                // Kabari Admin via WA
+                const text = `Halo Admin Projekgo, saya sudah mengisi form pendaftaran merchant beserta *kuesioner kelayakan* untuk warung *${warung}*. Mohon segera ditinjau ya!`;
                 const waUrl = `https://wa.me/62882008667068?text=${encodeURIComponent(text)}`;
                 window.open(waUrl, '_blank');
 
