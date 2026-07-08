@@ -748,7 +748,7 @@
                 <label class="form-label" style="color:var(--primary); display:flex; align-items:center; gap:5px;">
                     <i class="ph-fill ph-list-checks"></i> Pilihan Varian / Topping (Opsional)
                 </label>
-                <div style="font-size:11px; color:#666; margin-bottom:10px;">Nantinya pelanggan dapat mencentang pilihan ini (Checklist) di aplikasi.</div>
+                <div style="font-size:11px; color:#666; margin-bottom:10px;">Nantinya pelanggan dapat mencentang pilihan ini beserta harganya di aplikasi.</div>
                 
                 <div id="varian-container" style="display:flex; flex-direction:column; gap:8px;"></div>
                 
@@ -1509,7 +1509,7 @@
                             <div class="mi-info" style="width: calc(100% - 85px);">
                                 <div class="mi-name" style="${!isAvailable ? 'color:#888;' : ''} line-height: 1.3; margin-bottom: 4px; word-break: break-word;">${item.nama_menu}</div>
                                 <div class="mi-price" style="${!isAvailable ? 'color:#888;' : ''}">${item.harga_asli > item.harga ? `<span style="font-size:11px; text-decoration:line-through; color:#999; margin-right:4px;">Rp ${item.harga_asli.toLocaleString()}</span>` : ''} Rp ${item.harga.toLocaleString()}</div>
-                                ${item.varian && item.varian.length > 0 ? `<div style="font-size:11px; color:#666; margin-top:3px; background:#f5f5f5; padding:2px 6px; border-radius:4px; display:inline-block;">Varian: ${item.varian.join(", ")}</div>` : ''}
+                                ${item.varian && item.varian.length > 0 ? `<div style="font-size:11px; color:#666; margin-top:3px; background:#f5f5f5; padding:2px 6px; border-radius:4px; display:inline-block;">Varian: ${item.varian.map(v => typeof v === 'string' ? v : (v.nama + (v.harga > 0 ? ' (+Rp ' + v.harga.toLocaleString('id-ID') + ')' : ''))).join(", ")}</div>` : ''}
                                 <div style="margin-top:5px; display:flex; flex-wrap:wrap; gap:4px; align-items:center;">
                                     ${item.is_exclusive ? '<span style="background:var(--primary);color:white;font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;">Eksklusif</span>' : ''}
                                     ${item.is_priority ? '<span style="color:#FFC107;font-size:10px;font-weight:700;"><i class="ph-fill ph-star"></i> Andalan</span>' : ''}
@@ -1556,13 +1556,14 @@
         };
 
         // FUNGSI BARU UNTUK MENAMBAH KOLOM INPUT VARIAN SECARA DINAMIS
-        window.addVarianField = (value = "") => {
+        window.addVarianField = (nama = "", harga = "") => {
             const container = document.getElementById('varian-container');
             const div = document.createElement('div');
-            div.style.display = 'flex'; div.style.gap = '5px';
+            div.style.display = 'flex'; div.style.gap = '5px'; div.style.alignItems = 'center';
             div.innerHTML = `
-                <input type="text" class="form-input varian-item-input" style="flex:1; padding:8px; font-size:13px;" placeholder="Cth: Ekstra Pedas" value="${value}">
-                <button type="button" onclick="this.parentElement.remove()" style="background:#ffebee; color:var(--danger); border:none; border-radius:8px; padding:0 12px; cursor:pointer;"><i class="ph-bold ph-trash"></i></button>
+                <input type="text" class="form-input varian-nama-input" style="flex:2; padding:8px; font-size:13px;" placeholder="Nama (Cth: Keju)" value="${nama}">
+                <input type="number" class="form-input varian-harga-input" style="flex:1; padding:8px; font-size:13px;" placeholder="Harga (Cth: 3000) kosongkan jika tidak ada tambahan harga" value="${harga || ''}">
+                <button type="button" onclick="this.parentElement.remove()" style="background:#ffebee; color:var(--danger); border:none; border-radius:8px; padding:6px 12px; cursor:pointer; height: 35px;"><i class="ph-bold ph-trash"></i></button>
             `;
             container.appendChild(div);
         };
@@ -1591,7 +1592,13 @@
             // TAMBAHAN LOAD VARIAN KE KOTAK INPUT DINAMIS
             document.getElementById('varian-container').innerHTML = ""; 
             if (item.varian && item.varian.length > 0) {
-                item.varian.forEach(v => addVarianField(v));
+                item.varian.forEach(v => {
+                    if (typeof v === 'string') {
+                        addVarianField(v, "");
+                    } else if (typeof v === 'object' && v.nama) {
+                        addVarianField(v.nama, v.harga > 0 ? v.harga : "");
+                    }
+                });
             }
             
             document.getElementById('inp-exclusive').checked = !!item.is_exclusive;
@@ -1672,10 +1679,17 @@
         
         // TAMBAHAN PARSE VARIAN DARI INPUT DINAMIS
         let varianArray = [];
-        document.querySelectorAll('.varian-item-input').forEach(input => {
-            const val = input.value.trim();
-            if(val) varianArray.push(val);
-        });
+        const varianContainers = document.getElementById('varian-container').children;
+        for (let i = 0; i < varianContainers.length; i++) {
+            const namaInput = varianContainers[i].querySelector('.varian-nama-input').value.trim();
+            const hargaInput = varianContainers[i].querySelector('.varian-harga-input').value.trim();
+            if (namaInput) {
+                varianArray.push({
+                    nama: namaInput,
+                    harga: parseInt(hargaInput) || 0
+                });
+            }
+        }
         
         if(!nama || !hargaRaw || !uploadedImageUrl) return showToast("Lengkapi data!", false);
         const btn = document.querySelector('.btn-submit'); btn.disabled = true;
