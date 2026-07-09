@@ -14,6 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- SCRIPT GOOGLE MAPS API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAgPz5iVt7kEcd_gH2hmtHfHg2s8gJMZY&libraries=places"></script>
 
     <style>
         :root {
@@ -155,7 +157,7 @@
         .cat-checkbox-wrapper:has(input:checked) { background: #FFF3E0; border-color: var(--primary); color: var(--primary); }
 
         /* MODAL */
-        #modal-form { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: flex-end; }
+        #modal-form, #modal-lokasi { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: flex-end; }
         .modal-content { background: white; width: 100%; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
@@ -217,6 +219,9 @@
         .filter-container::-webkit-scrollbar { display: none; }
         .filter-pill { padding: 6px 16px; background: white; border: 1px solid #ddd; border-radius: 20px; font-size: 12px; font-weight: 600; color: #555; white-space: nowrap; cursor: pointer; transition: 0.2s; }
         .filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(255,102,0,0.2); }
+
+        /* MAP STYLES (NEW) */
+        #map-container { width: 100%; height: 300px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #ddd; background: #f5f5f5; }
 
         /* --- STYLES UNTUK SPLASH SCREEN --- */
         #splash-screen {
@@ -664,6 +669,18 @@
                 </div>
             </div>
 
+            <!-- LOKASI PETA WAJIB -->
+            <div class="variant-custom-box" style="background: white; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-bottom: 20px;">
+                <label class="form-label" style="font-size:14px; color:var(--dark); display:flex; align-items:center; gap:5px;">
+                    <i class="ph-fill ph-map-pin" style="color:var(--danger);"></i> Titik Lokasi Peta
+                </label>
+                <div style="font-size:11px; color:#888; margin-bottom:10px;">Lokasi toko untuk perhitungan ongkir pelanggan.</div>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <div id="display-lokasi" style="flex:1; padding:10px; border-radius:8px; background:#f5f5f5; font-size:12px; font-weight:600; color:#555; display:flex; align-items:center; overflow:hidden;">Belum diatur</div>
+                    <button onclick="openLocationModal(false)" class="btn-submit" style="width:auto; padding:10px 15px; font-size:12px; border-radius:8px; background:var(--danger); box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);">Ubah Lokasi</button>
+                </div>
+            </div>
+
             <!-- BAGIKAN WARUNG -->
             <div class="variant-custom-box" style="background: white; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-bottom: 20px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
@@ -768,6 +785,27 @@
 
             <button class="btn-submit" onclick="saveMenu()" style="margin-top: 20px;">Simpan Menu</button>
             <button class="btn-cancel" onclick="closeModal()">Batal</button>
+        </div>
+    </div>
+
+    <!-- MODAL LOKASI PETA (WAJIB JIKA BELUM ADA) -->
+    <div id="modal-lokasi">
+        <div class="modal-content" style="border-radius: 20px; animation: none; transform: none; width: 100%; max-width: 400px; padding: 25px; margin: auto;">
+            <h3 style="margin-top:0; margin-bottom:5px; color: var(--danger); display: flex; align-items: center; gap: 8px;">
+                <i class="ph-fill ph-map-pin"></i> Atur Titik Lokasi
+            </h3>
+            <p style="font-size: 12px; color: #555; margin-bottom: 15px; line-height: 1.5;">
+                Tentukan titik lokasi warung Anda di peta agar pelanggan bisa mengetahui ongkos kirim. <b>Geser pin merah</b> ke lokasi yang paling akurat.
+            </p>
+            
+            <div id="map-container"></div>
+            
+            <div style="font-size: 11px; color: #888; margin-bottom: 15px; text-align: center; background: #f9f9f9; padding: 8px; border-radius: 8px;">
+                Koordinat Anda:<br><span id="map-coords" style="font-weight: 700; color: var(--dark);">-</span>
+            </div>
+            
+            <button class="btn-submit" id="btn-save-location" onclick="saveLocation()" style="width: 100%; background: var(--danger); box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);">Simpan Titik Peta</button>
+            <button class="btn-cancel" id="btn-close-location" onclick="closeLocationModal()" style="display: none; width: 100%; margin-top: 10px;">Batal</button>
         </div>
     </div>
 
@@ -1284,6 +1322,107 @@
             window.scrollTo(0,0);
         };
 
+        // --- FUNGSI LOKASI PETA / GOOGLE MAPS (BARU DITAMBAHKAN) ---
+        let map, marker, selectedLat, selectedLng;
+        let isLocationMandatory = false;
+
+        window.openLocationModal = (isMandatory = true) => {
+            isLocationMandatory = isMandatory;
+            document.getElementById('modal-lokasi').style.display = 'flex';
+            document.getElementById('btn-close-location').style.display = isMandatory ? 'none' : 'block';
+
+            if (!map) {
+                // Inisialisasi Peta (Default posisi Gombong)
+                const defaultPos = { lat: -7.6083, lng: 109.5297 }; 
+                map = new google.maps.Map(document.getElementById("map-container"), {
+                    zoom: 16,
+                    center: defaultPos,
+                    disableDefaultUI: true,
+                    zoomControl: true,
+                });
+
+                marker = new google.maps.Marker({
+                    position: defaultPos,
+                    map: map,
+                    draggable: true,
+                    animation: google.maps.Animation.DROP,
+                });
+
+                const updateCoords = () => {
+                    selectedLat = marker.getPosition().lat();
+                    selectedLng = marker.getPosition().lng();
+                    document.getElementById('map-coords').innerText = `${selectedLat.toFixed(5)}, ${selectedLng.toFixed(5)}`;
+                };
+
+                // Event ketika pin digeser
+                google.maps.event.addListener(marker, 'dragend', updateCoords);
+                
+                // Event ketika peta diklik (pindahkan pin)
+                google.maps.event.addListener(map, 'click', (event) => {
+                    marker.setPosition(event.latLng);
+                    updateCoords();
+                });
+
+                updateCoords(); // Set koordinat awal
+
+                // Meminta izin lokasi HTML5 Geolocation bawaan browser agar lebih akurat ke pengguna
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                        map.setCenter(pos);
+                        marker.setPosition(pos);
+                        updateCoords();
+                    }, () => {
+                        console.log("Izin Geolocation ditolak atau gagal diakses.");
+                    });
+                }
+            } else {
+                // Memastikan peta di-render ulang dengan benar jika modal baru dibuka kembali
+                google.maps.event.trigger(map, 'resize');
+                if (selectedLat && selectedLng) {
+                    map.setCenter({ lat: selectedLat, lng: selectedLng });
+                }
+            }
+        };
+
+        window.closeLocationModal = () => {
+            if (isLocationMandatory) return; // Jika wajib, blokir penutupan
+            document.getElementById('modal-lokasi').style.display = 'none';
+        };
+
+        window.saveLocation = async () => {
+            if (!selectedLat || !selectedLng) {
+                selectedLat = marker.getPosition().lat();
+                selectedLng = marker.getPosition().lng();
+            }
+
+            const btn = document.getElementById('btn-save-location');
+            btn.innerHTML = "Menyimpan...";
+            btn.disabled = true;
+
+            try {
+                await updateDoc(doc(db, "vendors", currentUser.id), {
+                    latitude: selectedLat,
+                    longitude: selectedLng
+                });
+                showToast("Titik Lokasi berhasil disimpan!");
+                
+                // Tampilkan info lokasi di profil
+                const displayLokasi = document.getElementById('display-lokasi');
+                if (displayLokasi) {
+                    displayLokasi.innerText = `${selectedLat.toFixed(5)}, ${selectedLng.toFixed(5)}`;
+                }
+
+                document.getElementById('modal-lokasi').style.display = 'none';
+                isLocationMandatory = false;
+            } catch (error) {
+                showToast("Gagal menyimpan lokasi ke database.", false);
+            } finally {
+                btn.innerHTML = "Simpan Titik Peta";
+                btn.disabled = false;
+            }
+        };
+
         // --- LOGIKA PERJANJIAN KERJASAMA (TNC) ---
         window.openTNCModal = (isViewOnly = false, data = {}) => {
             const overlay = document.getElementById('tnc-overlay');
@@ -1393,15 +1532,12 @@
             container.innerHTML = '';
             
             if (isHalal) {
-                // PERBAIKAN: Badge SELALU bisa diklik untuk edit status, baik sudah bersertifikat maupun belum.
-                // Akan membuka modal Update Halal utama untuk mengedit kembali statusnya.
                 const clickAction = `onclick="openUpdateHalalModal()"`;
                 const cursorStyle = `cursor: pointer;`;
 
                 let badgeHTML = `<div ${clickAction} style="display: flex; flex-direction: column; align-items: center; gap: 5px; ${cursorStyle}" title="Klik untuk ubah status halal">
                     <img src="https://i.ibb.co.com/KjN0Wf2G/Desain-tanpa-judul-44.png" alt="Badge Halal" style="height: 45px; object-fit: contain; drop-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
                 
-                // Tambahkan teks bersertifikat di bawah gambar jika sudah punya sertifikat
                 if (hasSertifikat) {
                     badgeHTML += `<span style="font-size: 10px; font-weight: 800; color: #2E7D32; background: #E8F5E9; padding: 2px 8px; border-radius: 12px; border: 1px solid #C8E6C9; letter-spacing: 0.5px;">BERSERTIFIKAT</span>`;
                 }
@@ -1409,43 +1545,56 @@
                 badgeHTML += `</div>`;
                 container.innerHTML = badgeHTML;
             } else if (isHalal === false) {
-                // Tambahan: Jika diset Tidak Halal, tampilkan tombol agar bisa diedit kembali ke Halal
                 container.innerHTML = `<div onclick="openUpdateHalalModal()" style="cursor:pointer; font-size:11px; color:#E65100; border:1px solid #FFE0B2; background:#FFF3E0; padding:6px 12px; border-radius:12px; font-weight:700;"><i class="ph-fill ph-pencil-simple"></i> Edit Status Halal</div>`;
             }
         };
 
-        // --- DASHBOARD INIT ---
+        // --- DASHBOARD INIT (DIPERBARUI LOGIKA POP-UP BERANTAI) ---
         function initDashboard() {
             document.getElementById('loading-screen').style.display = 'flex';
             document.getElementById('login-page').style.display = 'none';
             document.getElementById('display-name').innerText = currentUser.name;
             document.getElementById('display-id').innerText = "ID: " + currentUser.id;
             loadMasterCategories();
+            
             onSnapshot(doc(db, "vendors", currentUser.id), (snap) => {
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
+                
                 if(snap.exists()) {
                     const data = snap.data();
                     currentUser.is_andalan = data.is_andalan === true; 
                     
                     const badge = document.getElementById('badge-andalan-header');
-                    if (badge) {
-                        badge.style.display = currentUser.is_andalan ? 'flex' : 'none';
-                    }
+                    if (badge) badge.style.display = currentUser.is_andalan ? 'flex' : 'none';
 
+                    // --- LOGIKA POP-UP BERANTAI ---
                     if (!data.tnc_agreed) {
                         openTNCModal(false, data);
                         document.getElementById('box-kerjasama').style.display = 'none';
                     } else {
                         document.getElementById('box-kerjasama').style.display = 'block';
-                    }
 
-                    // CEK DATA KEHALALAN (POPUP ATAU RENDER BADGE)
-                    if (data.is_halal === undefined) {
-                        setTimeout(() => openUpdateHalalModal(), 1500); // Tampilkan popup setelah 1.5 detik
-                    } else {
-                        renderHalalBadges(data.is_halal, data.has_sertifikat_halal);
+                        if (data.is_halal === undefined) {
+                            setTimeout(() => openUpdateHalalModal(), 1500); 
+                        } else {
+                            renderHalalBadges(data.is_halal, data.has_sertifikat_halal);
+
+                            // Pengecekan Lokasi WAJIB setelah Halal selesai
+                            if (!data.latitude || !data.longitude) {
+                                setTimeout(() => openLocationModal(true), 1500); 
+                            } else {
+                                // Jika lokasi sudah disetel, tampilkan di Profil
+                                const displayLokasi = document.getElementById('display-lokasi');
+                                if (displayLokasi) {
+                                    displayLokasi.innerText = `${data.latitude.toFixed(5)}, ${data.longitude.toFixed(5)}`;
+                                }
+                                selectedLat = data.latitude;
+                                selectedLng = data.longitude;
+                            }
+                        }
                     }
+                    // ---------------------------------
 
                     currentUser.kategori_utama = Array.isArray(data.kategori_utama) ? data.kategori_utama : [];
                     const isOpen = (data.status || 'BUKA') === 'BUKA';
