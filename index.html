@@ -771,16 +771,16 @@
                 </div>
             </div>
 
-            <!-- TAMBAHAN KOLOM INPUT VARIAN MENU (DIPERBARUI UNTUK CHECKLIST) -->
+            <!-- BAGIAN GRUP VARIAN BARU -->
             <div class="form-group" style="margin-top: 15px; background: #f9f9f9; padding: 12px; border-radius: 10px; border: 1px solid #eee;">
                 <label class="form-label" style="color:var(--primary); display:flex; align-items:center; gap:5px;">
-                    <i class="ph-fill ph-list-checks"></i> Pilihan Varian / Topping (Opsional)
+                    <i class="ph-fill ph-list-checks"></i> Grup Varian & Pilihan (Opsional)
                 </label>
-                <div style="font-size:11px; color:#666; margin-bottom:10px;">Nantinya pelanggan dapat mencentang pilihan ini beserta harganya di aplikasi.</div>
+                <div style="font-size:11px; color:#666; margin-bottom:10px;">Atur pilihan seperti "Tingkat Kepedasan", "Pilihan Nasi", dll.</div>
                 
-                <div id="varian-container" style="display:flex; flex-direction:column; gap:8px;"></div>
+                <div id="varian-grup-container" style="display:flex; flex-direction:column; gap:12px;"></div>
                 
-                <button type="button" class="btn-reply" onclick="addVarianField()" style="margin-top:10px; width:100%; border:1px dashed var(--primary); background:white;">+ Tambah Pilihan Varian</button>
+                <button type="button" class="btn-reply" onclick="addGroupVarian()" style="margin-top:10px; width:100%; border:1px dashed var(--primary); background:white;">+ Tambah Grup Varian</button>
             </div>
 
             <button class="btn-submit" onclick="saveMenu()" style="margin-top: 20px;">Simpan Menu</button>
@@ -1693,7 +1693,7 @@
                             <div class="mi-info" style="width: calc(100% - 85px);">
                                 <div class="mi-name" style="${!isAvailable ? 'color:#888;' : ''} line-height: 1.3; margin-bottom: 4px; word-break: break-word;">${item.nama_menu}</div>
                                 <div class="mi-price" style="${!isAvailable ? 'color:#888;' : ''}">${item.harga_asli > item.harga ? `<span style="font-size:11px; text-decoration:line-through; color:#999; margin-right:4px;">Rp ${item.harga_asli.toLocaleString()}</span>` : ''} Rp ${item.harga.toLocaleString()}</div>
-                                ${item.varian && item.varian.length > 0 ? `<div style="font-size:11px; color:#666; margin-top:3px; background:#f5f5f5; padding:2px 6px; border-radius:4px; display:inline-block;">Varian: ${item.varian.map(v => typeof v === 'string' ? v : (v.nama + (v.harga > 0 ? ' (+Rp ' + v.harga.toLocaleString('id-ID') + ')' : ''))).join(", ")}</div>` : ''}
+                                ${(item.varian_grup && item.varian_grup.length > 0) ? `<div style="font-size:10px; color:#666; margin-top:3px; background:#f5f5f5; padding:2px 6px; border-radius:4px; display:inline-block;">Grup Varian: ${item.varian_grup.map(g => g.nama).join(', ')}</div>` : (item.varian && item.varian.length > 0 ? `<div style="font-size:10px; color:#666; margin-top:3px; background:#f5f5f5; padding:2px 6px; border-radius:4px; display:inline-block;">Varian: ${item.varian.map(v => typeof v === 'string' ? v : (v.nama + (v.harga > 0 ? ' (+Rp ' + v.harga.toLocaleString('id-ID') + ')' : ''))).join(", ")}</div>` : '')}
                                 <div style="margin-top:5px; display:flex; flex-wrap:wrap; gap:4px; align-items:center;">
                                     ${item.is_exclusive ? '<span style="background:var(--primary);color:white;font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;">Eksklusif</span>' : ''}
                                     ${item.is_priority ? '<span style="color:#FFC107;font-size:10px;font-weight:700;"><i class="ph-fill ph-star"></i> Andalan</span>' : ''}
@@ -1739,15 +1739,47 @@
             return await getDownloadURL(storageRef);
         };
 
-        // FUNGSI BARU UNTUK MENAMBAH KOLOM INPUT VARIAN SECARA DINAMIS
-        window.addVarianField = (nama = "", harga = "") => {
-            const container = document.getElementById('varian-container');
+        // FUNGSI BARU UNTUK MENAMBAH GRUP VARIAN BERKELOMPOK
+        window.addGroupVarian = (namaGrup = "", tipeGrup = "radio", pilihan = []) => {
+            const container = document.getElementById('varian-grup-container');
+            const groupId = 'grup_' + Date.now() + Math.random().toString(36).substr(2, 5);
+            
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'varian-grup-box';
+            groupDiv.style.cssText = 'background: white; border: 1px solid #ddd; padding: 10px; border-radius: 8px; position: relative;';
+            
+            groupDiv.innerHTML = `
+                <div style="display:flex; gap:8px; margin-bottom:10px; align-items:center;">
+                    <input type="text" class="form-input vg-nama" placeholder="Nama Grup (Cth: Level Pedas)" value="${namaGrup}" style="flex:2; padding:8px; font-size:12px; font-weight:700;">
+                    <select class="form-input vg-tipe" style="flex:1.5; padding:8px; font-size:11px; background:#f5f5f5;">
+                        <option value="radio" ${tipeGrup === 'radio' ? 'selected' : ''}>Pilih 1 (Wajib)</option>
+                        <option value="checkbox" ${tipeGrup === 'checkbox' ? 'selected' : ''}>Pilih Banyak</option>
+                    </select>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" style="background:#ffebee; color:var(--danger); border:none; border-radius:6px; padding:8px; cursor:pointer;" title="Hapus Grup"><i class="ph-bold ph-trash"></i></button>
+                </div>
+                <div class="vg-pilihan-container" id="${groupId}_pilihan" style="display:flex; flex-direction:column; gap:6px; padding-left:10px; border-left:2px solid #FF6600; margin-bottom:10px;"></div>
+                <button type="button" onclick="addOptionToGroup('${groupId}_pilihan')" style="background:transparent; color:var(--primary); border:1px dashed #FFCC80; border-radius:6px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">+ Tambah Pilihan / Item</button>
+            `;
+            
+            container.appendChild(groupDiv);
+            
+            if (pilihan && pilihan.length > 0) {
+                pilihan.forEach(p => addOptionToGroup(`${groupId}_pilihan`, p.nama, p.harga));
+            } else {
+                addOptionToGroup(`${groupId}_pilihan`); // Default 1 pilihan kosong
+            }
+        };
+
+        // FUNGSI BARU UNTUK MENAMBAH PILIHAN DI DALAM GRUP
+        window.addOptionToGroup = (containerId, nama = "", harga = "") => {
+            const container = document.getElementById(containerId);
             const div = document.createElement('div');
+            div.className = 'vg-pilihan-item';
             div.style.display = 'flex'; div.style.gap = '5px'; div.style.alignItems = 'center';
             div.innerHTML = `
-                <input type="text" class="form-input varian-nama-input" style="flex:2; padding:8px; font-size:13px;" placeholder="Nama (Cth: Keju)" value="${nama}">
-                <input type="number" class="form-input varian-harga-input" style="flex:1; padding:8px; font-size:13px;" placeholder="Harga (Cth: 3000) kosongkan jika tidak ada tambahan harga" value="${harga || ''}">
-                <button type="button" onclick="this.parentElement.remove()" style="background:#ffebee; color:var(--danger); border:none; border-radius:8px; padding:6px 12px; cursor:pointer; height: 35px;"><i class="ph-bold ph-trash"></i></button>
+                <input type="text" class="form-input vp-nama" style="flex:2; padding:6px 8px; font-size:12px;" placeholder="Pilihan (Cth: Sedang)" value="${nama}">
+                <input type="number" class="form-input vp-harga" style="flex:1; padding:6px 8px; font-size:12px;" placeholder="Harga (Cth: 2000)" value="${harga || ''}">
+                <button type="button" onclick="this.parentElement.remove()" style="background:transparent; color:var(--danger); border:none; padding:4px; cursor:pointer;" title="Hapus Pilihan"><i class="ph-bold ph-x"></i></button>
             `;
             container.appendChild(div);
         };
@@ -1758,7 +1790,7 @@
             document.getElementById('menu-id').value = ""; document.getElementById('inp-nama').value = "";
             document.getElementById('inp-harga').value = ""; document.getElementById('inp-harga-asli').value = ""; 
             document.getElementById('inp-tipe').value = ""; document.getElementById('inp-desc').value = ""; 
-            document.getElementById('varian-container').innerHTML = ""; // TAMBAHAN RESET KOTAK VARIAN
+            document.getElementById('varian-grup-container').innerHTML = ""; // TAMBAHAN RESET KOTAK GRUP VARIAN
             document.getElementById('preview-img').style.display = "none"; document.querySelector('.upload-placeholder').style.display = "block";
             uploadedImageUrl = ""; document.getElementById('modal-form').style.display = 'flex';
         };
@@ -1773,16 +1805,21 @@
             document.getElementById('inp-tipe').value = item.tipe || "";
             document.getElementById('inp-desc').value = item.deskripsi || "";
             
-            // TAMBAHAN LOAD VARIAN KE KOTAK INPUT DINAMIS
-            document.getElementById('varian-container').innerHTML = ""; 
-            if (item.varian && item.varian.length > 0) {
-                item.varian.forEach(v => {
-                    if (typeof v === 'string') {
-                        addVarianField(v, "");
-                    } else if (typeof v === 'object' && v.nama) {
-                        addVarianField(v.nama, v.harga > 0 ? v.harga : "");
-                    }
+            // TAMBAHAN LOAD GRUP VARIAN KE KOTAK INPUT DINAMIS
+            document.getElementById('varian-grup-container').innerHTML = ""; 
+            if (item.varian_grup && item.varian_grup.length > 0) {
+                // Jika sudah memakai format grup yang baru
+                item.varian_grup.forEach(g => {
+                    addGroupVarian(g.nama, g.tipe, g.pilihan);
                 });
+            } else if (item.varian && item.varian.length > 0) {
+                // Konversi Otomatis dari Varian versi lama ke Varian Grup (Checkbox)
+                let convertedPilihan = [];
+                item.varian.forEach(v => {
+                    if (typeof v === 'string') convertedPilihan.push({ nama: v, harga: 0 });
+                    else if (typeof v === 'object' && v.nama) convertedPilihan.push({ nama: v.nama, harga: v.harga || 0 });
+                });
+                addGroupVarian("Pilihan Tambahan", "checkbox", convertedPilihan);
             }
             
             document.getElementById('inp-exclusive').checked = !!item.is_exclusive;
@@ -1861,23 +1898,40 @@
         let hargaRaw = document.getElementById('inp-harga').value.replace(/\./g, '');
         let hargaAsliRaw = document.getElementById('inp-harga-asli').value.replace(/\./g, '');
         
-        // TAMBAHAN PARSE VARIAN DARI INPUT DINAMIS
-        let varianArray = [];
-        const varianContainers = document.getElementById('varian-container').children;
-        for (let i = 0; i < varianContainers.length; i++) {
-            const namaInput = varianContainers[i].querySelector('.varian-nama-input').value.trim();
-            const hargaInput = varianContainers[i].querySelector('.varian-harga-input').value.trim();
-            if (namaInput) {
-                varianArray.push({
-                    nama: namaInput,
-                    harga: parseInt(hargaInput) || 0
+        // TAMBAHAN PARSE GRUP VARIAN DARI INPUT DINAMIS
+        let varianGrupArray = [];
+        const groupBoxes = document.querySelectorAll('#varian-grup-container .varian-grup-box');
+        
+        groupBoxes.forEach(box => {
+            const namaGrup = box.querySelector('.vg-nama').value.trim();
+            const tipeGrup = box.querySelector('.vg-tipe').value;
+            
+            if (namaGrup) {
+                let pilihanArray = [];
+                const pilihanItems = box.querySelectorAll('.vg-pilihan-item');
+                pilihanItems.forEach(pItem => {
+                    const pNama = pItem.querySelector('.vp-nama').value.trim();
+                    const pHarga = pItem.querySelector('.vp-harga').value.trim();
+                    if (pNama) {
+                        pilihanArray.push({
+                            nama: pNama,
+                            harga: parseInt(pHarga) || 0
+                        });
+                    }
                 });
+                
+                if (pilihanArray.length > 0) {
+                    varianGrupArray.push({
+                        nama: namaGrup,
+                        tipe: tipeGrup,
+                        pilihan: pilihanArray
+                    });
+                }
             }
-        }
+        });
         
         if(!nama || !hargaRaw || !uploadedImageUrl) return showToast("Lengkapi data!", false);
         
-        // PERBAIKAN: Gunakan ID spesifik #modal-form agar tidak salah tombol
         const btn = document.querySelector('#modal-form .btn-submit'); 
         btn.disabled = true;
         
@@ -1887,7 +1941,8 @@
             harga_asli: parseInt(hargaAsliRaw) || 0,
             tipe: document.getElementById('inp-tipe').value.trim() || 'Lainnya', 
             deskripsi: document.getElementById('inp-desc').value || "", 
-            varian: varianArray, // SIMPAN SEBAGAI ARRAY UNTUK CHECKLIST
+            varian_grup: varianGrupArray, // SIMPAN SEBAGAI GRUP VARIAN BARU
+            varian: [], // Kosongkan flat array agar kompatibel jika ada sisa logika lama di luar
             is_exclusive: document.getElementById('inp-exclusive').checked, 
             is_priority: document.getElementById('inp-priority').checked, 
             vendor_id: currentUser.id, 
