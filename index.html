@@ -1898,37 +1898,54 @@
         let hargaRaw = document.getElementById('inp-harga').value.replace(/\./g, '');
         let hargaAsliRaw = document.getElementById('inp-harga-asli').value.replace(/\./g, '');
         
-        // TAMBAHAN PARSE GRUP VARIAN DARI INPUT DINAMIS
+        // TAMBAHAN PARSE GRUP VARIAN DARI INPUT DINAMIS DENGAN VALIDASI
         let varianGrupArray = [];
         const groupBoxes = document.querySelectorAll('#varian-grup-container .varian-grup-box');
+        let hasVarianError = false;
+        let errorMessage = "";
         
-        groupBoxes.forEach(box => {
+        for (let box of groupBoxes) {
             const namaGrup = box.querySelector('.vg-nama').value.trim();
             const tipeGrup = box.querySelector('.vg-tipe').value;
             
-            if (namaGrup) {
-                let pilihanArray = [];
-                const pilihanItems = box.querySelectorAll('.vg-pilihan-item');
-                pilihanItems.forEach(pItem => {
-                    const pNama = pItem.querySelector('.vp-nama').value.trim();
-                    const pHarga = pItem.querySelector('.vp-harga').value.trim();
-                    if (pNama) {
-                        pilihanArray.push({
-                            nama: pNama,
-                            harga: parseInt(pHarga) || 0
-                        });
-                    }
-                });
-                
-                if (pilihanArray.length > 0) {
-                    varianGrupArray.push({
-                        nama: namaGrup,
-                        tipe: tipeGrup,
-                        pilihan: pilihanArray
+            // VALIDASI 1: Cek apakah Nama Grup kosong
+            if (!namaGrup) {
+                hasVarianError = true;
+                errorMessage = "Harus isi Nama Grup Varian!";
+                break;
+            }
+            
+            let pilihanArray = [];
+            const pilihanItems = box.querySelectorAll('.vg-pilihan-item');
+            pilihanItems.forEach(pItem => {
+                const pNama = pItem.querySelector('.vp-nama').value.trim();
+                const pHarga = pItem.querySelector('.vp-harga').value.trim();
+                if (pNama) {
+                    pilihanArray.push({
+                        nama: pNama,
+                        harga: parseInt(pHarga) || 0
                     });
                 }
+            });
+            
+            // VALIDASI 2: Cek apakah Pilihan di dalam grup kosong
+            if (pilihanArray.length === 0) {
+                hasVarianError = true;
+                errorMessage = `Grup "${namaGrup}" minimal punya 1 pilihan!`;
+                break;
             }
-        });
+            
+            varianGrupArray.push({
+                nama: namaGrup,
+                tipe: tipeGrup,
+                pilihan: pilihanArray
+            });
+        }
+        
+        // JIKA ADA ERROR DI VARIAN, BATALKAN SIMPAN
+        if (hasVarianError) {
+            return showToast(errorMessage, false);
+        }
         
         if(!nama || !hargaRaw || !uploadedImageUrl) return showToast("Lengkapi data!", false);
         
