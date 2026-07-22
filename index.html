@@ -699,7 +699,7 @@
                 <label class="form-label" style="font-size:14px; color:var(--dark); display:flex; align-items:center; gap:5px;">
                     <i class="ph-fill ph-storefront" style="color:var(--primary);"></i> Kategori Utama Resto
                 </label>
-                <div style="font-size:11px; color:#888; margin-bottom:10px;">Pilih fokus jualan utama warung Anda.</div>
+                <div style="font-size:11px; color:#888; margin-bottom:10px;">Pilih 1 fokus jualan utama warung Anda.</div>
                 
                 <div id="category-checkbox-group" class="disabled-group">
                     <div style="width:100%; text-align:center; padding:10px; color:#ccc; font-size:12px;">Memuat kategori...</div>
@@ -1508,11 +1508,23 @@
         function renderCategoryUI() {
             const container = document.getElementById('category-checkbox-group');
             container.innerHTML = '';
-            const userCats = Array.isArray(currentUser?.kategori_utama) ? currentUser.kategori_utama : [];
+            
+            // Mengubah tipe data dari array ke string untuk kategori tunggal
+            // Namun, untuk kompatibilitas ke belakang dengan data lama, kita cek jika array, ambil elemen pertama
+            let userCat = "";
+            if (currentUser && currentUser.kategori_utama) {
+                if (Array.isArray(currentUser.kategori_utama) && currentUser.kategori_utama.length > 0) {
+                    userCat = currentUser.kategori_utama[0];
+                } else if (typeof currentUser.kategori_utama === 'string') {
+                    userCat = currentUser.kategori_utama;
+                }
+            }
+
             masterCategories.forEach(cat => {
                 const wrapper = document.createElement('label');
                 wrapper.className = 'cat-checkbox-wrapper';
-                wrapper.innerHTML = `<input type="checkbox" value="${cat}" class="cat-checkbox" ${userCats.includes(cat) ? 'checked' : ''} ${!isEditingCategory ? 'disabled' : ''}><span>${cat}</span>`;
+                // Mengubah input type menjadi 'radio' dan memberikan name yang sama
+                wrapper.innerHTML = `<input type="radio" name="kategori_resto" value="${cat}" class="cat-checkbox" ${userCat === cat ? 'checked' : ''} ${!isEditingCategory ? 'disabled' : ''}><span>${cat}</span>`;
                 container.appendChild(wrapper);
             });
             if(isEditingCategory) container.classList.remove('disabled-group');
@@ -1596,7 +1608,15 @@
                     }
                     // ---------------------------------
 
-                    currentUser.kategori_utama = Array.isArray(data.kategori_utama) ? data.kategori_utama : [];
+                    // Menangani data array lama dan mengambil item pertama sebagai string
+                    if (Array.isArray(data.kategori_utama) && data.kategori_utama.length > 0) {
+                         currentUser.kategori_utama = data.kategori_utama[0];
+                    } else if (typeof data.kategori_utama === 'string') {
+                         currentUser.kategori_utama = data.kategori_utama;
+                    } else {
+                         currentUser.kategori_utama = "";
+                    }
+
                     const isOpen = (data.status || 'BUKA') === 'BUKA';
                     document.getElementById('shop-toggle').checked = isOpen;
                     document.getElementById('status-text').innerText = isOpen ? "Toko BUKA" : "Toko TUTUP";
@@ -2028,6 +2048,41 @@
             let val = document.getElementById('inp-shop-wa').value.trim();
             if(!val) return; if(val.startsWith('0')) val = '62' + val.substring(1);
             await updateDoc(doc(db, "vendors", currentUser.id), { no_wa: val }); showToast("WA disimpan!");
+        };
+
+        window.saveShopCategory = async () => {
+            const selectedInput = document.querySelector('input[name="kategori_resto"]:checked');
+            
+            if (!selectedInput) {
+                return showToast("Pilih satu kategori utama!", false);
+            }
+
+            const val = selectedInput.value;
+            
+            const btn = document.getElementById('btn-save-cat');
+            btn.innerHTML = "Menyimpan...";
+            btn.disabled = true;
+
+            try {
+                // Menyimpan sebagai array berisi 1 elemen agar tetap kompatibel dengan database/aplikasi pelanggan jika sebelumnya pakai format array
+                await updateDoc(doc(db, "vendors", currentUser.id), { kategori_utama: [val] });
+                currentUser.kategori_utama = [val]; 
+                localStorage.setItem('vendor_user', JSON.stringify(currentUser));
+                
+                showToast("Kategori utama berhasil disimpan!");
+                
+                // Kembalikan tombol dan nonaktifkan edit
+                isEditingCategory = false;
+                renderCategoryUI();
+                document.getElementById('btn-save-cat').style.display = 'none';
+                document.getElementById('btn-save-cat').innerHTML = "Simpan Kategori";
+                document.getElementById('btn-edit-cat').style.display = 'block';
+
+            } catch (error) {
+                showToast("Gagal menyimpan kategori", false);
+                btn.innerHTML = "Simpan Kategori";
+                btn.disabled = false;
+            }
         };
 
         window.shareWarung = () => {
