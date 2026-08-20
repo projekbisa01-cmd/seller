@@ -613,25 +613,92 @@
                 </div>
             </div>
 
-            <!-- JAM OPERASIONAL -->
+            <!-- JAM OPERASIONAL MINGGUAN -->
             <div class="variant-custom-box" style="background: white; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-bottom: 20px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
                     <label class="form-label" style="font-size:14px; color:var(--dark); display:flex; align-items:center; gap:5px; margin:0;">
-                        <i class="ph-fill ph-clock" style="color:var(--primary);"></i> Jam Operasional
+                        <i class="ph-fill ph-clock" style="color:var(--primary);"></i> Jam Operasional Mingguan
                     </label>
+                    <button onclick="applyToAllDays()" style="background:#FFF3E0; color:#E65100; border:1px solid #FFE0B2; padding:5px 10px; border-radius:8px; font-weight:700; font-size:10px; cursor:pointer;">
+                        <i class="ph-bold ph-copy"></i> Terapkan ke Semua
+                    </button>
                 </div>
-                <div style="font-size:11px; color:#888; margin-bottom:10px;">Atur jam buka dan tutup. Biarkan kosong jika buka 24 jam.</div>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <div style="flex:1;">
-                        <div style="font-size:11px; color:#555; margin-bottom:4px; font-weight:600;">Buka (Contoh: 08:00)</div>
-                        <input type="time" id="inp-jam-buka" class="form-input" style="padding:10px; border-radius:8px;">
+                <div style="font-size:11px; color:#888; margin-bottom:15px;">Atur jam operasional per hari. Centang "Libur" jika tutup penuh seharian.</div>
+                
+                <div id="jadwal-mingguan-container" style="display:flex; flex-direction:column; gap:10px;">
+                    <!-- Senin -->
+                    <div class="jadwal-hari-row" data-hari="senin" style="display:flex; align-items:center; gap:8px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px solid #eee;">
+                        <div style="width: 55px; font-size:12px; font-weight:700; color:var(--dark);">Senin</div>
+                        <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#E65100; cursor:pointer;">
+                            <input type="checkbox" class="cb-libur" id="cb-libur-senin" style="accent-color:var(--primary);"> Libur
+                        </label>
+                        <input type="time" id="jam-buka-senin" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                        <span style="font-size:12px; color:#999;">-</span>
+                        <input type="time" id="jam-tutup-senin" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
                     </div>
-                    <div style="flex:1;">
-                        <div style="font-size:11px; color:#555; margin-bottom:4px; font-weight:600;">Tutup (Contoh: 21:00)</div>
-                        <input type="time" id="inp-jam-tutup" class="form-input" style="padding:10px; border-radius:8px;">
+                    <!-- Selasa -->
+                    <div class="jadwal-hari-row" data-hari="selasa" style="display:flex; align-items:center; gap:8px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px solid #eee;">
+                        <div style="width: 55px; font-size:12px; font-weight:700; color:var(--dark);">Selasa</div>
+                        <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#E65100; cursor:pointer;">
+                            <input type="checkbox" class="cb-libur" id="cb-libur-selasa" style="accent-color:var(--primary);"> Libur
+                        </label>
+                        <input type="time" id="jam-buka-selasa" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                        <span style="font-size:12px; color:#999;">-</span>
+                        <input type="time" id="jam-tutup-selasa" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                    </div>
+                    <!-- Rabu -->
+                    <div class="jadwal-hari-row" data-hari="rabu" style="display:flex; align-items:center; gap:8px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px solid #eee;">
+                        <div style="width: 55px; font-size:12px; font-weight:700; color:var(--dark);">Rabu</div>
+                        <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#E65100; cursor:pointer;">
+                            <input type="checkbox" class="cb-libur" id="cb-libur-rabu" style="accent-color:var(--primary);"> Libur
+                        </label>
+                        <input type="time" id="jam-buka-rabu" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                        <span style="font-size:12px; color:#999;">-</span>
+                        <input type="time" id="jam-tutup-rabu" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                    </div>
+                    <!-- Kamis -->
+                    <div class="jadwal-hari-row" data-hari="kamis" style="display:flex; align-items:center; gap:8px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px solid #eee;">
+                        <div style="width: 55px; font-size:12px; font-weight:700; color:var(--dark);">Kamis</div>
+                        <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#E65100; cursor:pointer;">
+                            <input type="checkbox" class="cb-libur" id="cb-libur-kamis" style="accent-color:var(--primary);"> Libur
+                        </label>
+                        <input type="time" id="jam-buka-kamis" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                        <span style="font-size:12px; color:#999;">-</span>
+                        <input type="time" id="jam-tutup-kamis" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                    </div>
+                    <!-- Jumat -->
+                    <div class="jadwal-hari-row" data-hari="jumat" style="display:flex; align-items:center; gap:8px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px solid #eee;">
+                        <div style="width: 55px; font-size:12px; font-weight:700; color:var(--dark);">Jumat</div>
+                        <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#E65100; cursor:pointer;">
+                            <input type="checkbox" class="cb-libur" id="cb-libur-jumat" style="accent-color:var(--primary);"> Libur
+                        </label>
+                        <input type="time" id="jam-buka-jumat" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                        <span style="font-size:12px; color:#999;">-</span>
+                        <input type="time" id="jam-tutup-jumat" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                    </div>
+                    <!-- Sabtu -->
+                    <div class="jadwal-hari-row" data-hari="sabtu" style="display:flex; align-items:center; gap:8px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px solid #eee;">
+                        <div style="width: 55px; font-size:12px; font-weight:700; color:var(--dark);">Sabtu</div>
+                        <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#E65100; cursor:pointer;">
+                            <input type="checkbox" class="cb-libur" id="cb-libur-sabtu" style="accent-color:var(--primary);"> Libur
+                        </label>
+                        <input type="time" id="jam-buka-sabtu" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                        <span style="font-size:12px; color:#999;">-</span>
+                        <input type="time" id="jam-tutup-sabtu" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                    </div>
+                    <!-- Minggu -->
+                    <div class="jadwal-hari-row" data-hari="minggu" style="display:flex; align-items:center; gap:8px; background:#f9f9f9; padding:10px; border-radius:10px; border:1px solid #eee;">
+                        <div style="width: 55px; font-size:12px; font-weight:700; color:var(--dark);">Minggu</div>
+                        <label style="display:flex; align-items:center; gap:4px; font-size:11px; color:#E65100; cursor:pointer;">
+                            <input type="checkbox" class="cb-libur" id="cb-libur-minggu" style="accent-color:var(--primary);"> Libur
+                        </label>
+                        <input type="time" id="jam-buka-minggu" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
+                        <span style="font-size:12px; color:#999;">-</span>
+                        <input type="time" id="jam-tutup-minggu" class="form-input jam-input" style="flex:1; padding:6px; border-radius:6px; font-size:12px;">
                     </div>
                 </div>
-                <button onclick="saveShopHours()" id="btn-save-hours" class="btn-submit" style="width:100%; padding:10px 15px; font-size:12px; border-radius:8px; margin-top:10px;">Simpan Jam</button>
+
+                <button onclick="saveShopHours()" id="btn-save-hours" class="btn-submit" style="width:100%; padding:10px 15px; font-size:12px; border-radius:8px; margin-top:15px;">Simpan Jadwal Mingguan</button>
             </div>
 
             <!-- NAMA RESTO -->
@@ -1561,6 +1628,101 @@
             }
         };
 
+        // --- LOGIKA JADWAL MINGGUAN (LANGKAH 2) ---
+        function setupJadwalInteractions() {
+            const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+            days.forEach(hari => {
+                const cbLibur = document.getElementById(`cb-libur-${hari}`);
+                const jamBuka = document.getElementById(`jam-buka-${hari}`);
+                const jamTutup = document.getElementById(`jam-tutup-${hari}`);
+                
+                if (cbLibur && jamBuka && jamTutup) {
+                    cbLibur.addEventListener('change', (e) => {
+                        const isLibur = e.target.checked;
+                        jamBuka.disabled = isLibur;
+                        jamTutup.disabled = isLibur;
+                        
+                        if (isLibur) {
+                            jamBuka.style.backgroundColor = "#e0e0e0";
+                            jamTutup.style.backgroundColor = "#e0e0e0";
+                            jamBuka.style.cursor = "not-allowed";
+                            jamTutup.style.cursor = "not-allowed";
+                            // Kosongkan nilai jika ditandai libur (opsional, untuk kebersihan UI)
+                            jamBuka.value = "";
+                            jamTutup.value = "";
+                        } else {
+                            jamBuka.style.backgroundColor = "";
+                            jamTutup.style.backgroundColor = "";
+                            jamBuka.style.cursor = "text";
+                            jamTutup.style.cursor = "text";
+                        }
+                    });
+                }
+            });
+        }
+        // Eksekusi event listener untuk checkbox jadwal
+        setupJadwalInteractions();
+
+        window.applyToAllDays = () => {
+            const bukaSenin = document.getElementById('jam-buka-senin').value;
+            const tutupSenin = document.getElementById('jam-tutup-senin').value;
+            const liburSenin = document.getElementById('cb-libur-senin').checked;
+
+            const days = ['selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+            
+            days.forEach(hari => {
+                const cbLibur = document.getElementById(`cb-libur-${hari}`);
+                const jamBuka = document.getElementById(`jam-buka-${hari}`);
+                const jamTutup = document.getElementById(`jam-tutup-${hari}`);
+                
+                if (cbLibur && jamBuka && jamTutup) {
+                    cbLibur.checked = liburSenin;
+                    jamBuka.value = bukaSenin;
+                    jamTutup.value = tutupSenin;
+                    
+                    // Trigger manual change event agar visual disable (abu-abu) ikut merespon otomatis
+                    cbLibur.dispatchEvent(new Event('change')); 
+                }
+            });
+            showToast("Jadwal hari Senin berhasil disalin ke semua hari!");
+        };
+
+        window.saveShopHours = async () => {
+            const btn = document.getElementById('btn-save-hours');
+            btn.innerHTML = "Menyimpan...";
+            btn.disabled = true;
+
+            const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+            const jadwalMingguan = {};
+
+            // Mengumpulkan data dari form UI untuk setiap hari
+            days.forEach(hari => {
+                const libur = document.getElementById(`cb-libur-${hari}`).checked;
+                const buka = document.getElementById(`jam-buka-${hari}`).value;
+                const tutup = document.getElementById(`jam-tutup-${hari}`).value;
+
+                jadwalMingguan[hari] = {
+                    libur: libur,
+                    buka: libur ? "" : (buka || ""), // Kosongkan jam jika libur
+                    tutup: libur ? "" : (tutup || "")
+                };
+            });
+
+            try {
+                // Update document di Firestore dengan field baru jadwal_mingguan
+                await updateDoc(doc(db, "vendors", currentUser.id), { 
+                    jadwal_mingguan: jadwalMingguan 
+                });
+                showToast("Jadwal Mingguan berhasil disimpan!");
+            } catch (error) {
+                console.error("Error saat menyimpan jadwal:", error);
+                showToast("Gagal menyimpan jadwal!", false);
+            } finally {
+                btn.innerHTML = "Simpan Jadwal Mingguan";
+                btn.disabled = false;
+            }
+        };
+
         // --- DASHBOARD INIT (DIPERBARUI LOGIKA POP-UP BERANTAI) ---
         function initDashboard() {
             document.getElementById('loading-screen').style.display = 'flex';
@@ -1617,6 +1779,41 @@
                          currentUser.kategori_utama = "";
                     }
 
+                    // --- LOAD JADWAL MINGGUAN (LANGKAH 3: TAMPILKAN KE UI) ---
+                    const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+                    if (data.jadwal_mingguan) {
+                        // Memuat dari format data object mingguan baru
+                        days.forEach(hari => {
+                            if (data.jadwal_mingguan[hari]) {
+                                const cbLibur = document.getElementById(`cb-libur-${hari}`);
+                                const inpBuka = document.getElementById(`jam-buka-${hari}`);
+                                const inpTutup = document.getElementById(`jam-tutup-${hari}`);
+                                
+                                if (cbLibur && inpBuka && inpTutup) {
+                                    cbLibur.checked = data.jadwal_mingguan[hari].libur || false;
+                                    inpBuka.value = data.jadwal_mingguan[hari].buka || "";
+                                    inpTutup.value = data.jadwal_mingguan[hari].tutup || "";
+                                    // Trigger event otomatis untuk mengubah warna input jadi abu-abu jika libur
+                                    cbLibur.dispatchEvent(new Event('change'));
+                                }
+                            }
+                        });
+                    } else if (data.jam_buka && data.jam_tutup) {
+                        // Opsi Aman: Fallback ke format data lama jika data.jadwal_mingguan belum ada
+                        days.forEach(hari => {
+                            const cbLibur = document.getElementById(`cb-libur-${hari}`);
+                            const inpBuka = document.getElementById(`jam-buka-${hari}`);
+                            const inpTutup = document.getElementById(`jam-tutup-${hari}`);
+                            
+                            if (cbLibur && inpBuka && inpTutup) {
+                                cbLibur.checked = false; // Default lama selalu buka tiap hari
+                                inpBuka.value = data.jam_buka || "";
+                                inpTutup.value = data.jam_tutup || "";
+                            }
+                        });
+                    }
+                    // ---------------------------------------------------------
+
                     const isOpen = (data.status || 'BUKA') === 'BUKA';
                     document.getElementById('shop-toggle').checked = isOpen;
                     document.getElementById('status-text').innerText = isOpen ? "Toko BUKA" : "Toko TUTUP";
@@ -1637,9 +1834,7 @@
                             homeInfoBadge.classList.add('hidden');
                         }
                     }
-
-                    document.getElementById('inp-jam-buka').value = data.jam_buka || "";
-                    document.getElementById('inp-jam-tutup').value = data.jam_tutup || "";
+                    
                     document.getElementById('inp-shop-name').value = data.nama_warung || currentUser.name;
                     document.getElementById('inp-shop-note').value = data.catatan_toko || "";
                     document.getElementById('inp-shop-wa').value = data.no_wa || "";
@@ -2024,11 +2219,6 @@
             const isOpen = document.getElementById('home-shop-toggle').checked;
             await updateDoc(doc(db, "vendors", currentUser.id), { status: isOpen ? "BUKA" : "TUTUP" });
             showToast("Status Warung diperbarui!");
-        };
-
-        window.saveShopHours = async () => {
-            await updateDoc(doc(db, "vendors", currentUser.id), { jam_buka: document.getElementById('inp-jam-buka').value, jam_tutup: document.getElementById('inp-jam-tutup').value });
-            showToast("Jam disimpan!");
         };
 
         window.saveShopName = async () => {
