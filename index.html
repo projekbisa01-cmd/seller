@@ -1243,10 +1243,10 @@
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault(); 
                 deferredPrompt = e;
-                if (!sessionStorage.getItem('pwa_closed')) {
-                    // Diubah menjadi 500ms (0.5 detik) agar lebih agresif
-                    setTimeout(() => { document.getElementById('pwa-overlay-android').classList.add('show'); }, 500); 
-                }
+                // Popup otomatis dihilangkan agar user bisa klik tombol manual
+                // if (!sessionStorage.getItem('pwa_closed')) {
+                //    setTimeout(() => { document.getElementById('pwa-overlay-android').classList.add('show'); }, 500); 
+                // }
             });
 
             // 4. Trigger / Pemicu Popup Install iOS
@@ -1280,7 +1280,8 @@
             const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
             
             // Cek apakah aplikasi sudah diinstall
-            if (isInStandaloneMode || window.matchMedia('(display-mode: standalone)').matches) {
+            // Logika diperbaiki agar lebih akurat mendeteksi PWA di Android
+            if (isInStandaloneMode || window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
                 return showToast("Aplikasi sudah terpasang di HP Anda!", true);
             }
 
@@ -1292,8 +1293,19 @@
                     // Munculkan popup install otomatis dari browser Android
                     document.getElementById('pwa-overlay-android').classList.add('show');
                 } else {
-                    // Fallback jika tidak ada prompt (Browser versi lama atau tidak mendukung)
-                    showToast("Buka menu browser Anda (titik tiga) lalu pilih 'Tambahkan ke Layar Utama' / 'Install App'", false);
+                    // Fallback jika tidak ada prompt (Browser versi lama atau tidak mendukung, atau prompt sudah pernah di-dismiss)
+                    // Hapus peringatan 'buka menu browser' dan paksakan buka modal android sebagai simulasi atau panduan alternatif
+                    document.getElementById('pwa-overlay-android').classList.add('show');
+                    // Jika memang prompt sama sekali tidak bisa dipanggil lagi dari sistem, 
+                    // ubah teks di modal Android untuk memandu manual
+                    const pwaDesc = document.querySelector('#pwa-overlay-android .pwa-desc');
+                    if (pwaDesc) {
+                         pwaDesc.innerHTML = "Karena keterbatasan browser, silakan klik menu (titik tiga) di pojok kanan atas, lalu pilih <b>'Tambahkan ke Layar Utama' / 'Install App'</b>.";
+                    }
+                    const btnInstall = document.querySelector('#pwa-overlay-android .btn-install-pwa');
+                    if(btnInstall) {
+                         btnInstall.style.display = 'none'; // Sembunyikan tombol install otomatis jika prompt tidak ada
+                    }
                 }
             }
         };
