@@ -283,9 +283,113 @@
             0% { opacity: 0; transform: translateY(10px); }
             100% { opacity: 1; transform: translateY(0); }
         }
+
+        /* --- PWA TUTORIAL ANIMATION STYLES (STEP 1) --- */
+        #pwa-tutorial-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 9999999; /* Z-index tertinggi agar menutupi semuanya */
+            display: none; /* Disembunyikan secara default */
+            flex-direction: column;
+            align-items: flex-end; /* Rata kanan atas untuk menunjuk titik 3 */
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #pwa-tutorial-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .pwa-tutorial-hand {
+            font-size: 50px;
+            color: white;
+            margin-top: 10px;
+            margin-right: 15px; /* Menyesuaikan posisi umum titik 3 di browser Android */
+            animation: bounceHand 1s infinite alternate;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+        @keyframes bounceHand {
+            0% { transform: translateY(0) translateX(0) scale(1); }
+            100% { transform: translateY(-15px) translateX(10px) scale(1.1); }
+        }
+        .pwa-tutorial-box {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 300px;
+            margin-top: 20px;
+            margin-right: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            animation: slideInRight 0.5s ease-out;
+        }
+        .pwa-tutorial-box::before { /* Membuat bentuk segitiga penunjuk ke arah atas */
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 30px;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid white;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .pwa-step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .pwa-step-number {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .pwa-step-text {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.5;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
+
+    <!-- OVERLAY PWA TUTORIAL ANIMASI (LANGKAH 2) -->
+    <div id="pwa-tutorial-overlay">
+        <div class="pwa-tutorial-hand">
+            <i class="ph-fill ph-hand-pointing"></i>
+        </div>
+        <div class="pwa-tutorial-box">
+            <div style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i class="ph-fill ph-info"></i> Panduan Install
+            </div>
+            
+            <div class="pwa-step-item">
+                <div class="pwa-step-number">1</div>
+                <div class="pwa-step-text">Ketuk ikon <b>Titik Tiga</b> (Menu) di pojok kanan atas browser Anda.</div>
+            </div>
+            
+            <div class="pwa-step-item">
+                <div class="pwa-step-number">2</div>
+                <div class="pwa-step-text">Pilih opsi <b>"Tambahkan ke Layar Utama"</b> atau <b>"Install Aplikasi"</b>.</div>
+            </div>
+            
+            <button class="btn-cancel" onclick="document.getElementById('pwa-tutorial-overlay').classList.remove('show')" style="width: 100%; background: #f5f5f5; border-radius: 12px; margin-top: 10px; font-weight: 700; color: #555; padding: 12px; border: none; cursor: pointer; transition: 0.2s;">Saya Mengerti</button>
+        </div>
+    </div>
 
     <!-- KONTEN SPLASH SCREEN -->
     <div id="splash-screen">
@@ -1274,6 +1378,15 @@
             if(type === 'ios') document.getElementById('pwa-overlay-ios').classList.remove('show');
         };
 
+        // FUNGSI BARU (LANGKAH 4): MENUTUP TUTORIAL PWA
+        window.closeTutorialPWA = (event) => {
+            // Jika dipanggil dari tombol 'Saya Mengerti', event mungkin kosong.
+            // Jika dipanggil dari klik latar gelap, pastikan yang diklik benar-benar overlay-nya
+            if (!event || event.target.id === 'pwa-tutorial-overlay') {
+                document.getElementById('pwa-tutorial-overlay').classList.remove('show');
+            }
+        };
+
         // FUNGSI BARU: TRIGGER MANUAL INSTALL PWA
         window.triggerManualPWA = () => {
             const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
@@ -1293,19 +1406,9 @@
                     // Munculkan popup install otomatis dari browser Android
                     document.getElementById('pwa-overlay-android').classList.add('show');
                 } else {
-                    // Fallback jika tidak ada prompt (Browser versi lama atau tidak mendukung, atau prompt sudah pernah di-dismiss)
-                    // Hapus peringatan 'buka menu browser' dan paksakan buka modal android sebagai simulasi atau panduan alternatif
-                    document.getElementById('pwa-overlay-android').classList.add('show');
-                    // Jika memang prompt sama sekali tidak bisa dipanggil lagi dari sistem, 
-                    // ubah teks di modal Android untuk memandu manual
-                    const pwaDesc = document.querySelector('#pwa-overlay-android .pwa-desc');
-                    if (pwaDesc) {
-                         pwaDesc.innerHTML = "Karena keterbatasan browser, silakan klik menu (titik tiga) di pojok kanan atas, lalu pilih <b>'Tambahkan ke Layar Utama' / 'Install App'</b>.";
-                    }
-                    const btnInstall = document.querySelector('#pwa-overlay-android .btn-install-pwa');
-                    if(btnInstall) {
-                         btnInstall.style.display = 'none'; // Sembunyikan tombol install otomatis jika prompt tidak ada
-                    }
+                    // Fallback jika tidak ada prompt (Browser versi lama atau tidak mendukung, atau prompt sudah di-dismiss)
+                    // Panggil animasi tutorial yang baru dibuat di Langkah 2
+                    document.getElementById('pwa-tutorial-overlay').classList.add('show');
                 }
             }
         };
