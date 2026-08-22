@@ -1390,13 +1390,15 @@
         // FUNGSI BARU: TRIGGER MANUAL INSTALL PWA
         window.triggerManualPWA = () => {
             const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
             
-            // Cek apakah aplikasi sudah diinstall
-            // Logika diperbaiki agar lebih akurat mendeteksi PWA di Android
+            // Pengecekan apakah aplikasi sudah terinstal (Standalone mode) SAYA NONAKTIFKAN
+            // Agar tutorial atau pop-up install selalu merespon saat tombol ditekan
+            /*
+            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
             if (isInStandaloneMode || window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
                 return showToast("Aplikasi sudah terpasang di HP Anda!", true);
             }
+            */
 
             if (isIos) {
                 // Tampilkan panduan install untuk iPhone
@@ -1406,8 +1408,7 @@
                     // Munculkan popup install otomatis dari browser Android
                     document.getElementById('pwa-overlay-android').classList.add('show');
                 } else {
-                    // Fallback jika tidak ada prompt (Browser versi lama atau tidak mendukung, atau prompt sudah di-dismiss)
-                    // Panggil animasi tutorial yang baru dibuat di Langkah 2
+                    // Fallback: Panggil animasi tutorial yang baru dibuat di Langkah 2
                     document.getElementById('pwa-tutorial-overlay').classList.add('show');
                 }
             }
