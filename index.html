@@ -559,9 +559,16 @@
                         <div class="shop-id" id="display-id" style="margin-bottom:0;">ID: ...</div>
                     </div>
                 </div>
-                <!-- Tombol Keluar Akun di Kanan Atas -->
-                <div onclick="logout()" style="width:36px; height:36px; background:#ffebee; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--danger); cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" title="Keluar">
-                    <i class="ph-bold ph-sign-out" style="font-size: 20px;"></i>
+                
+                <div style="display:flex; align-items:center; gap: 8px;">
+                    <!-- Tombol Ganti Toko -->
+                    <div onclick="bukaModalCabang()" style="padding: 6px 12px; background:#e3f2fd; border-radius: 8px; color:#1976d2; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" title="Ganti Toko">
+                        <i class="ph-bold ph-swap"></i> Ganti
+                    </div>
+                    <!-- Tombol Keluar Akun di Kanan Atas -->
+                    <div onclick="logout()" style="width:36px; height:36px; background:#ffebee; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--danger); cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" title="Keluar">
+                        <i class="ph-bold ph-sign-out" style="font-size: 20px;"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -635,6 +642,12 @@
                     <div class="service-item" onclick="openPromoModal()">
                         <div class="service-icon"><i class="ph-fill ph-ticket" style="color:#E53935;"></i></div>
                         <span>Promo</span>
+                    </div>
+                    
+                    <!-- MENU BARU: TOKO LAINNYA -->
+                    <div class="service-item" onclick="openTokoLainnyaModal()">
+                        <div class="service-icon"><i class="ph-fill ph-buildings" style="color:#9C27B0;"></i></div>
+                        <span>Toko Lainnya</span>
                     </div>
                 </div>
             </div>
@@ -898,6 +911,29 @@
             <div style="height: 40px;"></div>
         </div>
         
+    </div>
+
+    <!-- MODAL PILIH CABANG (TAMPILAN UI) -->
+    <div id="modal-cabang" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 11000; align-items: flex-end;">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin:0;">Pilih Cabang / Toko</h3>
+                <!-- Tombol close menggunakan inline JS sementara agar tidak mengganggu JS utama -->
+                <button style="background:none; border:none; font-size:20px; cursor:pointer; color: #666;" onclick="document.getElementById('modal-cabang').style.display='none'"><i class="ph-bold ph-x"></i></button>
+            </div>
+            
+            <div style="background: #E3F2FD; border: 1px solid #BBDEFB; padding: 12px; border-radius: 10px; margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start;">
+                <i class="ph-fill ph-storefront" style="color: #1976D2; font-size: 18px; margin-top: 2px;"></i>
+                <div style="font-size: 11px; color: #1565C0; line-height: 1.5;">
+                    Pilih cabang warung yang ingin Anda kelola saat ini.
+                </div>
+            </div>
+            
+            <!-- Tempat daftar cabang akan dimuat nantinya -->
+            <div id="cabang-list-container" style="max-height: 50vh; overflow-y: auto; margin-bottom: 10px; display:flex; flex-direction:column; gap:10px;">
+                <div style="text-align:center; padding:20px; color:#999; font-size:12px;">Memuat daftar cabang...</div>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL FORM MENU -->
@@ -1283,6 +1319,69 @@
         </div>
     </div>
 
+    <!-- MODAL EDUKASI TOKO LAINNYA (LANGKAH 2) -->
+    <div id="modal-toko-lainnya" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 12000; align-items: flex-end;">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin:0;">Toko Lainnya</h3>
+                <!-- Penutup menggunakan fungsi JS -->
+                <button style="background:none; border:none; font-size:20px; cursor:pointer; color: #666;" onclick="closeTokoLainnyaModal()"><i class="ph-bold ph-x"></i></button>
+            </div>
+            
+            <div style="background: #F3E5F5; border: 1px solid #E1BEE7; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 12px; align-items: flex-start;">
+                <i class="ph-fill ph-buildings" style="color: #9C27B0; font-size: 24px; margin-top: 2px;"></i>
+                <div style="font-size: 12px; color: #6A1B9A; line-height: 1.5;">
+                    <strong style="color: #4A148C; display: block; margin-bottom: 4px;">Kelola Banyak Warung</strong>
+                    Fitur ini memungkinkan kamu menambah dan mengelola lebih dari 1 warung atau cabang lainnya cukup dalam 1 aplikasi saja.
+                </div>
+            </div>
+            
+            <button class="btn-submit" onclick="bukaGantiTokoDariEdukasi()" style="margin-bottom: 10px; background: white; color: #1976D2; border: 1px solid #1976D2; box-shadow: none;"><i class="ph-bold ph-swap" style="font-size: 18px; margin-right: 5px;"></i> Ganti Toko / Cabang</button>
+            
+            <button class="btn-submit" onclick="openTambahCabangModal()" style="background: var(--primary); display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);"><i class="ph-bold ph-list-plus" style="font-size: 18px;"></i> Form Tambah Cabang Baru</button>
+        </div>
+    </div>
+
+    <!-- MODAL FORM TAMBAH CABANG BARU (MULTI-OUTLET) -->
+    <div id="modal-tambah-cabang" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 12500; align-items: flex-end;">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin:0;">Tambah Cabang</h3>
+                <button style="background:none; border:none; font-size:20px; cursor:pointer; color: #666;" onclick="closeTambahCabangModal()"><i class="ph-bold ph-x"></i></button>
+            </div>
+            
+            <div style="background: #E8F5E9; border: 1px solid #C8E6C9; padding: 12px; border-radius: 10px; margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start;">
+                <i class="ph-fill ph-storefront" style="color: #4CAF50; font-size: 18px; margin-top: 2px;"></i>
+                <div style="font-size: 11px; color: #2E7D32; line-height: 1.5;">
+                    Pengajuan cabang baru akan dihubungkan dengan <b>Email akun Anda saat ini</b> agar bisa dikelola dalam satu aplikasi.
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Nama Lengkap Pemilik</label>
+                <input type="text" id="cabang-pemilik" class="form-input" placeholder="Memuat data..." readonly style="background: #f5f5f5; color: #888; font-weight: 600;">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nomor WhatsApp Aktif</label>
+                <input type="number" id="cabang-wa" class="form-input" placeholder="Memuat data..." readonly style="background: #f5f5f5; color: #888; font-weight: 600;">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nama Warung / Cabang Baru</label>
+                <input type="text" id="cabang-nama" class="form-input" placeholder="Contoh: Warung Nasi Barokah (Cabang 2)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Alamat Lengkap Cabang</label>
+                <textarea id="cabang-alamat" class="form-textarea" placeholder="Detail alamat jalan, RT/RW, dan patokan..." style="min-height: 80px;"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Jelaskan produk yang dijual di cabang ini</label>
+                <textarea id="cabang-produk" class="form-textarea" placeholder="Contoh: Ayam goreng, es teh, dll..." style="min-height: 60px;"></textarea>
+            </div>
+            
+            <button class="btn-submit" id="btn-submit-cabang" onclick="submitCabangBaru()" style="margin-top: 10px;">Kirim Pengajuan Cabang</button>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1450,15 +1549,63 @@
                 const querySnapshot = await getDocs(q);
                 
                 if (!querySnapshot.empty) {
-                    const docSnap = querySnapshot.docs[0];
-                    currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
-                    localStorage.setItem('vendor_user', JSON.stringify(currentUser));
-                    initDashboard();
+                    // CEK LOGIKA MULTI-CABANG
+                    if (querySnapshot.size === 1) {
+                        // KONDISI 1: HANYA ADA 1 CABANG (Langsung Masuk Dashboard)
+                        const docSnap = querySnapshot.docs[0];
+                        currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
+                        
+                        // Simpan memori cabang (berisi 1)
+                        window.userBranches = [{ id: docSnap.id, name: docSnap.data().nama_warung, data: docSnap.data() }];
+                        
+                        localStorage.setItem('vendor_user', JSON.stringify(currentUser));
+                        initDashboard();
+                    } else {
+                        // KONDISI 2: PUNYA BANYAK CABANG (Tampilkan Modal Pilihan)
+                        window.userBranches = [];
+                        let htmlList = "";
+                        
+                        querySnapshot.forEach((docSnap) => {
+                            const data = docSnap.data();
+                            const shopId = docSnap.id;
+                            const shopName = data.nama_warung || "Toko Tanpa Nama";
+                            const shopAddress = data.alamat || "Alamat belum diatur";
+                            
+                            // Simpan ke array global untuk fitur Ganti Toko nanti
+                            window.userBranches.push({ id: shopId, name: shopName, data: data });
+                            
+                            // Render UI masing-masing cabang ke dalam list modal
+                            htmlList += `
+                            <div onclick="pilihCabang('${shopId}', '${shopName.replace(/'/g, "\\'")}')" style="background: white; border: 1px solid #eee; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; margin-bottom: 8px;">
+                                <div style="width: 40px; height: 40px; background: #E3F2FD; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #1976D2; flex-shrink: 0;">
+                                    <i class="ph-fill ph-storefront" style="font-size: 20px;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 800; font-size: 14px; color: var(--dark);">${shopName}</div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${shopAddress}</div>
+                                </div>
+                                <i class="ph-bold ph-caret-right" style="color: #ccc;"></i>
+                            </div>`;
+                        });
+                        
+                        // Masukkan list HTML ke dalam kontainer modal cabang
+                        document.getElementById('cabang-list-container').innerHTML = htmlList;
+                        
+                        // Sembunyikan halaman login dan Tampilkan Modal Cabang
+                        document.getElementById('login-page').style.display = 'none';
+                        document.getElementById('dashboard').style.display = 'block'; 
+                        document.getElementById('modal-cabang').style.display = 'flex';
+                        
+                        // Kembalikan status tombol login (karena tidak masuk ke dashboard langsung)
+                        btn.innerHTML = "Masuk ke Dashboard"; 
+                        btn.disabled = false;
+                    }
                 } else {
                     // Fallback jika id dokumen adalah alamat email itu sendiri
                     const docSnap = await getDoc(doc(db, "vendors", emailInput));
                     if (docSnap.exists()) {
                         currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
+                        window.userBranches = [{ id: docSnap.id, name: docSnap.data().nama_warung, data: docSnap.data() }];
                         localStorage.setItem('vendor_user', JSON.stringify(currentUser));
                         initDashboard();
                     } else {
@@ -1487,11 +1634,98 @@
                 try {
                     await signOut(auth); // Putuskan sesi dari Firebase Auth
                     localStorage.removeItem('vendor_user'); 
+                    window.userBranches = []; // Membersihkan memori daftar cabang di sesi secara tuntas
                     location.reload(); 
                 } catch(e) {
                     showToast("Gagal keluar dari sesi.", false);
                 }
             }
+        };
+
+        window.bukaModalCabang = async () => {
+            const modal = document.getElementById('modal-cabang');
+            const listContainer = document.getElementById('cabang-list-container');
+            
+            // 1. Tampilkan modal dan setel UI ke status loading
+            modal.style.display = 'flex';
+            listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#999; font-size:12px;">Memuat daftar cabang...</div>';
+
+            try {
+                // 2. Ambil email pengguna yang sedang login dari sistem auth Firebase
+                const userEmail = auth.currentUser ? auth.currentUser.email : null;
+                
+                if (!userEmail) {
+                    listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:var(--danger); font-size:12px;">Sesi tidak valid, silakan muat ulang halaman.</div>';
+                    return;
+                }
+
+                // 3. Tarik data cabang terbaru dari database berdasarkan email
+                const q = query(collection(db, "vendors"), where("email", "==", userEmail));
+                const querySnapshot = await getDocs(q);
+                
+                window.userBranches = [];
+                let htmlList = "";
+                
+                // 4. Proses render hasil pencarian ke dalam list HTML
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const shopId = docSnap.id;
+                    const shopName = data.nama_warung || "Toko Tanpa Nama";
+                    const shopAddress = data.alamat || "Alamat belum diatur";
+                    
+                    // Simpan ke memori global
+                    window.userBranches.push({ id: shopId, name: shopName, data: data });
+                    
+                    // Cek apakah ini toko yang sedang aktif dibuka
+                    const isCurrentStore = (currentUser && currentUser.id === shopId);
+                    const bgStyle = isCurrentStore ? 'background: #FFF3E0; border: 1px solid #FFE0B2;' : 'background: white; border: 1px solid #eee;';
+                    const indicator = isCurrentStore ? '<div style="font-size:10px; color:var(--primary); font-weight:800; margin-top:4px;"><i class="ph-fill ph-check-circle"></i> Sedang Aktif</div>' : '';
+
+                    htmlList += `
+                    <div onclick="pilihCabang('${shopId}', '${shopName.replace(/'/g, "\\'")}')" style="${bgStyle} padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; margin-bottom: 8px;">
+                        <div style="width: 40px; height: 40px; background: #E3F2FD; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #1976D2; flex-shrink: 0;">
+                            <i class="ph-fill ph-storefront" style="font-size: 20px;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 800; font-size: 14px; color: var(--dark);">${shopName}</div>
+                            <div style="font-size: 11px; color: #666; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${shopAddress}</div>
+                            ${indicator}
+                        </div>
+                        ${isCurrentStore ? '' : '<i class="ph-bold ph-caret-right" style="color: #ccc;"></i>'}
+                    </div>`;
+                });
+                
+                // Masukkan HTML ke dalam Modal
+                listContainer.innerHTML = htmlList;
+                
+            } catch (error) {
+                console.error("Gagal mengambil cabang:", error);
+                listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:var(--danger); font-size:12px;">Terjadi kesalahan saat memuat cabang.</div>';
+            }
+        };
+
+        window.pilihCabang = (id, nama_warung) => {
+            // 1. Timpa variabel global currentUser dengan cabang yang dipilih
+            currentUser = { id: id, name: nama_warung };
+            
+            // 2. Simpan ke localStorage agar tidak hilang saat reload halaman
+            localStorage.setItem('vendor_user', JSON.stringify(currentUser));
+            
+            // 3. Tutup Modal Cabang
+            document.getElementById('modal-cabang').style.display = 'none';
+            
+            // 4. Pastikan halaman login disembunyikan dan dashboard aktif (jika dipanggil dari proses login awal)
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            
+            // 5. Reset filter menu kembali ke 'Semua' saat ganti toko (opsional untuk mencegah bug UI)
+            currentMenuFilter = 'Semua';
+            
+            // 6. Panggil ulang initDashboard() untuk menarik data dari Firebase untuk cabang yang baru dipilih
+            initDashboard();
+            
+            // Beri notifikasi ke pengguna
+            showToast("Beralih ke toko: " + nama_warung);
         };
 
         window.switchTab = (tab) => {
@@ -2696,6 +2930,105 @@
             const waUrl = `https://wa.me/62882008667068?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
             closeTagihanModal();
+        };
+
+        // --- FUNGSI TOKO LAINNYA / MULTI-OUTLET ---
+        window.openTokoLainnyaModal = () => {
+            document.getElementById('modal-toko-lainnya').style.display = 'flex';
+        };
+
+        window.closeTokoLainnyaModal = () => {
+            document.getElementById('modal-toko-lainnya').style.display = 'none';
+        };
+
+        window.bukaGantiTokoDariEdukasi = () => {
+            // Tutup modal edukasi
+            closeTokoLainnyaModal();
+            // Panggil fungsi buka modal daftar cabang yang sudah dibuat sebelumnya
+            bukaModalCabang();
+        };
+
+        window.openTambahCabangModal = async () => {
+            // Tutup modal edukasi
+            closeTokoLainnyaModal();
+            // Buka form tambah cabang
+            document.getElementById('modal-tambah-cabang').style.display = 'flex';
+            
+            // Tarik data nama pemilik dan wa secara otomatis dari database toko saat ini
+            try {
+                const docSnap = await getDoc(doc(db, "vendors", currentUser.id));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('cabang-pemilik').value = data.nama_pemilik || "-";
+                    document.getElementById('cabang-wa').value = data.no_wa || "-";
+                }
+            } catch (e) {
+                console.log("Autofill error:", e);
+            }
+        };
+
+        window.closeTambahCabangModal = () => {
+            document.getElementById('modal-tambah-cabang').style.display = 'none';
+        };
+
+        window.submitCabangBaru = async () => {
+            const namaPemilik = document.getElementById('cabang-pemilik').value;
+            const noWa = document.getElementById('cabang-wa').value;
+            const namaCabang = document.getElementById('cabang-nama').value.trim();
+            const alamat = document.getElementById('cabang-alamat').value.trim();
+            const produk = document.getElementById('cabang-produk').value.trim();
+            
+            // Mengambil email dari sistem autentikasi saat ini
+            const userEmail = auth.currentUser ? auth.currentUser.email : null;
+
+            // Validasi data kosong
+            if (!namaCabang || !alamat || !produk) {
+                return showToast("Harap isi Nama Cabang, Alamat, dan Produk!", false);
+            }
+
+            if (!userEmail) {
+                return showToast("Sesi tidak valid, silakan muat ulang aplikasi.", false);
+            }
+
+            const btn = document.getElementById('btn-submit-cabang');
+            btn.innerHTML = "Mengirim Pengajuan...";
+            btn.disabled = true;
+
+            try {
+                // Menyimpan ke koleksi pengajuan_mitra dengan penanda khusus
+                await addDoc(collection(db, "pengajuan_mitra"), {
+                    nama_pemilik: namaPemilik !== "-" ? namaPemilik : "",
+                    no_wa: noWa !== "-" ? noWa : "",
+                    nama_warung: namaCabang,
+                    alamat: alamat,
+                    deskripsi_produk: produk,
+                    email_terdaftar: userEmail, // Penanda rahasia untuk Admin
+                    tipe_pengajuan: "Cabang Baru",
+                    tanggal_pengajuan: new Date().toISOString(),
+                    status: "Menunggu Tinjauan"
+                });
+
+                showToast("Pengajuan Cabang Berhasil Dikirim!");
+                
+                // Reset form isian manual saja (Nama, WA dibiarkan karena otomatis)
+                document.getElementById('cabang-nama').value = '';
+                document.getElementById('cabang-alamat').value = '';
+                document.getElementById('cabang-produk').value = '';
+                
+                closeTambahCabangModal();
+
+                // Buka WA untuk konfirmasi ke Admin
+                const text = `Halo Admin Projekgo, saya sudah mengajukan pembuatan *Cabang Baru* bernama *${namaCabang}* dari aplikasi mitra. Mohon segera ditinjau dan disetujui ya!`;
+                const waUrl = `https://wa.me/62882008667068?text=${encodeURIComponent(text)}`;
+                window.open(waUrl, '_blank');
+
+            } catch (error) {
+                console.error("Error submit cabang:", error);
+                showToast("Terjadi kesalahan, gagal mengirim pengajuan.", false);
+            } finally {
+                btn.innerHTML = "Kirim Pengajuan Cabang";
+                btn.disabled = false;
+            }
         };
 
         window.openRegisterModal = () => {
