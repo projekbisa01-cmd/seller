@@ -118,6 +118,43 @@
         .content-section.active { display: block; }
 
         /* MENU ITEM */
+        /* --- FORM GRUP VARIAN (dibuat lebih mudah dimengerti) --- */
+        .vg-help { background:#f0f9ff; border:1px solid #bae6fd; color:#075985; border-radius:10px; padding:10px 12px; font-size:11.5px; line-height:1.65; margin-bottom:10px; }
+        .vg-help b { color:#0c4a6e; }
+        .vg-tpl-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+        .vg-tpl { background:#fff; border:1px solid #ffcc80; color:#e65100; border-radius:20px; padding:6px 12px; font-size:11px; font-weight:800; cursor:pointer; }
+        .vg-tpl:active { background:#fff3e0; }
+        .varian-grup-box { background:#fff; border:1px solid #ddd; border-radius:12px; padding:12px; position:relative; }
+        .vg-label { font-size:11px; font-weight:800; color:#475569; display:block; margin-bottom:4px; }
+        .vg-sub { font-size:10px; color:#94a3b8; font-weight:600; margin-top:3px; line-height:1.5; }
+        .vg-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+        .vg-badge { background:var(--primary); color:#fff; font-size:10px; font-weight:800; padding:3px 9px; border-radius:20px; }
+        .vg-kolom { display:flex; gap:6px; align-items:center; font-size:10px; font-weight:800; color:#94a3b8; margin:10px 0 5px 0; }
+        .vg-kolom .k1 { flex:2; }
+        .vg-kolom .k2 { flex:1.1; }
+        .vg-kolom .k3 { width:26px; }
+        .vg-harga-wrap { flex:1.1; position:relative; }
+        .vg-harga-wrap .rp { position:absolute; left:7px; top:50%; transform:translateY(-50%); font-size:10px; font-weight:800; color:#94a3b8; pointer-events:none; }
+        .vg-harga-wrap input { padding-left:26px !important; }
+        .vg-preview { background:#fafafa; border:1px dashed #d4d4d8; border-radius:10px; padding:10px; margin-top:12px; }
+        .vg-preview-judul { font-size:9.5px; font-weight:800; color:#a1a1aa; letter-spacing:0.5px; margin-bottom:7px; }
+        .vg-preview-grup { font-size:12.5px; font-weight:800; color:var(--dark); }
+        .vg-preview-wajib { font-size:9px; font-weight:800; padding:2px 6px; border-radius:5px; margin-left:6px; }
+        .vg-preview-opsi { display:flex; align-items:center; gap:7px; font-size:12px; color:#3f3f46; padding:4px 0; }
+        .vg-preview-harga { margin-left:auto; font-size:11px; font-weight:800; color:var(--primary); }
+        /* --- PANEL ATUR URUTAN (DRAG & DROP) --- */
+        .sort-row { background:#fff; border:1px solid #eee; border-radius:12px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
+        .sort-row.sort-dragging { box-shadow:0 10px 24px rgba(0,0,0,0.18); border-color:#0284c7; position:relative; z-index:50; }
+        .sort-row-head { display:flex; align-items:center; gap:10px; padding:10px; }
+        .sort-handle { touch-action:none; -webkit-user-select:none; user-select:none; cursor:grab; color:#9aa0a6; font-size:22px; padding:2px 4px; flex-shrink:0; }
+        .sort-num { width:24px; height:24px; border-radius:7px; background:#f1f5f9; color:#475569; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .sort-name { flex:1; font-size:13px; font-weight:700; color:var(--dark); word-break:break-word; line-height:1.3; }
+        .sort-meta { font-size:10px; font-weight:600; color:#94a3b8; margin-top:2px; }
+        .sort-thumb { width:34px; height:34px; border-radius:8px; object-fit:cover; flex-shrink:0; background:#f1f5f9; }
+        .sort-caret { background:none; border:none; color:#64748b; font-size:18px; padding:4px; cursor:pointer; flex-shrink:0; }
+        .sort-sub { padding:0 10px 10px 34px; }
+        .sort-sub .sort-row { background:#fafafa; }
+        body.sort-dragging-active { -webkit-user-select:none; user-select:none; }
         .menu-category-header { font-size: 16px; font-weight: 800; color: var(--dark); margin: 25px 0 10px 0; padding-bottom: 8px; border-bottom: 2px solid #eee; display: flex; justify-content: space-between; align-items: center; text-transform: capitalize; }
         .menu-category-count { font-size: 12px; color: #888; font-weight: 600; background: #eee; padding: 2px 8px; border-radius: 10px; }
 
@@ -727,6 +764,16 @@
                 <span style="font-size:12px; color:var(--gray);" id="menu-count">0 Menu</span>
             </div>
 
+            <!-- TOMBOL ATUR URUTAN TAMPILAN -->
+            <div style="margin-bottom:12px;">
+                <button id="btn-sort-mode" type="button" onclick="toggleSortMode()" style="width:100%; background:#fff; border:1.5px dashed #0284c7; color:#0284c7; border-radius:12px; padding:10px; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+                    <i class="ph-bold ph-arrows-down-up"></i> Atur Urutan Tampilan di Aplikasi Pelanggan
+                </button>
+            </div>
+
+            <!-- PANEL ATUR URUTAN (DRAG & DROP) -->
+            <div id="sort-panel" style="display:none;"></div>
+
             <!-- WADAH FILTER KATEGORI -->
             <div id="menu-filter-wrapper"></div>
 
@@ -1019,11 +1066,27 @@
                 <label class="form-label" style="color:var(--primary); display:flex; align-items:center; gap:5px;">
                     <i class="ph-fill ph-list-checks"></i> Grup Varian & Pilihan (Opsional)
                 </label>
-                <div style="font-size:11px; color:#666; margin-bottom:10px;">Atur pilihan seperti "Tingkat Kepedasan", "Pilihan Nasi", dll.</div>
+
+                <div class="vg-help">
+                    <b>Grup</b> = pertanyaan yang muncul ke pelanggan.<br>
+                    <b>Pilihan</b> = jawaban yang bisa dipilih pelanggan.<br>
+                    <b>Tambahan harga</b> = diisi <u>hanya</u> kalau pilihan itu menambah harga. Kosongkan atau isi 0 kalau tidak menambah.<br><br>
+                    Contoh: grup <b>Level Pedas</b> → pilihan <i>Tidak Pedas (0)</i>, <i>Sedang (0)</i>, <i>Pedas Banget (0)</i>.<br>
+                    Contoh lain: grup <b>Topping</b> → pilihan <i>Telur (5000)</i>, <i>Keju (5000)</i>.
+                </div>
+
+                <div style="font-size:10.5px; font-weight:800; color:#94a3b8; margin-bottom:6px;">CONTOH CEPAT — ketuk untuk langsung terisi:</div>
+                <div class="vg-tpl-wrap">
+                    <button type="button" class="vg-tpl" onclick="pakaiTemplateVarian('pedas')">🌶️ Level Pedas</button>
+                    <button type="button" class="vg-tpl" onclick="pakaiTemplateVarian('ukuran')">🍽️ Ukuran Porsi</button>
+                    <button type="button" class="vg-tpl" onclick="pakaiTemplateVarian('topping')">🍳 Topping Tambahan</button>
+                    <button type="button" class="vg-tpl" onclick="pakaiTemplateVarian('suhu')">🧊 Dingin / Panas</button>
+                    <button type="button" class="vg-tpl" onclick="pakaiTemplateVarian('manis')">🍯 Level Manis</button>
+                </div>
                 
                 <div id="varian-grup-container" style="display:flex; flex-direction:column; gap:12px;"></div>
                 
-                <button type="button" class="btn-reply" onclick="addGroupVarian()" style="margin-top:10px; width:100%; border:1px dashed var(--primary); background:white;">+ Tambah Grup Varian</button>
+                <button type="button" class="btn-reply" onclick="addGroupVarian()" style="margin-top:10px; width:100%; border:1px dashed var(--primary); background:white;">+ Tambah Grup Varian Kosong</button>
             </div>
 
             <button class="btn-submit" onclick="saveMenu()" style="margin-top: 20px;">Simpan Menu</button>
@@ -1421,7 +1484,7 @@
     <!-- JAVASCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDoc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDoc, getDocs, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
@@ -1469,6 +1532,13 @@
         // VARIABEL GLOBAL UNTUK FILTER MENU
         let globalMenuGroups = {};
         let currentMenuFilter = 'Semua';
+
+        // VARIABEL GLOBAL UNTUK URUTAN TAMPILAN CUSTOM
+        let vendorKategoriOrder = [];   // urutan etalase pilihan mitra (dari dokumen vendor)
+        let isSortMode = false;         // sedang membuka panel "Atur Urutan"?
+        let sortDraftKategori = [];     // draft urutan etalase sebelum disimpan
+        let sortDraftMenu = {};         // draft urutan menu per etalase sebelum disimpan
+        let sortExpanded = null;        // etalase yang sedang dibuka di panel urutan
 
         // --- SISTEM PWA (FILE EKSTERNAL) ---
         let deferredPrompt;
@@ -1972,10 +2042,18 @@
         // --- DYNAMIC CATEGORY LOGIC ---
         function loadMasterCategories() {
             onSnapshot(collection(db, "kategori_utama"), (snap) => {
+                // Daftar kategori sekarang dikelola admin lewat halaman Kategori di ADPRO.
+                // Kalau koleksinya terisi, isinya menggantikan daftar bawaan sepenuhnya —
+                // kalau tidak, kategori yang sudah dihapus admin akan tetap muncul di sini.
                 if (!snap.empty) {
-                    const fetchedCats = [];
-                    snap.forEach(d => fetchedCats.push(d.data().nama || d.id));
-                    masterCategories = [...new Set([...masterCategories, ...fetchedCats])];
+                    const fetched = [];
+                    snap.forEach(d => {
+                        const data = d.data() || {};
+                        const nama = String(data.nama || data.name || '').trim();
+                        if (nama) fetched.push({ nama: nama, urutan: typeof data.urutan === 'number' ? data.urutan : 999999 });
+                    });
+                    fetched.sort((a, b) => (a.urutan - b.urutan) || a.nama.localeCompare(b.nama, 'id'));
+                    if (fetched.length) masterCategories = [...new Set(fetched.map(f => f.nama))];
                 }
                 renderCategoryUI();
             });
@@ -1996,11 +2074,16 @@
                 }
             }
 
-            masterCategories.forEach(cat => {
+            // Kategori yang sedang dipakai tapi sudah tidak ada di daftar admin tetap
+            // ditampilkan, supaya mitra bisa melihat isian lamanya dan menggantinya.
+            const daftarTampil = [...masterCategories];
+            if (userCat && !daftarTampil.includes(userCat)) daftarTampil.push(userCat);
+
+            daftarTampil.forEach(cat => {
                 const wrapper = document.createElement('label');
                 wrapper.className = 'cat-checkbox-wrapper';
-                // Mengubah input type menjadi 'radio' dan memberikan name yang sama
-                wrapper.innerHTML = `<input type="radio" name="kategori_resto" value="${cat}" class="cat-checkbox" ${userCat === cat ? 'checked' : ''} ${!isEditingCategory ? 'disabled' : ''}><span>${cat}</span>`;
+                // Nama kategori berasal dari database, jadi tetap di-esc() sebelum masuk HTML
+                wrapper.innerHTML = `<input type="radio" name="kategori_resto" value="${esc(cat)}" class="cat-checkbox" ${userCat === cat ? 'checked' : ''} ${!isEditingCategory ? 'disabled' : ''}><span>${esc(cat)}</span>`;
                 container.appendChild(wrapper);
             });
             if(isEditingCategory) container.classList.remove('disabled-group');
@@ -2157,6 +2240,12 @@
                     }
 
                     currentUser.is_andalan = data.is_andalan === true; 
+
+                    // Urutan etalase pilihan mitra (dipakai di aplikasi pelanggan)
+                    vendorKategoriOrder = Array.isArray(data.urutan_kategori)
+                        ? data.urutan_kategori.filter(x => typeof x === 'string').map(x => x.trim()).filter(Boolean)
+                        : [];
+                    if (!isSortMode && typeof renderMenuUI === 'function' && Object.keys(globalMenuGroups).length) renderMenuUI();
                     
                     const badge = document.getElementById('badge-andalan-header');
                     if (badge) badge.style.display = currentUser.is_andalan ? 'flex' : 'none';
@@ -2280,7 +2369,7 @@
                 snapshot.forEach(docSnap => {
                     const item = docSnap.data();
                     currentProducts[docSnap.id] = item;
-                    const groupKey = item.tipe || 'Lainnya';
+                    const groupKey = kunciEtalaseAman(item.tipe);
                     if(!globalMenuGroups[groupKey]) globalMenuGroups[groupKey] = [];
                     globalMenuGroups[groupKey].push({ id: docSnap.id, ...item });
                 });
@@ -2295,16 +2384,22 @@
             const filterWrapper = document.getElementById('menu-filter-wrapper');
             container.innerHTML = '';
             
-            const categories = Object.keys(globalMenuGroups).sort();
+            // Urutan etalase mengikuti pilihan mitra; yang belum diatur jatuh di belakang (alfabetis)
+            const categories = urutkanKategori(Object.keys(globalMenuGroups));
+            // Urutan menu di dalam tiap etalase mengikuti field "urutan"
+            categories.forEach(cat => { globalMenuGroups[cat] = urutkanMenu(globalMenuGroups[cat]); });
             
             if(currentMenuFilter !== 'Semua' && !categories.includes(currentMenuFilter)) {
                 currentMenuFilter = 'Semua';
             }
 
+            // CATATAN KEAMANAN: nama etalase diketik bebas oleh mitra, jadi tidak boleh
+            // masuk mentah ke atribut onclick. Dipanggil lewat nomor indeks + esc() untuk teksnya.
+            window.__menuFilterKeys = categories;
             let filterHTML = `<div class="filter-container">
-                <div class="filter-pill ${currentMenuFilter === 'Semua' ? 'active' : ''}" onclick="setMenuFilter('Semua')">Semua</div>`;
-            categories.forEach(cat => {
-                filterHTML += `<div class="filter-pill ${currentMenuFilter === cat ? 'active' : ''}" onclick="setMenuFilter('${cat}')">${cat}</div>`;
+                <div class="filter-pill ${currentMenuFilter === 'Semua' ? 'active' : ''}" onclick="setMenuFilter(-1)">Semua</div>`;
+            categories.forEach((cat, idx) => {
+                filterHTML += `<div class="filter-pill ${currentMenuFilter === cat ? 'active' : ''}" onclick="setMenuFilter(${idx})">${esc(cat)}</div>`;
             });
             filterHTML += `</div>`;
             if(filterWrapper) filterWrapper.innerHTML = filterHTML;
@@ -2312,7 +2407,7 @@
             categories.forEach(cat => {
                 if (currentMenuFilter !== 'Semua' && currentMenuFilter !== cat) return;
                 
-                container.innerHTML += `<div class="menu-category-header"><span>${cat}</span><span class="menu-category-count">${globalMenuGroups[cat].length}</span></div>`;
+                container.innerHTML += `<div class="menu-category-header"><span>${esc(cat)}</span><span class="menu-category-count">${globalMenuGroups[cat].length}</span></div>`;
                 globalMenuGroups[cat].forEach(item => {
                     const isAvailable = !item.is_sold_out;
                     const imgStyle = isAvailable ? '' : 'filter: grayscale(100%); opacity: 0.6;';
@@ -2353,10 +2448,384 @@
             });
         }
 
-        window.setMenuFilter = (cat) => {
-            currentMenuFilter = cat;
+        window.setMenuFilter = (idx) => {
+            // idx -1 = "Semua". Nama etalase diambil dari array, tidak dari string di HTML.
+            const keys = window.__menuFilterKeys || [];
+            currentMenuFilter = (idx === -1 || !keys[idx]) ? 'Semua' : keys[idx];
             renderMenuUI();
         };
+
+
+        /* ==========================================================
+           URUTAN TAMPILAN CUSTOM (ETALASE + MENU)
+           urutan_kategori -> disimpan di dokumen vendors/{id}
+           urutan          -> disimpan di tiap dokumen products
+           ========================================================== */
+
+        // Nama etalase dipakai sebagai kunci objek, jadi "__proto__" dan kawan-kawannya ditolak
+        // supaya tidak menimpa prototype objek/array dan merusak halaman.
+        const KUNCI_TERLARANG = ['__proto__', 'constructor', 'prototype'];
+        const kunciEtalaseAman = (k) => {
+            const t = String(k == null ? '' : k).trim();
+            if (!t || KUNCI_TERLARANG.includes(t)) return 'Lainnya';
+            return t;
+        };
+
+        const angkaUrutan = (p) => { const n = Number(p && p.urutan); return Number.isFinite(n) ? n : 999999; };
+
+        // Menu yang belum punya nomor urut jatuh di belakang, lalu diurutkan abjad.
+        function urutkanMenu(list) {
+            return [...(list || [])].sort((a, b) => {
+                const ua = angkaUrutan(a), ub = angkaUrutan(b);
+                if (ua !== ub) return ua - ub;
+                return String(a.nama_menu || '').localeCompare(String(b.nama_menu || ''), 'id');
+            });
+        }
+
+        // Etalase yang belum diatur mitra jatuh di belakang, lalu diurutkan abjad.
+        function urutkanKategori(keys) {
+            const pos = (k) => { const i = vendorKategoriOrder.indexOf(k); return i === -1 ? 9999 : i; };
+            return [...(keys || [])].sort((a, b) => {
+                const pa = pos(a), pb = pos(b);
+                if (pa !== pb) return pa - pb;
+                return String(a).localeCompare(String(b), 'id');
+            });
+        }
+
+        function urutanTerakhirDi(tipe) {
+            let max = -1;
+            (globalMenuGroups[tipe] || []).forEach(i => {
+                const n = Number(i.urutan);
+                if (Number.isFinite(n) && n > max) max = n;
+            });
+            return max;
+        }
+
+        // --- MESIN DRAG & DROP (jempol-friendly, jalan di HP maupun mouse) ---
+        function pasangDrag(listEl, saatSelesai) {
+            const barisAktif = () => Array.from(listEl.children).filter(el => el.classList && el.classList.contains('sort-row'));
+            let drag = null, rafId = null;
+
+            const autoScroll = () => {
+                if (!drag) return;
+                const batas = 90, langkah = 9;
+                let delta = 0;
+                if (drag.clientY < batas) delta = -langkah;
+                else if (drag.clientY > window.innerHeight - batas) delta = langkah;
+                if (delta) {
+                    const sebelum = window.scrollY;
+                    window.scrollBy(0, delta);
+                    const geser = window.scrollY - sebelum;
+                    if (geser) { drag.startY -= geser; geserVisual(); cekTukar(); }
+                }
+                rafId = requestAnimationFrame(autoScroll);
+            };
+
+            const geserVisual = () => {
+                if (!drag) return;
+                drag.row.style.transform = `translateY(${drag.clientY - drag.startY}px)`;
+            };
+
+            // Tukar posisi begitu titik tengah baris melewati tetangganya
+            const cekTukar = () => {
+                if (!drag) return;
+                const daftar = barisAktif();
+                const idx = daftar.indexOf(drag.row);
+                if (idx === -1) return;
+                const kotak = drag.row.getBoundingClientRect();
+                const tengah = kotak.top + kotak.height / 2;
+
+                let target = null, sebelum = null;
+                const atas = daftar[idx - 1], bawah = daftar[idx + 1];
+                if (atas) {
+                    const ra = atas.getBoundingClientRect();
+                    if (tengah < ra.top + ra.height / 2) { target = atas; sebelum = true; }
+                }
+                if (!target && bawah) {
+                    const rb = bawah.getBoundingClientRect();
+                    if (tengah > rb.top + rb.height / 2) { target = bawah; sebelum = false; }
+                }
+                if (!target) return;
+
+                const atasSebelum = drag.row.getBoundingClientRect().top;
+                if (sebelum) listEl.insertBefore(drag.row, target);
+                else listEl.insertBefore(drag.row, target.nextSibling);
+                const atasSesudah = drag.row.getBoundingClientRect().top;
+                // Koreksi titik acuan supaya baris tetap menempel di jari setelah DOM pindah
+                drag.startY += (atasSesudah - atasSebelum);
+                geserVisual();
+                perbaruiNomor();
+            };
+
+            const perbaruiNomor = () => {
+                barisAktif().forEach((r, i) => {
+                    const n = r.querySelector(':scope > .sort-row-head > .sort-num');
+                    if (n) n.textContent = String(i + 1);
+                });
+            };
+
+            const gerak = (ev) => {
+                if (!drag) return;
+                ev.preventDefault();
+                drag.clientY = ev.clientY;
+                geserVisual();
+                cekTukar();
+            };
+
+            const selesai = () => {
+                if (!drag) return;
+                if (rafId) cancelAnimationFrame(rafId);
+                rafId = null;
+                drag.row.classList.remove('sort-dragging');
+                drag.row.style.transform = '';
+                drag.row.style.transition = '';
+                document.body.classList.remove('sort-dragging-active');
+                drag = null;
+                window.removeEventListener('pointermove', gerak);
+                window.removeEventListener('pointerup', selesai);
+                window.removeEventListener('pointercancel', selesai);
+                perbaruiNomor();
+                if (typeof saatSelesai === 'function') {
+                    saatSelesai(barisAktif().map(r => r.dataset.kunci || ''));
+                }
+            };
+
+            listEl.addEventListener('pointerdown', (ev) => {
+                const pegangan = ev.target.closest('.sort-handle');
+                if (!pegangan) return;
+                const row = pegangan.closest('.sort-row');
+                if (!row || row.parentElement !== listEl) return;
+                ev.preventDefault();
+                drag = { row, startY: ev.clientY, clientY: ev.clientY };
+                row.classList.add('sort-dragging');
+                row.style.transition = 'none';
+                document.body.classList.add('sort-dragging-active');
+                if (navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
+                window.addEventListener('pointermove', gerak, { passive: false });
+                window.addEventListener('pointerup', selesai);
+                window.addEventListener('pointercancel', selesai);
+                rafId = requestAnimationFrame(autoScroll);
+            });
+        }
+
+        // --- BUKA / TUTUP MODE ATUR URUTAN ---
+        window.toggleSortMode = () => {
+            if (isSortMode) { keluarSortMode(); return; }
+            if (!currentUser || !currentUser.id) return;
+            if (!Object.keys(globalMenuGroups).length) { showToast("Belum ada menu untuk diurutkan.", false); return; }
+
+            isSortMode = true;
+            sortDraftKategori = urutkanKategori(Object.keys(globalMenuGroups));
+            sortDraftMenu = {};
+            sortDraftKategori.forEach(k => { sortDraftMenu[k] = urutkanMenu(globalMenuGroups[k]).map(i => i.id); });
+            sortExpanded = null;
+
+            document.getElementById('menu-filter-wrapper').style.display = 'none';
+            document.getElementById('menu-container').style.display = 'none';
+            document.getElementById('sort-panel').style.display = 'block';
+            const btn = document.getElementById('btn-sort-mode');
+            btn.innerHTML = '<i class="ph-bold ph-x"></i> Tutup Pengaturan Urutan';
+            btn.style.borderStyle = 'solid';
+            renderSortPanel();
+        };
+
+        function keluarSortMode() {
+            isSortMode = false;
+            sortExpanded = null;
+            const panel = document.getElementById('sort-panel');
+            if (panel) { panel.style.display = 'none'; panel.innerHTML = ''; }
+            const fw = document.getElementById('menu-filter-wrapper');
+            const mc = document.getElementById('menu-container');
+            if (fw) fw.style.display = '';
+            if (mc) mc.style.display = '';
+            const btn = document.getElementById('btn-sort-mode');
+            if (btn) {
+                btn.innerHTML = '<i class="ph-bold ph-arrows-down-up"></i> Atur Urutan Tampilan di Aplikasi Pelanggan';
+                btn.style.borderStyle = 'dashed';
+            }
+            renderMenuUI();
+        }
+
+        // --- GAMBAR PANEL URUTAN ---
+        // Semua teks dipasang lewat textContent / createElement, tidak lewat innerHTML,
+        // supaya nama etalase dan nama menu tidak pernah diperlakukan sebagai HTML.
+        function renderSortPanel() {
+            const panel = document.getElementById('sort-panel');
+            if (!panel) return;
+            panel.innerHTML = '';
+
+            const info = document.createElement('div');
+            info.style.cssText = "background:#f0f9ff; border:1px solid #bae6fd; color:#075985; border-radius:12px; padding:12px; font-size:11.5px; line-height:1.6; margin-bottom:14px;";
+            info.innerHTML = '<b>Cara pakai:</b> tahan ikon <i class="ph-bold ph-dots-six-vertical"></i> lalu geser ke atas / bawah. '
+                + 'Urutan etalase menentukan kelompok mana yang tampil paling awal di aplikasi pelanggan. '
+                + 'Ketuk tanda panah untuk membuka isi etalase dan mengurutkan menunya. Jangan lupa <b>Simpan</b>.';
+            panel.appendChild(info);
+
+            const listKategori = document.createElement('div');
+            listKategori.id = 'sort-list-kategori';
+            panel.appendChild(listKategori);
+
+            sortDraftKategori.forEach((kat, idx) => {
+                const row = document.createElement('div');
+                row.className = 'sort-row';
+                row.dataset.kunci = kat;
+
+                const head = document.createElement('div');
+                head.className = 'sort-row-head';
+
+                const handle = document.createElement('i');
+                handle.className = 'ph-bold ph-dots-six-vertical sort-handle';
+                head.appendChild(handle);
+
+                const num = document.createElement('span');
+                num.className = 'sort-num';
+                num.textContent = String(idx + 1);
+                head.appendChild(num);
+
+                const nama = document.createElement('div');
+                nama.className = 'sort-name';
+                nama.textContent = kat;
+                const meta = document.createElement('div');
+                meta.className = 'sort-meta';
+                meta.textContent = (sortDraftMenu[kat] || []).length + ' menu';
+                nama.appendChild(meta);
+                head.appendChild(nama);
+
+                const caret = document.createElement('button');
+                caret.type = 'button';
+                caret.className = 'sort-caret';
+                caret.innerHTML = sortExpanded === kat
+                    ? '<i class="ph-bold ph-caret-up"></i>'
+                    : '<i class="ph-bold ph-caret-down"></i>';
+                caret.addEventListener('click', () => {
+                    sortExpanded = (sortExpanded === kat) ? null : kat;
+                    renderSortPanel();
+                });
+                head.appendChild(caret);
+
+                row.appendChild(head);
+
+                if (sortExpanded === kat) {
+                    const sub = document.createElement('div');
+                    sub.className = 'sort-sub';
+                    const subList = document.createElement('div');
+                    sub.appendChild(subList);
+
+                    (sortDraftMenu[kat] || []).forEach((pid, j) => {
+                        const item = currentProducts[pid];
+                        if (!item) return;
+                        const mRow = document.createElement('div');
+                        mRow.className = 'sort-row';
+                        mRow.dataset.kunci = pid;
+
+                        const mHead = document.createElement('div');
+                        mHead.className = 'sort-row-head';
+
+                        const mHandle = document.createElement('i');
+                        mHandle.className = 'ph-bold ph-dots-six-vertical sort-handle';
+                        mHead.appendChild(mHandle);
+
+                        const mNum = document.createElement('span');
+                        mNum.className = 'sort-num';
+                        mNum.textContent = String(j + 1);
+                        mHead.appendChild(mNum);
+
+                        const img = document.createElement('img');
+                        img.className = 'sort-thumb';
+                        img.loading = 'lazy';
+                        img.src = fixImgUrl(item.foto_url) || 'https://cdn-icons-png.flaticon.com/512/1046/1046857.png';
+                        img.onerror = function () { this.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046857.png'; };
+                        mHead.appendChild(img);
+
+                        const mNama = document.createElement('div');
+                        mNama.className = 'sort-name';
+                        mNama.textContent = item.nama_menu || '(tanpa nama)';
+                        const mMeta = document.createElement('div');
+                        mMeta.className = 'sort-meta';
+                        mMeta.textContent = 'Rp ' + Number(item.harga || 0).toLocaleString('id-ID') + (item.is_sold_out ? ' • HABIS' : '');
+                        mNama.appendChild(mMeta);
+                        mHead.appendChild(mNama);
+
+                        mRow.appendChild(mHead);
+                        subList.appendChild(mRow);
+                    });
+
+                    row.appendChild(sub);
+                    pasangDrag(subList, (urutanBaru) => { sortDraftMenu[kat] = urutanBaru.filter(Boolean); });
+                }
+
+                listKategori.appendChild(row);
+            });
+
+            pasangDrag(listKategori, (urutanBaru) => { sortDraftKategori = urutanBaru.filter(Boolean); });
+
+            const tombolWrap = document.createElement('div');
+            tombolWrap.style.cssText = "display:flex; gap:8px; margin-top:16px;";
+
+            const batal = document.createElement('button');
+            batal.type = 'button';
+            batal.textContent = 'Batal';
+            batal.style.cssText = "flex:1; background:#f1f5f9; color:#475569; border:none; border-radius:12px; padding:13px; font-weight:800; font-size:13px; cursor:pointer;";
+            batal.addEventListener('click', keluarSortMode);
+            tombolWrap.appendChild(batal);
+
+            const simpan = document.createElement('button');
+            simpan.type = 'button';
+            simpan.id = 'btn-simpan-urutan';
+            simpan.textContent = 'Simpan Urutan';
+            simpan.style.cssText = "flex:2; background:#0284c7; color:#fff; border:none; border-radius:12px; padding:13px; font-weight:800; font-size:13px; cursor:pointer;";
+            simpan.addEventListener('click', simpanUrutanTampilan);
+            tombolWrap.appendChild(simpan);
+
+            panel.appendChild(tombolWrap);
+            const spacer = document.createElement('div');
+            spacer.style.height = '90px';
+            panel.appendChild(spacer);
+        }
+
+        // --- SIMPAN KE FIRESTORE ---
+        async function simpanUrutanTampilan() {
+            if (!currentUser || !currentUser.id) return;
+            const btn = document.getElementById('btn-simpan-urutan');
+            if (btn) { btn.disabled = true; btn.textContent = 'Menyimpan...'; }
+
+            try {
+                // Hanya nama etalase yang benar-benar ada di menu, dibatasi panjangnya.
+                const kategoriValid = sortDraftKategori
+                    .filter(k => typeof k === 'string' && k.trim() && k.length <= 60 && globalMenuGroups[k])
+                    .slice(0, 60);
+
+                // Kumpulkan perubahan; menu milik warung lain tidak pernah ikut ditulis.
+                const perubahan = [];
+                kategoriValid.forEach(kat => {
+                    (sortDraftMenu[kat] || []).forEach((pid, i) => {
+                        const item = currentProducts[pid];
+                        if (!item || item.vendor_id !== currentUser.id) return;
+                        if (Number(item.urutan) === i) return; // sudah benar, tidak perlu ditulis ulang
+                        perubahan.push({ id: pid, urutan: i });
+                    });
+                });
+
+                // Batch Firestore maksimal 500 operasi, jadi dipecah per 400.
+                for (let i = 0; i < perubahan.length; i += 400) {
+                    const batch = writeBatch(db);
+                    perubahan.slice(i, i + 400).forEach(u => {
+                        batch.update(doc(db, "products", u.id), { urutan: u.urutan });
+                    });
+                    await batch.commit();
+                }
+
+                await updateDoc(doc(db, "vendors", currentUser.id), { urutan_kategori: kategoriValid });
+                vendorKategoriOrder = kategoriValid;
+
+                showToast("Urutan tampilan disimpan!");
+                keluarSortMode();
+            } catch (e) {
+                console.warn("Gagal menyimpan urutan:", e);
+                showToast("Gagal menyimpan urutan.", false);
+                if (btn) { btn.disabled = false; btn.textContent = 'Simpan Urutan'; }
+            }
+        }
 
         window.formatRibuan = (input) => {
             let val = input.value.replace(/\D/g, '');
@@ -2374,48 +2843,196 @@
         };
 
         // FUNGSI BARU UNTUK MENAMBAH GRUP VARIAN BERKELOMPOK
+        // --- TEMPLATE CONTOH GRUP VARIAN ---
+        const TEMPLATE_VARIAN = {
+            pedas:   { nama: "Level Pedas", tipe: "radio",    pilihan: [{nama:"Tidak Pedas",harga:0},{nama:"Pedas Sedang",harga:0},{nama:"Pedas Banget",harga:0}] },
+            manis:   { nama: "Level Manis", tipe: "radio",    pilihan: [{nama:"Kurang Manis",harga:0},{nama:"Normal",harga:0},{nama:"Manis Banget",harga:0}] },
+            ukuran:  { nama: "Ukuran Porsi", tipe: "radio",   pilihan: [{nama:"Porsi Biasa",harga:0},{nama:"Porsi Jumbo",harga:5000}] },
+            topping: { nama: "Topping Tambahan", tipe: "checkbox", pilihan: [{nama:"Telur",harga:5000},{nama:"Keju",harga:5000},{nama:"Sosis",harga:5000}] },
+            suhu:    { nama: "Disajikan", tipe: "radio",      pilihan: [{nama:"Dingin (Es)",harga:0},{nama:"Panas",harga:0}] }
+        };
+
+        window.pakaiTemplateVarian = (kunci) => {
+            const t = TEMPLATE_VARIAN[kunci];
+            if (!t) return;
+            addGroupVarian(t.nama, t.tipe, t.pilihan.map(p => ({ nama: p.nama, harga: p.harga })));
+            showToast('Contoh "' + t.nama + '" ditambahkan. Silakan diubah sesuai warung Anda.');
+        };
+
+        // --- PRATINJAU: memperlihatkan persis bentuknya di aplikasi pelanggan ---
+        // Ditulis dengan textContent, bukan innerHTML, supaya apa pun yang diketik mitra
+        // tetap diperlakukan sebagai teks biasa.
+        function perbaruiPreviewVarian(box) {
+            const wrap = box.querySelector('.vg-preview');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+
+            const judul = document.createElement('div');
+            judul.className = 'vg-preview-judul';
+            judul.textContent = 'YANG DILIHAT PELANGGAN';
+            wrap.appendChild(judul);
+
+            const nama = box.querySelector('.vg-nama').value.trim();
+            const tipe = box.querySelector('.vg-tipe').value;
+
+            const barisJudul = document.createElement('div');
+            barisJudul.style.cssText = "display:flex; align-items:center; flex-wrap:wrap;";
+            const teksGrup = document.createElement('span');
+            teksGrup.className = 'vg-preview-grup';
+            teksGrup.textContent = nama || '(nama grup belum diisi)';
+            if (!nama) teksGrup.style.color = '#c4c4c8';
+            barisJudul.appendChild(teksGrup);
+
+            const badge = document.createElement('span');
+            badge.className = 'vg-preview-wajib';
+            if (tipe === 'radio') {
+                badge.textContent = 'Wajib pilih 1';
+                badge.style.cssText += 'background:#fee2e2; color:#b91c1c;';
+            } else {
+                badge.textContent = 'Boleh pilih banyak';
+                badge.style.cssText += 'background:#dcfce7; color:#15803d;';
+            }
+            barisJudul.appendChild(badge);
+            wrap.appendChild(barisJudul);
+
+            const items = box.querySelectorAll('.vg-pilihan-item');
+            let adaIsi = false;
+            items.forEach(it => {
+                const nm = it.querySelector('.vp-nama').value.trim();
+                if (!nm) return;
+                adaIsi = true;
+                const hargaRaw = parseInt(it.querySelector('.vp-harga').value, 10);
+                const harga = Number.isFinite(hargaRaw) ? hargaRaw : 0;
+
+                const baris = document.createElement('div');
+                baris.className = 'vg-preview-opsi';
+
+                const kotak = document.createElement('span');
+                kotak.textContent = tipe === 'radio' ? '○' : '☐';
+                kotak.style.cssText = "color:#a1a1aa; font-size:14px;";
+                baris.appendChild(kotak);
+
+                const teks = document.createElement('span');
+                teks.textContent = nm;
+                baris.appendChild(teks);
+
+                const hrg = document.createElement('span');
+                hrg.className = 'vg-preview-harga';
+                hrg.textContent = harga > 0 ? '+Rp ' + harga.toLocaleString('id-ID') : 'Gratis';
+                if (harga <= 0) hrg.style.color = '#a1a1aa';
+                baris.appendChild(hrg);
+
+                wrap.appendChild(baris);
+            });
+
+            if (!adaIsi) {
+                const kosong = document.createElement('div');
+                kosong.style.cssText = "font-size:11px; color:#c4c4c8; padding:6px 0;";
+                kosong.textContent = 'Belum ada pilihan yang diisi.';
+                wrap.appendChild(kosong);
+            }
+        }
+        window.perbaruiPreviewVarian = perbaruiPreviewVarian;
+
         window.addGroupVarian = (namaGrup = "", tipeGrup = "radio", pilihan = []) => {
             const container = document.getElementById('varian-grup-container');
             const groupId = 'grup_' + Date.now() + Math.random().toString(36).substr(2, 5);
-            
+
             const groupDiv = document.createElement('div');
             groupDiv.className = 'varian-grup-box';
-            groupDiv.style.cssText = 'background: white; border: 1px solid #ddd; padding: 10px; border-radius: 8px; position: relative;';
-            
+
+            // Nilai dari database dipasang lewat properti .value di bawah, bukan ditempel
+            // ke dalam atribut HTML, supaya tanda kutip pada nama grup tidak merusak form.
             groupDiv.innerHTML = `
-                <div style="display:flex; gap:8px; margin-bottom:10px; align-items:center;">
-                    <input type="text" class="form-input vg-nama" placeholder="Nama Grup (Cth: Level Pedas)" value="${namaGrup}" style="flex:2; padding:8px; font-size:12px; font-weight:700;">
-                    <select class="form-input vg-tipe" style="flex:1.5; padding:8px; font-size:11px; background:#f5f5f5;">
-                        <option value="radio" ${tipeGrup === 'radio' ? 'selected' : ''}>Pilih 1 (Wajib)</option>
-                        <option value="checkbox" ${tipeGrup === 'checkbox' ? 'selected' : ''}>Pilih Banyak</option>
-                    </select>
-                    <button type="button" onclick="this.parentElement.parentElement.remove()" style="background:#ffebee; color:var(--danger); border:none; border-radius:6px; padding:8px; cursor:pointer;" title="Hapus Grup"><i class="ph-bold ph-trash"></i></button>
+                <div class="vg-head">
+                    <span class="vg-badge">Grup Varian</span>
+                    <button type="button" class="vg-hapus-grup" style="background:#ffebee; color:var(--danger); border:none; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:11px; font-weight:800;" title="Hapus Grup"><i class="ph-bold ph-trash"></i> Hapus Grup</button>
                 </div>
-                <div class="vg-pilihan-container" id="${groupId}_pilihan" style="display:flex; flex-direction:column; gap:6px; padding-left:10px; border-left:2px solid #FF6600; margin-bottom:10px;"></div>
-                <button type="button" onclick="addOptionToGroup('${groupId}_pilihan')" style="background:transparent; color:var(--primary); border:1px dashed #FFCC80; border-radius:6px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer; width:100%;">+ Tambah Pilihan / Item</button>
+
+                <label class="vg-label">1. Nama Grup <span style="color:#94a3b8; font-weight:600;">(pertanyaan ke pelanggan)</span></label>
+                <input type="text" class="form-input vg-nama" placeholder="Cth: Level Pedas" style="padding:9px; font-size:12.5px; font-weight:700;">
+                <div class="vg-sub">Contoh: Level Pedas, Ukuran Porsi, Topping Tambahan, Pilihan Nasi.</div>
+
+                <label class="vg-label" style="margin-top:12px;">2. Cara Pelanggan Memilih</label>
+                <select class="form-input vg-tipe" style="padding:9px; font-size:12px; background:#f8fafc;">
+                    <option value="radio">Wajib pilih 1</option>
+                    <option value="checkbox">Boleh pilih lebih dari satu (opsional)</option>
+                </select>
+                <div class="vg-sub vg-tipe-ket"></div>
+
+                <label class="vg-label" style="margin-top:12px;">3. Daftar Pilihan</label>
+                <div class="vg-kolom">
+                    <span class="k1">NAMA PILIHAN</span>
+                    <span class="k2">TAMBAHAN HARGA</span>
+                    <span class="k3"></span>
+                </div>
+                <div class="vg-pilihan-container" id="${groupId}_pilihan" style="display:flex; flex-direction:column; gap:6px;"></div>
+                <button type="button" class="vg-tambah-pilihan" style="background:transparent; color:var(--primary); border:1px dashed #FFCC80; border-radius:8px; padding:8px 12px; font-size:11.5px; font-weight:800; cursor:pointer; width:100%; margin-top:8px;">+ Tambah Pilihan</button>
+
+                <div class="vg-preview"></div>
             `;
-            
+
             container.appendChild(groupDiv);
-            
+
+            const inpNama = groupDiv.querySelector('.vg-nama');
+            const selTipe = groupDiv.querySelector('.vg-tipe');
+            inpNama.value = namaGrup || '';
+            selTipe.value = (tipeGrup === 'checkbox') ? 'checkbox' : 'radio';
+
+            const ket = groupDiv.querySelector('.vg-tipe-ket');
+            const perbaruiKet = () => {
+                ket.textContent = selTipe.value === 'radio'
+                    ? 'Pelanggan harus memilih salah satu sebelum bisa memesan. Pakai ini untuk level pedas, ukuran, atau pilihan rasa.'
+                    : 'Pelanggan boleh mencentang beberapa sekaligus, boleh juga tidak sama sekali. Pakai ini untuk topping atau tambahan.';
+            };
+            perbaruiKet();
+
+            groupDiv.querySelector('.vg-hapus-grup').addEventListener('click', () => groupDiv.remove());
+            groupDiv.querySelector('.vg-tambah-pilihan').addEventListener('click', () => addOptionToGroup(`${groupId}_pilihan`));
+
+            // Pratinjau ikut berubah setiap kali ada yang diketik atau diganti
+            groupDiv.addEventListener('input', () => perbaruiPreviewVarian(groupDiv));
+            groupDiv.addEventListener('change', () => { perbaruiKet(); perbaruiPreviewVarian(groupDiv); });
+
             if (pilihan && pilihan.length > 0) {
                 pilihan.forEach(p => addOptionToGroup(`${groupId}_pilihan`, p.nama, p.harga));
             } else {
-                addOptionToGroup(`${groupId}_pilihan`); // Default 1 pilihan kosong
+                addOptionToGroup(`${groupId}_pilihan`);
+                addOptionToGroup(`${groupId}_pilihan`);
             }
+
+            perbaruiPreviewVarian(groupDiv);
+            groupDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         };
 
         // FUNGSI BARU UNTUK MENAMBAH PILIHAN DI DALAM GRUP
         window.addOptionToGroup = (containerId, nama = "", harga = "") => {
             const container = document.getElementById(containerId);
+            if (!container) return;
             const div = document.createElement('div');
             div.className = 'vg-pilihan-item';
-            div.style.display = 'flex'; div.style.gap = '5px'; div.style.alignItems = 'center';
+            div.style.cssText = 'display:flex; gap:6px; align-items:center;';
             div.innerHTML = `
-                <input type="text" class="form-input vp-nama" style="flex:2; padding:6px 8px; font-size:12px;" placeholder="Pilihan (Cth: Sedang)" value="${nama}">
-                <input type="number" class="form-input vp-harga" style="flex:1; padding:6px 8px; font-size:12px;" placeholder="Harga (Cth: 2000)" value="${harga || ''}">
-                <button type="button" onclick="this.parentElement.remove()" style="background:transparent; color:var(--danger); border:none; padding:4px; cursor:pointer;" title="Hapus Pilihan"><i class="ph-bold ph-x"></i></button>
+                <input type="text" class="form-input vp-nama" style="flex:2; padding:8px; font-size:12px;" placeholder="Cth: Pedas Sedang">
+                <div class="vg-harga-wrap">
+                    <span class="rp">+Rp</span>
+                    <input type="number" inputmode="numeric" min="0" class="form-input vp-harga" style="width:100%; padding:8px; font-size:12px;" placeholder="0">
+                </div>
+                <button type="button" class="vp-hapus" style="background:transparent; color:var(--danger); border:none; padding:4px; cursor:pointer; width:26px;" title="Hapus Pilihan"><i class="ph-bold ph-x"></i></button>
             `;
+            // Nilai tersimpan dipasang lewat properti, bukan atribut
+            div.querySelector('.vp-nama').value = nama || '';
+            const h = parseInt(harga, 10);
+            div.querySelector('.vp-harga').value = (Number.isFinite(h) && h > 0) ? h : '';
+
+            const box = container.closest('.varian-grup-box');
+            div.querySelector('.vp-hapus').addEventListener('click', () => {
+                div.remove();
+                if (box) perbaruiPreviewVarian(box);
+            });
+
             container.appendChild(div);
+            if (box) perbaruiPreviewVarian(box);
         };
 
         window.openModal = () => {
@@ -2590,7 +3207,7 @@
             nama_menu: nama, 
             harga: parseInt(hargaRaw), 
             harga_asli: parseInt(hargaAsliRaw) || 0,
-            tipe: document.getElementById('inp-tipe').value.trim() || 'Lainnya', 
+            tipe: kunciEtalaseAman(document.getElementById('inp-tipe').value), 
             deskripsi: document.getElementById('inp-desc').value || "", 
             varian_grup: varianGrupArray, // SIMPAN SEBAGAI GRUP VARIAN BARU
             varian: [], // Kosongkan flat array agar kompatibel jika ada sisa logika lama di luar
@@ -2602,6 +3219,13 @@
             updated_at: new Date().toISOString()
         };
         
+        // Menu baru (atau menu yang etalasenya dipindah) diletakkan di urutan paling bawah
+        // pada etalasenya, supaya urutan yang sudah diatur mitra tidak berubah.
+        const etalaseLama = id && currentProducts[id] ? (currentProducts[id].tipe || 'Lainnya') : null;
+        if (!id || etalaseLama !== data.tipe) {
+            data.urutan = urutanTerakhirDi(data.tipe) + 1;
+        }
+
         try {
             if(id) await updateDoc(doc(db, "products", id), data);
             else { data.created_at = new Date().toISOString(); await addDoc(collection(db, "products"), data); }
