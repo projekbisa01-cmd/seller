@@ -764,6 +764,16 @@
                 <span style="font-size:12px; color:var(--gray);" id="menu-count">0 Menu</span>
             </div>
 
+            <!-- KOTAK PENCARIAN MENU -->
+            <div style="position:relative; margin-bottom:12px;">
+                <i class="ph-bold ph-magnifying-glass" style="position:absolute; left:13px; top:50%; transform:translateY(-50%); color:#9aa0a6; font-size:18px;"></i>
+                <input type="text" id="inp-cari-menu" placeholder="Cari nama menu atau etalase..." autocomplete="off"
+                       oninput="cariMenu(this.value)"
+                       style="width:100%; box-sizing:border-box; padding:11px 38px 11px 40px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; font-family:inherit; outline:none; background:#fafafa;">
+                <button type="button" id="btn-hapus-cari" onclick="cariMenu('', true)"
+                        style="display:none; position:absolute; right:8px; top:50%; transform:translateY(-50%); background:#eef2f7; border:none; border-radius:50%; width:24px; height:24px; color:#64748b; cursor:pointer; font-size:13px; line-height:1;">&times;</button>
+            </div>
+
             <!-- TOMBOL ATUR URUTAN TAMPILAN -->
             <div style="margin-bottom:12px;">
                 <button id="btn-sort-mode" type="button" onclick="toggleSortMode()" style="width:100%; background:#fff; border:1.5px dashed #0284c7; color:#0284c7; border-radius:12px; padding:10px; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
@@ -1115,22 +1125,82 @@
         </div>
     </div>
 
-    <!-- MODAL PESAN KURIR -->
+    <!-- MODAL ANTER MAKANAN (gaya Kirim Paket di aplikasi pelanggan) -->
     <div id="modal-kurir" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: flex-end;">
-        <div class="modal-content">
-            <h3 style="margin-top:0;">Pesan Kurir (Admin)</h3>
-            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Kirim detail pesanan untuk diantar ke pelanggan via WhatsApp.</p>
-            
-            <div class="form-group">
-                <label class="form-label">Detail Makanan/Barang</label>
-                <textarea id="inp-kurir-detail" class="form-textarea" placeholder="Contoh: 2 Nasi Goreng, 1 Es Teh" style="min-height: 80px;"></textarea>
+        <div class="modal-content" style="max-height: 94vh; display:flex; flex-direction:column;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <h3 style="margin:0;">Anter Makanan</h3>
+                <button style="background:none; border:none; font-size:20px; cursor:pointer; color:#666;" onclick="closeKurirModal()"><i class="ph-bold ph-x"></i></button>
             </div>
-            <div class="form-group">
-                <label class="form-label">Alamat Tujuan Pengantaran</label>
-                <textarea id="inp-kurir-tujuan" class="form-textarea" placeholder="Contoh: Jl. Merdeka No.10 (Patokan depan masjid)" style="min-height: 80px;"></textarea>
+            <p style="font-size: 12px; color: #666; margin: 0 0 12px 0;">Tentukan titik jemput dan tujuan seperti pemesanan Kirim Paket di aplikasi pelanggan.</p>
+
+            <div style="flex:1; overflow-y:auto; padding-right:2px;">
+
+                <!-- PETA + PEMILIH TITIK -->
+                <div style="position:relative; border-radius:16px; overflow:hidden; height:250px; border:1px solid #eee; background:#e5e7eb; margin-bottom:12px;">
+                    <div id="kurir-map" style="position:absolute; inset:0;"></div>
+
+                    <!-- Mode geser pin -->
+                    <div id="kurir-pick-overlay" style="display:none; position:absolute; inset:0; z-index:5; pointer-events:none;">
+                        <div style="position:absolute; top:12px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.95); padding:7px 16px; border-radius:20px; font-size:11.5px; font-weight:800; color:var(--primary); box-shadow:0 4px 15px rgba(0,0,0,0.15); white-space:nowrap;">
+                            Geser peta untuk menentukan titik
+                        </div>
+                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-100%);">
+                            <i class="ph-fill ph-map-pin" style="font-size:40px; color:#E53935; filter:drop-shadow(0 4px 4px rgba(0,0,0,0.3));"></i>
+                        </div>
+                        <div style="position:absolute; left:12px; right:12px; bottom:12px; display:flex; gap:8px; pointer-events:auto;">
+                            <button type="button" onclick="batalPilihTitikKurir()" style="flex:1; background:#fff; color:#475569; border:1px solid #e5e7eb; border-radius:11px; padding:11px; font-weight:800; font-size:12px; cursor:pointer;">Batal</button>
+                            <button type="button" onclick="pakaiTitikKurir()" style="flex:2; background:var(--primary); color:#fff; border:none; border-radius:11px; padding:11px; font-weight:800; font-size:12px; cursor:pointer;">Gunakan Titik Ini</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INPUT LOKASI -->
+                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <span style="width:10px; height:10px; border-radius:50%; background:#2196F3; flex-shrink:0;"></span>
+                        <input type="text" id="inp-kurir-jemput" class="form-input" placeholder="Titik jemput (warung Anda)" autocomplete="off" style="flex:1; padding:10px; font-size:12.5px;">
+                        <button type="button" onclick="pilihTitikKurir('jemput')" style="width:42px; flex-shrink:0; background:#fff; border:1px solid #e5e7eb; border-radius:11px; padding:9px 0; cursor:pointer;"><i class="ph-fill ph-map-pin" style="color:#2196F3; font-size:19px;"></i></button>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <span style="width:10px; height:10px; border-radius:50%; background:#F44336; flex-shrink:0;"></span>
+                        <input type="text" id="inp-kurir-tujuan" class="form-input" placeholder="Cari alamat tujuan..." autocomplete="off" style="flex:1; padding:10px; font-size:12.5px;">
+                        <button type="button" onclick="pilihTitikKurir('tujuan')" style="width:42px; flex-shrink:0; background:#fff; border:1px solid #e5e7eb; border-radius:11px; padding:9px 0; cursor:pointer;"><i class="ph-fill ph-map-pin" style="color:#F44336; font-size:19px;"></i></button>
+                    </div>
+                </div>
+
+                <!-- RINGKASAN RUTE -->
+                <div id="kurir-route-summary" style="background:#FFF3E0; border:1px solid #FFE0B2; border-radius:12px; padding:12px; margin-bottom:14px; font-size:12px; color:#b5651d;">
+                    Isi titik jemput dan tujuan untuk melihat estimasi jarak dan ongkir.
+                </div>
+
+                <!-- DETAIL PESANAN -->
+                <label class="form-label" style="margin-bottom:6px; display:block;">Detail Makanan yang Diantar</label>
+                <div style="position:relative; margin-bottom:8px;">
+                    <i class="ph-bold ph-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#9aa0a6; font-size:16px;"></i>
+                    <input type="text" id="inp-cari-kurir" placeholder="Cari menu..." autocomplete="off" oninput="renderDaftarMenuKurir(this.value)"
+                           style="width:100%; box-sizing:border-box; padding:9px 12px 9px 36px; border:1px solid #e5e7eb; border-radius:11px; font-size:12.5px; font-family:inherit; outline:none; background:#fafafa;">
+                </div>
+                <div id="kurir-menu-list" style="max-height:190px; overflow-y:auto; border:1px solid #eee; border-radius:12px; padding:8px; margin-bottom:8px;"></div>
+                <div id="kurir-ringkasan" style="background:#f8fafc; border:1px solid #eef2f7; border-radius:11px; padding:9px 12px; margin-bottom:14px; font-size:12px; color:#475569;">
+                    Belum ada menu yang dipilih.
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Nama Penerima</label>
+                    <input type="text" id="inp-kurir-nama" class="form-input" placeholder="Contoh: Bu Sari">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">No. WA Penerima</label>
+                    <input type="tel" id="inp-kurir-wa" class="form-input" inputmode="numeric" placeholder="Contoh: 08123456789">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Patokan / Catatan (opsional)</label>
+                    <textarea id="inp-kurir-detail" class="form-textarea" placeholder="Contoh: rumah cat hijau depan masjid, sambal dipisah" style="min-height: 55px;"></textarea>
+                </div>
             </div>
 
-            <button class="btn-submit" onclick="sendKurirWA()" style="margin-top: 10px; background: #25D366; display: flex; justify-content: center; align-items: center; gap: 8px;"><i class="ph-bold ph-whatsapp-logo" style="font-size: 18px;"></i> Kirim Pesanan via WA</button>
+            <button class="btn-submit" onclick="sendKurirWA()" style="margin-top: 8px; background: #25D366; display: flex; justify-content: center; align-items: center; gap: 8px;"><i class="ph-bold ph-whatsapp-logo" style="font-size: 18px;"></i> Kirim Pesanan via WA</button>
             <button class="btn-cancel" onclick="closeKurirModal()">Batal</button>
         </div>
     </div>
@@ -1539,6 +1609,7 @@
         let sortDraftKategori = [];     // draft urutan etalase sebelum disimpan
         let sortDraftMenu = {};         // draft urutan menu per etalase sebelum disimpan
         let sortExpanded = null;        // etalase yang sedang dibuka di panel urutan
+        let menuSearchQuery = '';       // kata kunci pencarian di halaman Menu
 
         // --- SISTEM PWA (FILE EKSTERNAL) ---
         let deferredPrompt;
@@ -2393,6 +2464,13 @@
                 currentMenuFilter = 'Semua';
             }
 
+            // Kata kunci pencarian: kalau diisi, pencarian berlaku lintas etalase
+            // sehingga menu tetap ketemu walau sedang memfilter satu etalase saja.
+            const q = (menuSearchQuery || '').trim().toLowerCase();
+            const cocokCari = (item) => !q
+                || String(item.nama_menu || '').toLowerCase().includes(q)
+                || String(item.tipe || '').toLowerCase().includes(q);
+
             // CATATAN KEAMANAN: nama etalase diketik bebas oleh mitra, jadi tidak boleh
             // masuk mentah ke atribut onclick. Dipanggil lewat nomor indeks + esc() untuk teksnya.
             window.__menuFilterKeys = categories;
@@ -2404,11 +2482,16 @@
             filterHTML += `</div>`;
             if(filterWrapper) filterWrapper.innerHTML = filterHTML;
 
+            let jumlahTampil = 0;
             categories.forEach(cat => {
-                if (currentMenuFilter !== 'Semua' && currentMenuFilter !== cat) return;
+                if (!q && currentMenuFilter !== 'Semua' && currentMenuFilter !== cat) return;
+
+                const daftarItem = globalMenuGroups[cat].filter(cocokCari);
+                if (daftarItem.length === 0) return;
+                jumlahTampil += daftarItem.length;
                 
-                container.innerHTML += `<div class="menu-category-header"><span>${esc(cat)}</span><span class="menu-category-count">${globalMenuGroups[cat].length}</span></div>`;
-                globalMenuGroups[cat].forEach(item => {
+                container.innerHTML += `<div class="menu-category-header"><span>${esc(cat)}</span><span class="menu-category-count">${daftarItem.length}</span></div>`;
+                daftarItem.forEach(item => {
                     const isAvailable = !item.is_sold_out;
                     const imgStyle = isAvailable ? '' : 'filter: grayscale(100%); opacity: 0.6;';
                     const badgeHabis = isAvailable ? '' : `<div style="position:absolute; top:4px; left:4px; background:var(--danger); color:white; font-size:9px; font-weight:800; padding:2px 5px; border-radius:4px; z-index:2; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">HABIS</div>`;
@@ -2446,7 +2529,24 @@
                         </div>`;
                 });
             });
+
+            if (jumlahTampil === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:#999;">
+                    <i class="ph-bold ph-magnifying-glass" style="font-size:32px; display:block; margin-bottom:10px; color:#cbd5e1;"></i>
+                    Menu "${esc(menuSearchQuery)}" tidak ditemukan.
+                </div>`;
+            }
         }
+
+        // --- PENCARIAN MENU ---
+        window.cariMenu = (nilai, kosongkanInput) => {
+            menuSearchQuery = String(nilai || '');
+            const input = document.getElementById('inp-cari-menu');
+            if (kosongkanInput && input) input.value = '';
+            const tombol = document.getElementById('btn-hapus-cari');
+            if (tombol) tombol.style.display = menuSearchQuery.trim() ? 'block' : 'none';
+            renderMenuUI();
+        };
 
         window.setMenuFilter = (idx) => {
             // idx -1 = "Semua". Nama etalase diambil dari array, tidak dari string di HTML.
@@ -3439,26 +3539,395 @@
             img.onerror = () => showToast("Gagal memuat foto untuk poster", false);
         };
 
+        /* ==========================================================
+           ANTER MAKANAN — alur sama dengan "Kirim Paket" di aplikasi pelanggan:
+           titik jemput + titik tujuan -> jarak, estimasi waktu, estimasi ongkir.
+           Tarif memakai rumus yang sama dengan aplikasi pelanggan supaya
+           angkanya tidak berbeda antara mitra dan pelanggan.
+           ========================================================== */
+        let kurirKeranjang = {};        // { idProduk: jumlah }
+        let kurirJemput = null;         // { lat, lng, alamat }
+        let kurirTujuan = null;
+        let kurirMap = null, kurirDirService = null, kurirDirRenderer = null, kurirGeocoder = null;
+        let kurirMarkerJemput = null, kurirMarkerTujuan = null;
+        let kurirPickTarget = null;     // 'jemput' | 'tujuan' saat mode geser pin
+        let kurirJarakKm = 0, kurirDurasi = '', kurirOngkir = 0;
+        let kurirAutocompletePasang = false;
+
+        // Tarif Kirim Paket, disalin dari aplikasi pelanggan
+        const tarifPaketKurir = (km) => (km <= 1) ? 8000 : 8000 + (Math.ceil(km - 1) * 2600);
+
+        // Jarak garis lurus, dipakai kalau Google tidak menemukan rute jalan
+        function jarakLurusKm(a, b) {
+            const R = 6371, rad = (d) => d * Math.PI / 180;
+            const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
+            const x = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+        }
+
         window.openKurirModal = () => {
-            document.getElementById('inp-kurir-detail').value = '';
-            document.getElementById('inp-kurir-tujuan').value = '';
+            kurirKeranjang = {};
+            kurirTujuan = null;
+            kurirJarakKm = 0; kurirDurasi = ''; kurirOngkir = 0;
+            kurirPickTarget = null;
+
+            ['inp-kurir-detail', 'inp-kurir-nama', 'inp-kurir-wa', 'inp-cari-kurir', 'inp-kurir-tujuan']
+                .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
+            // Titik jemput otomatis memakai lokasi warung yang sudah disimpan di Profil
+            if (selectedLat && selectedLng) {
+                kurirJemput = {
+                    lat: selectedLat,
+                    lng: selectedLng,
+                    alamat: 'Warung ' + (currentUser && currentUser.name ? currentUser.name : '')
+                };
+                document.getElementById('inp-kurir-jemput').value = kurirJemput.alamat;
+            } else {
+                kurirJemput = null;
+                document.getElementById('inp-kurir-jemput').value = '';
+                showToast("Lokasi warung belum disetel. Isi titik jemput manual dulu ya.", false);
+            }
+
+            renderDaftarMenuKurir('');
+            perbaruiRingkasanRuteKurir();
             document.getElementById('modal-kurir').style.display = 'flex';
+            setTimeout(siapkanPetaKurir, 250);   // peta butuh kontainernya terlihat dulu
         };
+
+        function siapkanPetaKurir() {
+            if (typeof google === 'undefined' || !google.maps) return;
+            const pusat = kurirJemput
+                ? { lat: kurirJemput.lat, lng: kurirJemput.lng }
+                : { lat: -7.6083, lng: 109.5297 };   // Gombong
+
+            if (!kurirMap) {
+                kurirMap = new google.maps.Map(document.getElementById('kurir-map'), {
+                    zoom: 15, center: pusat, disableDefaultUI: true, zoomControl: true, clickableIcons: false
+                });
+                kurirDirService = new google.maps.DirectionsService();
+                kurirDirRenderer = new google.maps.DirectionsRenderer({ map: kurirMap, suppressMarkers: true });
+                kurirGeocoder = new google.maps.Geocoder();
+            } else {
+                google.maps.event.trigger(kurirMap, 'resize');
+                kurirMap.setCenter(pusat);
+            }
+
+            if (!kurirAutocompletePasang && google.maps.places) {
+                pasangAutocompleteKurir('inp-kurir-jemput', 'jemput');
+                pasangAutocompleteKurir('inp-kurir-tujuan', 'tujuan');
+                kurirAutocompletePasang = true;
+            }
+            gambarTitikKurir();
+        }
+
+        function pasangAutocompleteKurir(idInput, target) {
+            const el = document.getElementById(idInput);
+            if (!el) return;
+            const ac = new google.maps.places.Autocomplete(el, {
+                componentRestrictions: { country: 'id' },
+                fields: ['geometry', 'formatted_address', 'name']
+            });
+            ac.addListener('place_changed', () => {
+                const place = ac.getPlace();
+                if (!place || !place.geometry || !place.geometry.location) return;
+                const titik = {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                    alamat: place.formatted_address || place.name || el.value
+                };
+                if (target === 'jemput') kurirJemput = titik; else kurirTujuan = titik;
+                el.value = titik.alamat;
+                gambarTitikKurir();
+                hitungRuteKurir();
+            });
+        }
+
+        function gambarTitikKurir() {
+            if (!kurirMap) return;
+            const buat = (lama, titik, warna) => {
+                if (!titik) { if (lama) lama.setMap(null); return null; }
+                const pos = { lat: titik.lat, lng: titik.lng };
+                if (lama) { lama.setPosition(pos); lama.setMap(kurirMap); return lama; }
+                return new google.maps.Marker({
+                    position: pos, map: kurirMap,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE, scale: 8,
+                        fillColor: warna, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2
+                    }
+                });
+            };
+            kurirMarkerJemput = buat(kurirMarkerJemput, kurirJemput, '#2196F3');
+            kurirMarkerTujuan = buat(kurirMarkerTujuan, kurirTujuan, '#F44336');
+
+            if (kurirJemput && kurirTujuan) {
+                const batas = new google.maps.LatLngBounds();
+                batas.extend({ lat: kurirJemput.lat, lng: kurirJemput.lng });
+                batas.extend({ lat: kurirTujuan.lat, lng: kurirTujuan.lng });
+                kurirMap.fitBounds(batas, 60);
+            } else if (kurirJemput) {
+                kurirMap.setCenter({ lat: kurirJemput.lat, lng: kurirJemput.lng });
+            }
+        }
+
+        function hitungRuteKurir() {
+            if (!kurirJemput || !kurirTujuan) { perbaruiRingkasanRuteKurir(); return; }
+
+            const pakaiGarisLurus = () => {
+                // Cadangan kalau rute jalan tidak ditemukan. Ditandai jelas ke mitra
+                // supaya tidak dikira jarak tempuh sebenarnya.
+                kurirJarakKm = jarakLurusKm(kurirJemput, kurirTujuan);
+                kurirDurasi = '';
+                kurirOngkir = tarifPaketKurir(kurirJarakKm);
+                perbaruiRingkasanRuteKurir(true);
+            };
+
+            if (!kurirDirService) { pakaiGarisLurus(); return; }
+
+            kurirDirService.route({
+                origin: { lat: kurirJemput.lat, lng: kurirJemput.lng },
+                destination: { lat: kurirTujuan.lat, lng: kurirTujuan.lng },
+                travelMode: google.maps.TravelMode.DRIVING
+            }, (hasil, status) => {
+                if (status === 'OK' && hasil.routes && hasil.routes[0] && hasil.routes[0].legs[0]) {
+                    const leg = hasil.routes[0].legs[0];
+                    if (kurirDirRenderer) kurirDirRenderer.setDirections(hasil);
+                    kurirJarakKm = leg.distance.value / 1000;
+                    kurirDurasi = leg.duration.text || '';
+                    kurirOngkir = tarifPaketKurir(kurirJarakKm);
+                    perbaruiRingkasanRuteKurir();
+                } else {
+                    if (kurirDirRenderer) kurirDirRenderer.setDirections({ routes: [] });
+                    pakaiGarisLurus();
+                }
+            });
+        }
+
+        function perbaruiRingkasanRuteKurir(garisLurus) {
+            const box = document.getElementById('kurir-route-summary');
+            if (!box) return;
+            box.innerHTML = '';
+
+            if (!kurirJemput || !kurirTujuan) {
+                box.textContent = 'Isi titik jemput dan tujuan untuk melihat estimasi jarak dan ongkir.';
+                return;
+            }
+
+            const baris1 = document.createElement('div');
+            baris1.style.cssText = "font-weight:800; font-size:13px; color:#E65100; margin-bottom:3px;";
+            baris1.textContent = 'Estimasi Ongkir: Rp ' + kurirOngkir.toLocaleString('id-ID');
+            box.appendChild(baris1);
+
+            const baris2 = document.createElement('div');
+            baris2.textContent = 'Jarak ' + kurirJarakKm.toFixed(1) + ' km'
+                + (kurirDurasi ? ' • sekitar ' + kurirDurasi : '');
+            box.appendChild(baris2);
+
+            const baris3 = document.createElement('div');
+            baris3.style.cssText = "margin-top:5px; font-size:11px; color:#a16207;";
+            baris3.textContent = garisLurus
+                ? 'Rute jalan tidak ketemu, jadi ini hitungan garis lurus. Ongkir final tetap ditentukan admin.'
+                : 'Angka ini estimasi aplikasi. Ongkir final tetap ditentukan admin.';
+            box.appendChild(baris3);
+        }
+
+        // --- MODE GESER PIN ---
+        window.pilihTitikKurir = (target) => {
+            if (!kurirMap) { showToast("Peta belum siap, tunggu sebentar.", false); return; }
+            kurirPickTarget = target;
+            const acuan = (target === 'tujuan' && kurirTujuan) ? kurirTujuan : (kurirJemput || null);
+            if (acuan) kurirMap.setCenter({ lat: acuan.lat, lng: acuan.lng });
+            document.getElementById('kurir-pick-overlay').style.display = 'block';
+        };
+
+        window.batalPilihTitikKurir = () => {
+            kurirPickTarget = null;
+            document.getElementById('kurir-pick-overlay').style.display = 'none';
+        };
+
+        window.pakaiTitikKurir = () => {
+            if (!kurirPickTarget || !kurirMap) return;
+            const pusat = kurirMap.getCenter();
+            const titik = { lat: pusat.lat(), lng: pusat.lng(), alamat: '' };
+            const target = kurirPickTarget;
+            const idInput = target === 'jemput' ? 'inp-kurir-jemput' : 'inp-kurir-tujuan';
+
+            const selesai = (alamat) => {
+                titik.alamat = alamat || (titik.lat.toFixed(5) + ', ' + titik.lng.toFixed(5));
+                if (target === 'jemput') kurirJemput = titik; else kurirTujuan = titik;
+                document.getElementById(idInput).value = titik.alamat;
+                batalPilihTitikKurir();
+                gambarTitikKurir();
+                hitungRuteKurir();
+            };
+
+            if (kurirGeocoder) {
+                kurirGeocoder.geocode({ location: { lat: titik.lat, lng: titik.lng } }, (hasil, status) => {
+                    selesai((status === 'OK' && hasil && hasil[0]) ? hasil[0].formatted_address : '');
+                });
+            } else {
+                selesai('');
+            }
+        };
+
+        // --- DAFTAR MENU (urutannya sama dengan aplikasi pelanggan) ---
+        function daftarMenuKurir(kataKunci) {
+            const q = String(kataKunci || '').trim().toLowerCase();
+            const hasil = [];
+            urutkanKategori(Object.keys(globalMenuGroups)).forEach(cat => {
+                urutkanMenu(globalMenuGroups[cat]).forEach(item => {
+                    if (item.is_sold_out) return;
+                    if (q && !String(item.nama_menu || '').toLowerCase().includes(q)
+                          && !String(item.tipe || '').toLowerCase().includes(q)) return;
+                    hasil.push(item);
+                });
+            });
+            return hasil;
+        }
+
+        // Digambar dengan createElement/textContent, jadi nama menu selalu jadi teks biasa
+        window.renderDaftarMenuKurir = (kataKunci) => {
+            const wadah = document.getElementById('kurir-menu-list');
+            if (!wadah) return;
+            wadah.innerHTML = '';
+
+            const daftar = daftarMenuKurir(kataKunci);
+            if (daftar.length === 0) {
+                const kosong = document.createElement('div');
+                kosong.style.cssText = "text-align:center; padding:20px 10px; color:#999; font-size:12px;";
+                kosong.textContent = Object.keys(globalMenuGroups).length
+                    ? 'Menu tidak ditemukan.'
+                    : 'Belum ada menu di warung Anda.';
+                wadah.appendChild(kosong);
+                perbaruiRingkasanKurir();
+                return;
+            }
+
+            daftar.forEach(item => {
+                const jml = kurirKeranjang[item.id] || 0;
+
+                const baris = document.createElement('div');
+                baris.style.cssText = "display:flex; align-items:center; gap:9px; padding:7px 4px; border-bottom:1px solid #f4f4f5;";
+
+                const img = document.createElement('img');
+                img.loading = 'lazy';
+                img.style.cssText = "width:40px; height:40px; border-radius:9px; object-fit:cover; background:#f1f5f9; flex-shrink:0;";
+                img.src = fixImgUrl(item.foto_url) || 'https://cdn-icons-png.flaticon.com/512/1046/1046857.png';
+                img.onerror = function () { this.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046857.png'; };
+                baris.appendChild(img);
+
+                const info = document.createElement('div');
+                info.style.cssText = "flex:1; min-width:0;";
+                const nama = document.createElement('div');
+                nama.style.cssText = "font-size:12.5px; font-weight:700; color:var(--dark); line-height:1.3; overflow-wrap:anywhere;";
+                nama.textContent = item.nama_menu || '(tanpa nama)';
+                info.appendChild(nama);
+                const harga = document.createElement('div');
+                harga.style.cssText = "font-size:11.5px; font-weight:800; color:var(--primary); margin-top:2px;";
+                harga.textContent = 'Rp ' + Number(item.harga || 0).toLocaleString('id-ID');
+                info.appendChild(harga);
+                baris.appendChild(info);
+
+                const stepper = document.createElement('div');
+                stepper.style.cssText = "display:flex; align-items:center; gap:7px; flex-shrink:0;";
+
+                if (jml > 0) {
+                    const kurang = document.createElement('button');
+                    kurang.type = 'button';
+                    kurang.textContent = '−';
+                    kurang.style.cssText = "width:26px; height:26px; border-radius:8px; border:1px solid var(--primary); background:#fff; color:var(--primary); font-size:15px; font-weight:800; cursor:pointer; line-height:1;";
+                    kurang.addEventListener('click', () => ubahJumlahKurir(item.id, -1, kataKunci));
+                    stepper.appendChild(kurang);
+
+                    const angka = document.createElement('span');
+                    angka.style.cssText = "font-size:13px; font-weight:800; min-width:16px; text-align:center;";
+                    angka.textContent = String(jml);
+                    stepper.appendChild(angka);
+                }
+
+                const tambah = document.createElement('button');
+                tambah.type = 'button';
+                tambah.textContent = '+';
+                tambah.style.cssText = "width:26px; height:26px; border-radius:8px; border:none; background:var(--primary); color:#fff; font-size:15px; font-weight:800; cursor:pointer; line-height:1;";
+                tambah.addEventListener('click', () => ubahJumlahKurir(item.id, 1, kataKunci));
+                stepper.appendChild(tambah);
+
+                baris.appendChild(stepper);
+                wadah.appendChild(baris);
+            });
+
+            perbaruiRingkasanKurir();
+        };
+
+        function ubahJumlahKurir(id, delta, kataKunci) {
+            const baru = (kurirKeranjang[id] || 0) + delta;
+            if (baru <= 0) delete kurirKeranjang[id];
+            else if (baru <= 99) kurirKeranjang[id] = baru;
+            renderDaftarMenuKurir(kataKunci);
+        }
+
+        function isiKeranjangKurir() {
+            const isi = [];
+            Object.keys(kurirKeranjang).forEach(id => {
+                const item = currentProducts[id];
+                if (!item) return;
+                const jml = kurirKeranjang[id];
+                const hargaSatuan = Number(item.harga) || 0;
+                isi.push({ nama: item.nama_menu || '(tanpa nama)', jml: jml, subtotal: hargaSatuan * jml });
+            });
+            return isi;
+        }
+
+        function perbaruiRingkasanKurir() {
+            const box = document.getElementById('kurir-ringkasan');
+            if (!box) return;
+            const isi = isiKeranjangKurir();
+            if (isi.length === 0) { box.textContent = 'Belum ada menu yang dipilih.'; return; }
+            const totalItem = isi.reduce((a, b) => a + b.jml, 0);
+            const totalHarga = isi.reduce((a, b) => a + b.subtotal, 0);
+            box.textContent = totalItem + ' item • Total makanan Rp ' + totalHarga.toLocaleString('id-ID');
+        }
 
         window.closeKurirModal = () => {
             document.getElementById('modal-kurir').style.display = 'none';
+            batalPilihTitikKurir();
+            kurirKeranjang = {};
         };
 
         window.sendKurirWA = () => {
-            const detail = document.getElementById('inp-kurir-detail').value.trim();
-            const tujuan = document.getElementById('inp-kurir-tujuan').value.trim();
-            
-            if(!detail || !tujuan) return showToast("Harap isi semua detail pemesanan!", false);
-            
-            const text = `Halo Admin Projekgo,\n\nSaya mau pesan kurir dari warung *${currentUser.name}*.\n\n*Detail Pesanan:*\n${detail}\n\n*Alamat Tujuan:*\n${tujuan}\n\nMohon segera diproses untuk dijemput. Terima kasih!`;
-            const waUrl = `https://wa.me/62882008667068?text=${encodeURIComponent(text)}`;
-            
-            window.open(waUrl, '_blank');
+            const catatan = document.getElementById('inp-kurir-detail').value.trim();
+            const namaPenerima = document.getElementById('inp-kurir-nama').value.trim();
+            const waPenerima = document.getElementById('inp-kurir-wa').value.trim();
+            const teksJemput = document.getElementById('inp-kurir-jemput').value.trim();
+            const teksTujuan = document.getElementById('inp-kurir-tujuan').value.trim();
+            const isi = isiKeranjangKurir();
+
+            if (!teksJemput) return showToast("Titik jemput belum diisi!", false);
+            if (!teksTujuan) return showToast("Titik tujuan belum diisi!", false);
+            if (isi.length === 0 && !catatan) return showToast("Pilih menunya dulu, atau tulis di kolom catatan.", false);
+
+            const petaLink = (t) => t ? `\nhttps://www.google.com/maps?q=${t.lat},${t.lng}` : '';
+
+            let text = `Halo Admin Projekgo,\n\nSaya mau pesan kurir dari warung *${currentUser.name}*.\n\n`;
+            text += `*Titik Jemput:*\n${teksJemput}${petaLink(kurirJemput)}\n\n`;
+            text += `*Titik Tujuan:*\n${teksTujuan}${petaLink(kurirTujuan)}\n`;
+
+            if (kurirJemput && kurirTujuan && kurirJarakKm > 0) {
+                text += `\n*Jarak:* ${kurirJarakKm.toFixed(1)} km${kurirDurasi ? ' (sekitar ' + kurirDurasi + ')' : ''}`;
+                text += `\n*Estimasi Ongkir:* Rp ${kurirOngkir.toLocaleString('id-ID')} _(estimasi aplikasi, mohon dikonfirmasi)_\n`;
+            }
+
+            if (isi.length > 0) {
+                const totalHarga = isi.reduce((a, b) => a + b.subtotal, 0);
+                text += `\n*Detail Pesanan:*\n`;
+                text += isi.map(i => `${i.jml}x ${i.nama} - Rp ${i.subtotal.toLocaleString('id-ID')}`).join('\n');
+                text += `\n*Total Makanan:* Rp ${totalHarga.toLocaleString('id-ID')}\n`;
+            }
+            if (catatan) text += `\n*Patokan/Catatan:*\n${catatan}\n`;
+            if (namaPenerima) text += `\n*Nama Penerima:* ${namaPenerima}`;
+            if (waPenerima) text += `\n*No. WA Penerima:* ${waPenerima}`;
+            text += `\n\nMohon segera diproses untuk dijemput. Terima kasih!`;
+
+            window.open(`https://wa.me/62882008667068?text=${encodeURIComponent(text)}`, '_blank');
             closeKurirModal();
         };
 
@@ -3664,6 +4133,60 @@
             document.getElementById('modal-tambah-cabang').style.display = 'none';
         };
 
+        /* ==========================================================
+           PENCEGAH PENDAFTARAN GANDA
+           Selama pengajuan belum di-ACC admin, pengajuan baru dengan nomor WA
+           (atau email mitra) yang sama ditolak. Kalau admin menghapus
+           pengajuannya, otomatis boleh mendaftar lagi.
+           ========================================================== */
+
+        // Normalkan nomor WA supaya 0812..., 62812..., dan +62 812-... dianggap sama
+        const normalWA = (wa) => {
+            let t = String(wa || '').replace(/[^0-9]/g, '');
+            if (t.startsWith('0')) t = '62' + t.slice(1);
+            if (t.startsWith('620')) t = '62' + t.slice(3);
+            return t;
+        };
+
+        // Mengembalikan dokumen pengajuan yang masih menunggu, atau null kalau tidak ada.
+        // Kalau pengecekan gagal (misal aturan Firestore menutup akses baca), sengaja
+        // mengembalikan undefined supaya pemanggilnya tahu bedanya "tidak ada" dan "gagal cek".
+        async function cariPengajuanTertunda(kolom, nilai) {
+            if (!nilai) return null;
+            try {
+                const snap = await getDocs(query(collection(db, "pengajuan_mitra"), where(kolom, "==", nilai)));
+                let hasil = null;
+                snap.forEach(d => {
+                    const data = d.data() || {};
+                    if (data.status !== 'terdaftar' && !hasil) hasil = { id: d.id, ...data };
+                });
+                return hasil;
+            } catch (e) {
+                console.warn("Gagal memeriksa pengajuan ganda:", e);
+                return undefined;
+            }
+        }
+
+        // Cek berdasarkan nomor WA. Nomor lama mungkin tersimpan dalam format berbeda,
+        // jadi dicoba beberapa bentuk yang umum dipakai.
+        async function cekPengajuanWA(waMentah) {
+            const wa62 = normalWA(waMentah);
+            if (!wa62) return null;
+            const kandidat = [wa62, '0' + wa62.slice(2), '+' + wa62];
+            let adaKegagalan = false;
+            for (const bentuk of kandidat) {
+                const hasil = await cariPengajuanTertunda("no_wa", bentuk);
+                if (hasil) return hasil;
+                if (hasil === undefined) adaKegagalan = true;
+            }
+            return adaKegagalan ? undefined : null;
+        }
+
+        function pesanSudahMendaftar(nama) {
+            return 'Pengajuan untuk "' + (nama || 'warung ini') + '" sudah masuk dan sedang menunggu ditinjau admin. '
+                 + 'Mohon tunggu, jangan mendaftar lagi supaya datanya tidak dobel.';
+        }
+
         window.submitCabangBaru = async () => {
             const namaPemilik = document.getElementById('cabang-pemilik').value;
             const noWa = document.getElementById('cabang-wa').value;
@@ -3684,10 +4207,20 @@
             }
 
             const btn = document.getElementById('btn-submit-cabang');
-            btn.innerHTML = "Mengirim Pengajuan...";
+            btn.innerHTML = "Memeriksa...";
             btn.disabled = true;
 
             try {
+                // Tolak kalau pengajuan sebelumnya dari akun ini belum di-ACC admin
+                const tertunda = await cariPengajuanTertunda("email_terdaftar", userEmail);
+                if (tertunda) {
+                    btn.innerHTML = "Kirim Pengajuan Cabang";
+                    btn.disabled = false;
+                    return showToast(pesanSudahMendaftar(tertunda.nama_warung), false);
+                }
+
+                btn.innerHTML = "Mengirim Pengajuan...";
+
                 // Menyimpan ke koleksi pengajuan_mitra dengan penanda khusus
                 await addDoc(collection(db, "pengajuan_mitra"), {
                     nama_pemilik: namaPemilik !== "-" ? namaPemilik : "",
@@ -3774,10 +4307,21 @@
             if(wa.startsWith('0')) wa = '62' + wa.substring(1);
 
             const btn = document.getElementById('btn-submit-register');
-            btn.innerHTML = "Menyimpan Data...";
+            btn.innerHTML = "Memeriksa...";
             btn.disabled = true;
 
             try {
+                // Tolak kalau nomor WA ini sudah punya pengajuan yang belum di-ACC admin.
+                // Kalau pengecekannya sendiri gagal, pendaftaran tetap diteruskan supaya
+                // calon mitra tidak terkunci; duplikatnya nanti terlihat di panel admin.
+                const tertunda = await cekPengajuanWA(wa);
+                if (tertunda) {
+                    btn.innerHTML = "Selesai & Kirim Pengajuan";
+                    btn.disabled = false;
+                    return showToast(pesanSudahMendaftar(tertunda.nama_warung), false);
+                }
+
+                btn.innerHTML = "Menyimpan Data...";
                 let sertifikatUrl = "";
                 
                 // Jika pilih Punya Sertifikat Halal, upload fotonya ke Firebase Storage
