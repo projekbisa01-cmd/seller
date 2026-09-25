@@ -400,6 +400,50 @@
             line-height: 1.5;
             font-weight: 600;
         }
+        /* =========================================================
+           BERANDA MITRA: badge layanan, info jam otomatis, banner Rp0
+           ========================================================= */
+        .service-item { position: relative; }
+        .svc-badge { position: absolute; top: -6px; left: calc(50% + 12px); min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box; border-radius: 99px; background: #E53935; color: #fff; font-size: 10.5px; font-weight: 800; line-height: 16px; text-align: center; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(229,57,53,0.4); display: none; z-index: 2; }
+        .svc-badge.tampil { display: block; animation: svcDenyut 1.8s ease-in-out infinite; }
+        .svc-badge.label { font-size: 9px; padding: 0 6px; left: calc(50% + 4px); }
+        @keyframes svcDenyut { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+
+        .ij-card { background: #fff; border: 1px solid #FFE0B2; border-radius: 20px; padding: 16px; margin: 0 0 20px; box-shadow: 0 4px 14px rgba(255,102,0,0.08); display: flex; gap: 12px; align-items: flex-start; }
+        .ij-ikon { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 14px; background: #FFF3E0; color: var(--primary); display: grid; place-items: center; font-size: 24px; }
+        .ij-card.sudah .ij-ikon { background: #E8F5E9; color: #2E7D32; }
+        .ij-judul { font-size: 14px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+        .ij-teks { font-size: 12px; color: #555; line-height: 1.55; margin: 0 0 6px; }
+        .ij-teks.kecil { font-size: 11px; color: #888; }
+        .ij-btn { margin-top: 4px; min-height: 40px; border: 0; border-radius: 12px; background: var(--primary); color: #fff; font-weight: 800; font-size: 12.5px; padding: 0 14px; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
+        .ij-card.sudah .ij-btn { background: #fff; color: #2E7D32; border: 1.5px solid #A5D6A7; }
+
+        .b0 { position: relative; overflow: hidden; margin-top: 20px; border-radius: 24px; padding: 20px 18px 18px; color: #fff; background: linear-gradient(135deg, #1C1C1E 0%, #3A1D0A 55%, #7A2E00 100%); box-shadow: 0 10px 28px rgba(122,46,0,0.35); }
+        .b0::before { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,0.18), transparent); transform: skewX(-20deg); animation: b0Kilau 3.6s ease-in-out infinite; }
+        @keyframes b0Kilau { 0% { left: -60%; } 55%, 100% { left: 130%; } }
+        .b0-atas { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .b0-kicker { font-size: 10.5px; font-weight: 800; letter-spacing: 0.16em; color: #FFB27A; }
+        .b0-gratis { background: #2E7D32; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 99px; animation: b0Goyang 2.4s ease-in-out infinite; }
+        @keyframes b0Goyang { 0%, 80%, 100% { transform: rotate(0); } 85% { transform: rotate(-6deg); } 90% { transform: rotate(6deg); } 95% { transform: rotate(-3deg); } }
+        .b0-angka { position: relative; display: flex; align-items: baseline; gap: 10px; margin: 8px 0 2px; }
+        .b0-coret { font-size: 17px; font-weight: 800; color: rgba(255,255,255,0.45); position: relative; }
+        .b0-coret::after { content: ''; position: absolute; left: -3px; right: -3px; top: 52%; height: 2.5px; background: #FF5252; border-radius: 2px; transform-origin: left; animation: b0Coret 3.6s ease-in-out infinite; }
+        @keyframes b0Coret { 0%, 10% { transform: scaleX(0); } 25%, 100% { transform: scaleX(1); } }
+        .b0-nol { font-size: 44px; font-weight: 800; line-height: 1; letter-spacing: -1px; color: #FFD08A; text-shadow: 0 4px 18px rgba(255,178,122,0.45); animation: b0Denyut 3.6s ease-in-out infinite; }
+        @keyframes b0Denyut { 0%, 25% { transform: scale(0.9); opacity: 0.6; } 35% { transform: scale(1.08); opacity: 1; } 45%, 100% { transform: scale(1); opacity: 1; } }
+        .b0-sub { position: relative; font-size: 12px; font-weight: 700; color: #F3E6D6; margin-bottom: 10px; }
+        .b0-teks { position: relative; font-size: 12.5px; line-height: 1.6; color: #fff; margin: 0 0 12px; }
+        .b0-teks b { color: #FFD08A; }
+        .b0-chips { position: relative; display: flex; flex-wrap: wrap; gap: 6px; }
+        .b0-chip { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 99px; }
+        .b0-chip i { color: #7BE39B; }
+        .b0-hati { position: absolute; right: 16px; bottom: 16px; font-size: 30px; color: #FF6B6B; opacity: 0.9; animation: b0Hati 2.2s ease-in-out infinite; }
+        @keyframes b0Hati { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.12); } }
+        @media (prefers-reduced-motion: reduce) {
+            .svc-badge.tampil, .b0::before, .b0-gratis, .b0-nol, .b0-hati { animation: none; }
+            .b0-coret::after { animation: none; transform: scaleX(1); }
+        }
+
     </style>
 </head>
 <body>
@@ -674,6 +718,17 @@
                 </div>
             </div>
 
+            <!-- INFO: TOKO BUKA-TUTUP OTOMATIS SESUAI JAM -->
+            <div class="ij-card" id="info-jam-otomatis">
+                <div class="ij-ikon"><i class="ph-fill ph-clock-clockwise"></i></div>
+                <div style="flex: 1; min-width: 0;">
+                    <div class="ij-judul" id="ij-judul">Warung bisa buka-tutup otomatis</div>
+                    <p class="ij-teks">Isi <b>jam buka</b> di halaman Toko sekali saja. Setelah itu, warungmu otomatis tampil <b>BUKA</b> atau <b>TUTUP</b> di aplikasi pelanggan sesuai jadwal. Tidak perlu menyalakan tombol setiap hari.</p>
+                    <p class="ij-teks kecil">Buka aplikasi ini lagi hanya kalau jam buka berubah, mau libur, atau ada perubahan menu.</p>
+                    <button type="button" class="ij-btn" id="ij-btn" onclick="window.bukaAturJam()"><i class="ph-bold ph-clock"></i> <span>Atur Jam Buka</span></button>
+                </div>
+            </div>
+
             <!-- LAYANAN UTAMA GRID -->
             <div class="services-container">
                 <h4 style="margin: 0 0 18px 0; font-size: 16px; font-weight: 800; color: var(--dark);">Layanan utama</h4>
@@ -681,6 +736,7 @@
                 <div class="service-grid">
                     <!-- Tombol Aktif: TOKO & MENU -->
                     <div class="service-item" onclick="switchTab('profile')">
+                        <span class="svc-badge" id="badge-toko" aria-label="Ulasan baru"></span>
                         <div class="service-icon"><i class="ph-fill ph-storefront" style="color:#2196F3;"></i></div>
                         <span>Toko</span>
                     </div>
@@ -691,6 +747,7 @@
 
                     <!-- Layanan Lainnya -->
                     <div class="service-item" onclick="openFlashSaleModal()">
+                        <span class="svc-badge label" id="badge-flash" aria-label="Flash Sale belum diisi"></span>
                         <div class="service-icon"><i class="ph-fill ph-lightning" style="color:#FF9800;"></i></div>
                         <span>Flash Sale</span>
                     </div>
@@ -713,6 +770,7 @@
                         <span>Tagihan</span>
                     </div>
                     <div class="service-item" onclick="openPromoModal()">
+                        <span class="svc-badge label" id="badge-promo" aria-label="Promo belum diisi"></span>
                         <div class="service-icon"><i class="ph-fill ph-ticket" style="color:#E53935;"></i></div>
                         <span>Promo</span>
                     </div>
@@ -725,6 +783,26 @@
                 </div>
             </div>
             
+            <!-- BANNER: BIAYA APLIKASI Rp0 & HARGA TETAP ASLI -->
+            <div class="b0" role="note" aria-label="Biaya aplikasi PROJEKGO untuk mitra Rp0">
+                <div class="b0-atas">
+                    <span class="b0-kicker">KOMITMEN PROJEKGO</span>
+                    <span class="b0-gratis">GRATIS</span>
+                </div>
+                <div class="b0-angka" aria-hidden="true">
+                    <span class="b0-coret">Potongan %</span>
+                    <span class="b0-nol">Rp0</span>
+                </div>
+                <div class="b0-sub">Biaya aplikasi untuk mitra</div>
+                <p class="b0-teks">PROJEKGO <b>tidak memotong sepeser pun</b> dari penjualanmu. Karena itu, pasang harga menu <b>sama seperti di warung</b>, jangan dinaikkan ya. Kami hadir untuk mendukung UMKM lokal supaya sama-sama maju.</p>
+                <div class="b0-chips">
+                    <span class="b0-chip"><i class="ph-bold ph-check"></i> Harga tetap asli</span>
+                    <span class="b0-chip"><i class="ph-bold ph-check"></i> Tanpa potongan</span>
+                    <span class="b0-chip"><i class="ph-bold ph-check"></i> Dukung UMKM lokal</span>
+                </div>
+                <i class="ph-fill ph-heart b0-hati" aria-hidden="true"></i>
+            </div>
+
             <!-- BANNER LIHAT TOKO -->
             <div style="background: #FFF3E0; border-radius: 16px; padding: 15px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openKatalog()">
                 <div style="display: flex; align-items: center; gap: 12px;">
@@ -1130,73 +1208,39 @@
         <div class="modal-content" style="max-height: 94vh; display:flex; flex-direction:column;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <h3 style="margin:0;">Anter Makanan</h3>
-                <button style="background:none; border:none; font-size:20px; cursor:pointer; color:#666;" onclick="closeKurirModal()"><i class="ph-bold ph-x"></i></button>
+                <button style="background:none; border:none; font-size:20px; cursor:pointer; color:#666;" aria-label="Tutup" onclick="closeKurirModal()"><i class="ph-bold ph-x"></i></button>
             </div>
-            <p style="font-size: 12px; color: #666; margin: 0 0 12px 0;">Tentukan titik jemput dan tujuan seperti pemesanan Kirim Paket di aplikasi pelanggan.</p>
+            <p style="font-size: 12px; color: #666; margin: 0 0 12px 0; line-height: 1.5;">Pesanan pelanggan sudah siap? Isi alamat pengantarannya. Admin PROJEKGO akan mengirim kurir untuk menjemput di warungmu.</p>
 
             <div style="flex:1; overflow-y:auto; padding-right:2px;">
-
-                <!-- PETA + PEMILIH TITIK -->
-                <div style="position:relative; border-radius:16px; overflow:hidden; height:250px; border:1px solid #eee; background:#e5e7eb; margin-bottom:12px;">
-                    <div id="kurir-map" style="position:absolute; inset:0;"></div>
-
-                    <!-- Mode geser pin -->
-                    <div id="kurir-pick-overlay" style="display:none; position:absolute; inset:0; z-index:5; pointer-events:none;">
-                        <div style="position:absolute; top:12px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.95); padding:7px 16px; border-radius:20px; font-size:11.5px; font-weight:800; color:var(--primary); box-shadow:0 4px 15px rgba(0,0,0,0.15); white-space:nowrap;">
-                            Geser peta untuk menentukan titik
-                        </div>
-                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-100%);">
-                            <i class="ph-fill ph-map-pin" style="font-size:40px; color:#E53935; filter:drop-shadow(0 4px 4px rgba(0,0,0,0.3));"></i>
-                        </div>
-                        <div style="position:absolute; left:12px; right:12px; bottom:12px; display:flex; gap:8px; pointer-events:auto;">
-                            <button type="button" onclick="batalPilihTitikKurir()" style="flex:1; background:#fff; color:#475569; border:1px solid #e5e7eb; border-radius:11px; padding:11px; font-weight:800; font-size:12px; cursor:pointer;">Batal</button>
-                            <button type="button" onclick="pakaiTitikKurir()" style="flex:2; background:var(--primary); color:#fff; border:none; border-radius:11px; padding:11px; font-weight:800; font-size:12px; cursor:pointer;">Gunakan Titik Ini</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- INPUT LOKASI -->
-                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
-                    <div style="display:flex; gap:8px; align-items:center;">
-                        <span style="width:10px; height:10px; border-radius:50%; background:#2196F3; flex-shrink:0;"></span>
-                        <input type="text" id="inp-kurir-jemput" class="form-input" placeholder="Titik jemput (warung Anda)" autocomplete="off" style="flex:1; padding:10px; font-size:12.5px;">
-                        <button type="button" onclick="pilihTitikKurir('jemput')" style="width:42px; flex-shrink:0; background:#fff; border:1px solid #e5e7eb; border-radius:11px; padding:9px 0; cursor:pointer;"><i class="ph-fill ph-map-pin" style="color:#2196F3; font-size:19px;"></i></button>
-                    </div>
-                    <div style="display:flex; gap:8px; align-items:center;">
-                        <span style="width:10px; height:10px; border-radius:50%; background:#F44336; flex-shrink:0;"></span>
-                        <input type="text" id="inp-kurir-tujuan" class="form-input" placeholder="Cari alamat tujuan..." autocomplete="off" style="flex:1; padding:10px; font-size:12.5px;">
-                        <button type="button" onclick="pilihTitikKurir('tujuan')" style="width:42px; flex-shrink:0; background:#fff; border:1px solid #e5e7eb; border-radius:11px; padding:9px 0; cursor:pointer;"><i class="ph-fill ph-map-pin" style="color:#F44336; font-size:19px;"></i></button>
-                    </div>
-                </div>
-
-                <!-- RINGKASAN RUTE -->
-                <div id="kurir-route-summary" style="background:#FFF3E0; border:1px solid #FFE0B2; border-radius:12px; padding:12px; margin-bottom:14px; font-size:12px; color:#b5651d;">
-                    Isi titik jemput dan tujuan untuk melihat estimasi jarak dan ongkir.
-                </div>
-
-                <!-- DETAIL PESANAN -->
-                <label class="form-label" style="margin-bottom:6px; display:block;">Detail Makanan yang Diantar</label>
-                <div style="position:relative; margin-bottom:8px;">
-                    <i class="ph-bold ph-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#9aa0a6; font-size:16px;"></i>
-                    <input type="text" id="inp-cari-kurir" placeholder="Cari menu..." autocomplete="off" oninput="renderDaftarMenuKurir(this.value)"
-                           style="width:100%; box-sizing:border-box; padding:9px 12px 9px 36px; border:1px solid #e5e7eb; border-radius:11px; font-size:12.5px; font-family:inherit; outline:none; background:#fafafa;">
-                </div>
-                <div id="kurir-menu-list" style="max-height:190px; overflow-y:auto; border:1px solid #eee; border-radius:12px; padding:8px; margin-bottom:8px;"></div>
-                <div id="kurir-ringkasan" style="background:#f8fafc; border:1px solid #eef2f7; border-radius:11px; padding:9px 12px; margin-bottom:14px; font-size:12px; color:#475569;">
-                    Belum ada menu yang dipilih.
-                </div>
-
                 <div class="form-group">
-                    <label class="form-label">Nama Penerima</label>
-                    <input type="text" id="inp-kurir-nama" class="form-input" placeholder="Contoh: Bu Sari">
+                    <label class="form-label" for="inp-kurir-jemput">Dijemput di</label>
+                    <input type="text" id="inp-kurir-jemput" class="form-input" maxlength="150" autocomplete="off">
+                    <div id="kurir-info-titik" style="display:none; align-items:center; gap:5px; font-size:11px; color:#2E7D32; margin-top:5px;"><i class="ph-fill ph-map-pin"></i> Titik lokasi warungmu ikut terkirim otomatis.</div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">No. WA Penerima</label>
-                    <input type="tel" id="inp-kurir-wa" class="form-input" inputmode="numeric" placeholder="Contoh: 08123456789">
+                    <label class="form-label" for="inp-kurir-tujuan">Alamat Tujuan *</label>
+                    <textarea id="inp-kurir-tujuan" class="form-textarea" maxlength="300" placeholder="Contoh: Jl. Mawar no. 5, RT 02/03, Wonokriyo, Gombong" style="min-height: 60px;"></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Patokan / Catatan (opsional)</label>
-                    <textarea id="inp-kurir-detail" class="form-textarea" placeholder="Contoh: rumah cat hijau depan masjid, sambal dipisah" style="min-height: 55px;"></textarea>
+                    <label class="form-label" for="inp-kurir-patokan">Patokan (opsional)</label>
+                    <input type="text" id="inp-kurir-patokan" class="form-input" maxlength="120" placeholder="Contoh: rumah cat hijau depan masjid">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="inp-kurir-nama">Nama Penerima</label>
+                    <input type="text" id="inp-kurir-nama" class="form-input" maxlength="60" placeholder="Contoh: Bu Sari">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="inp-kurir-wa">No. WA Penerima</label>
+                    <input type="tel" id="inp-kurir-wa" class="form-input" inputmode="numeric" maxlength="16" placeholder="Contoh: 08123456789">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="inp-kurir-tagih">Uang yang ditagih ke penerima (opsional)</label>
+                    <input type="text" id="inp-kurir-tagih" class="form-input" inputmode="numeric" placeholder="Kosongkan kalau sudah dibayar" oninput="formatTagihKurir(this)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="inp-kurir-detail">Catatan untuk kurir (opsional)</label>
+                    <textarea id="inp-kurir-detail" class="form-textarea" maxlength="300" placeholder="Contoh: 2 bungkus, kuah dipisah, jangan dibalik" style="min-height: 55px;"></textarea>
                 </div>
             </div>
 
@@ -1928,6 +1972,64 @@
             showToast("Beralih ke toko: " + nama_warung);
         };
 
+        /* ==========================================================
+           BERANDA: info jam otomatis + badge merah di layanan
+           - Toko: jumlah ulasan baru yang belum dilihat
+           - Promo / Flash Sale: tanda "Isi" bila belum ada menu yang dipasang
+           ========================================================== */
+        window.bukaAturJam = () => {
+            switchTab('profile');
+            setTimeout(() => {
+                const el = document.getElementById('jadwal-mingguan-container');
+                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
+            }, 80);
+        };
+
+        window.perbaruiInfoJam = (jadwal) => {
+            const kartu = document.getElementById('info-jam-otomatis');
+            if (!kartu) return;
+            const hari = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
+            const terisi = jadwal && typeof jadwal === 'object' && hari.some(h => jadwal[h] && (jadwal[h].libur === true || (jadwal[h].buka && jadwal[h].tutup)));
+            kartu.classList.toggle('sudah', !!terisi);
+            document.getElementById('ij-judul').textContent = terisi ? 'Buka-tutup otomatis sudah aktif ✓' : 'Warung bisa buka-tutup otomatis';
+            document.querySelector('#ij-btn span').textContent = terisi ? 'Lihat / Ubah Jam Buka' : 'Atur Jam Buka';
+        };
+
+        const aturBadge = (id, teks) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = teks || '';
+            el.classList.toggle('tampil', !!teks);
+        };
+
+        const kunciUlasanDilihat = () => 'ulasan_dilihat_' + (currentUser && currentUser.id ? currentUser.id : '-');
+        let jumlahUlasanSekarang = 0;
+
+        window.perbaruiBadgeUlasan = (jumlah) => {
+            jumlahUlasanSekarang = jumlah;
+            let dilihat = null;
+            try { dilihat = localStorage.getItem(kunciUlasanDilihat()); } catch (e) {}
+            if (dilihat === null) {
+                // Pertama kali: ulasan lama tidak dihitung sebagai "baru"
+                try { localStorage.setItem(kunciUlasanDilihat(), String(jumlah)); } catch (e) {}
+                dilihat = jumlah;
+            }
+            const baru = Math.max(0, jumlah - (parseInt(dilihat, 10) || 0));
+            aturBadge('badge-toko', baru ? (baru > 9 ? '9+' : String(baru)) : '');
+        };
+
+        window.tandaiUlasanDilihat = () => {
+            try { localStorage.setItem(kunciUlasanDilihat(), String(jumlahUlasanSekarang)); } catch (e) {}
+            aturBadge('badge-toko', '');
+        };
+
+        window.perbaruiBadgePromo = () => {
+            const semua = Object.values(currentProducts || {});
+            const adaMenu = semua.length > 0;
+            aturBadge('badge-promo', adaMenu && !semua.some(p => p && p.is_promo) ? 'Isi' : '');
+            aturBadge('badge-flash', adaMenu && !semua.some(p => p && p.is_flash_sale) ? 'Isi' : '');
+        };
+
         window.switchTab = (tab) => {
             if (tab === 'home') {
                 document.getElementById('btn-back-home').style.display = 'none';
@@ -1937,6 +2039,7 @@
             document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
             document.getElementById(`content-${tab}`).classList.add('active');
             window.scrollTo(0,0);
+            if (tab === 'profile' && typeof window.tandaiUlasanDilihat === 'function') window.tandaiUlasanDilihat();
         };
 
         // --- FUNGSI LOKASI PETA / GOOGLE MAPS (BARU DITAMBAHKAN) ---
@@ -2277,6 +2380,7 @@
                     jadwal_mingguan: jadwalMingguan 
                 });
                 showToast("Jadwal Mingguan berhasil disimpan!");
+                if (typeof window.perbaruiInfoJam === 'function') window.perbaruiInfoJam(jadwalMingguan);
             } catch (error) {
                 console.error("Error saat menyimpan jadwal:", error);
                 showToast("Gagal menyimpan jadwal!", false);
@@ -2359,6 +2463,7 @@
                     }
 
                     // --- LOAD JADWAL MINGGUAN (LANGKAH 3: TAMPILKAN KE UI) ---
+                    if (typeof window.perbaruiInfoJam === 'function') window.perbaruiInfoJam(data.jadwal_mingguan);
                     const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
                     if (data.jadwal_mingguan) {
                         // Memuat dari format data object mingguan baru
@@ -2434,6 +2539,7 @@
                 if(snapshot.empty) { 
                     document.getElementById('menu-container').innerHTML = '<div style="text-align:center; padding:40px; color:#999;">Belum ada menu.</div>'; 
                     document.getElementById('menu-filter-wrapper').innerHTML = '';
+                    window.perbaruiBadgePromo();
                     return; 
                 }
                 
@@ -2446,6 +2552,7 @@
                 });
                 
                 renderMenuUI();
+                window.perbaruiBadgePromo();
             });
         }
 
@@ -3540,391 +3647,53 @@
         };
 
         /* ==========================================================
-           ANTER MAKANAN — alur sama dengan "Kirim Paket" di aplikasi pelanggan:
-           titik jemput + titik tujuan -> jarak, estimasi waktu, estimasi ongkir.
-           Tarif memakai rumus yang sama dengan aplikasi pelanggan supaya
-           angkanya tidak berbeda antara mitra dan pelanggan.
+           ANTER MAKANAN — isian manual, tanpa peta & tanpa daftar menu.
+           Pesanan biasanya sudah siap; mitra cukup menulis alamat tujuan.
+           Titik lokasi warung (dari Profil) ikut dikirim sebagai link Maps.
            ========================================================== */
-        let kurirKeranjang = {};        // { idProduk: jumlah }
-        let kurirJemput = null;         // { lat, lng, alamat }
-        let kurirTujuan = null;
-        let kurirMap = null, kurirDirService = null, kurirDirRenderer = null, kurirGeocoder = null;
-        let kurirMarkerJemput = null, kurirMarkerTujuan = null;
-        let kurirPickTarget = null;     // 'jemput' | 'tujuan' saat mode geser pin
-        let kurirJarakKm = 0, kurirDurasi = '', kurirOngkir = 0;
-        let kurirAutocompletePasang = false;
-
-        // Tarif Kirim Paket, disalin dari aplikasi pelanggan
-        const tarifPaketKurir = (km) => (km <= 1) ? 8000 : 8000 + (Math.ceil(km - 1) * 2600);
-
-        // Jarak garis lurus, dipakai kalau Google tidak menemukan rute jalan
-        function jarakLurusKm(a, b) {
-            const R = 6371, rad = (d) => d * Math.PI / 180;
-            const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
-            const x = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
-            return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
-        }
-
         window.openKurirModal = () => {
-            kurirKeranjang = {};
-            kurirTujuan = null;
-            kurirJarakKm = 0; kurirDurasi = ''; kurirOngkir = 0;
-            kurirPickTarget = null;
-
-            ['inp-kurir-detail', 'inp-kurir-nama', 'inp-kurir-wa', 'inp-cari-kurir', 'inp-kurir-tujuan']
+            ['inp-kurir-tujuan', 'inp-kurir-patokan', 'inp-kurir-nama', 'inp-kurir-wa', 'inp-kurir-tagih', 'inp-kurir-detail']
                 .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-
-            // Titik jemput otomatis memakai lokasi warung yang sudah disimpan di Profil
-            if (selectedLat && selectedLng) {
-                kurirJemput = {
-                    lat: selectedLat,
-                    lng: selectedLng,
-                    alamat: 'Warung ' + (currentUser && currentUser.name ? currentUser.name : '')
-                };
-                document.getElementById('inp-kurir-jemput').value = kurirJemput.alamat;
-            } else {
-                kurirJemput = null;
-                document.getElementById('inp-kurir-jemput').value = '';
-                showToast("Lokasi warung belum disetel. Isi titik jemput manual dulu ya.", false);
-            }
-
-            renderDaftarMenuKurir('');
-            perbaruiRingkasanRuteKurir();
+            document.getElementById('inp-kurir-jemput').value = 'Warung ' + (currentUser && currentUser.name ? currentUser.name : '');
+            const adaTitik = Number.isFinite(Number(selectedLat)) && Number.isFinite(Number(selectedLng)) && selectedLat && selectedLng;
+            document.getElementById('kurir-info-titik').style.display = adaTitik ? 'flex' : 'none';
             document.getElementById('modal-kurir').style.display = 'flex';
-            setTimeout(siapkanPetaKurir, 250);   // peta butuh kontainernya terlihat dulu
         };
-
-        function siapkanPetaKurir() {
-            if (typeof google === 'undefined' || !google.maps) return;
-            const pusat = kurirJemput
-                ? { lat: kurirJemput.lat, lng: kurirJemput.lng }
-                : { lat: -7.6083, lng: 109.5297 };   // Gombong
-
-            if (!kurirMap) {
-                kurirMap = new google.maps.Map(document.getElementById('kurir-map'), {
-                    zoom: 15, center: pusat, disableDefaultUI: true, zoomControl: true, clickableIcons: false
-                });
-                kurirDirService = new google.maps.DirectionsService();
-                kurirDirRenderer = new google.maps.DirectionsRenderer({ map: kurirMap, suppressMarkers: true });
-                kurirGeocoder = new google.maps.Geocoder();
-            } else {
-                google.maps.event.trigger(kurirMap, 'resize');
-                kurirMap.setCenter(pusat);
-            }
-
-            if (!kurirAutocompletePasang && google.maps.places) {
-                pasangAutocompleteKurir('inp-kurir-jemput', 'jemput');
-                pasangAutocompleteKurir('inp-kurir-tujuan', 'tujuan');
-                kurirAutocompletePasang = true;
-            }
-            gambarTitikKurir();
-        }
-
-        function pasangAutocompleteKurir(idInput, target) {
-            const el = document.getElementById(idInput);
-            if (!el) return;
-            const ac = new google.maps.places.Autocomplete(el, {
-                componentRestrictions: { country: 'id' },
-                fields: ['geometry', 'formatted_address', 'name']
-            });
-            ac.addListener('place_changed', () => {
-                const place = ac.getPlace();
-                if (!place || !place.geometry || !place.geometry.location) return;
-                const titik = {
-                    lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng(),
-                    alamat: place.formatted_address || place.name || el.value
-                };
-                if (target === 'jemput') kurirJemput = titik; else kurirTujuan = titik;
-                el.value = titik.alamat;
-                gambarTitikKurir();
-                hitungRuteKurir();
-            });
-        }
-
-        function gambarTitikKurir() {
-            if (!kurirMap) return;
-            const buat = (lama, titik, warna) => {
-                if (!titik) { if (lama) lama.setMap(null); return null; }
-                const pos = { lat: titik.lat, lng: titik.lng };
-                if (lama) { lama.setPosition(pos); lama.setMap(kurirMap); return lama; }
-                return new google.maps.Marker({
-                    position: pos, map: kurirMap,
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE, scale: 8,
-                        fillColor: warna, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2
-                    }
-                });
-            };
-            kurirMarkerJemput = buat(kurirMarkerJemput, kurirJemput, '#2196F3');
-            kurirMarkerTujuan = buat(kurirMarkerTujuan, kurirTujuan, '#F44336');
-
-            if (kurirJemput && kurirTujuan) {
-                const batas = new google.maps.LatLngBounds();
-                batas.extend({ lat: kurirJemput.lat, lng: kurirJemput.lng });
-                batas.extend({ lat: kurirTujuan.lat, lng: kurirTujuan.lng });
-                kurirMap.fitBounds(batas, 60);
-            } else if (kurirJemput) {
-                kurirMap.setCenter({ lat: kurirJemput.lat, lng: kurirJemput.lng });
-            }
-        }
-
-        function hitungRuteKurir() {
-            if (!kurirJemput || !kurirTujuan) { perbaruiRingkasanRuteKurir(); return; }
-
-            const pakaiGarisLurus = () => {
-                // Cadangan kalau rute jalan tidak ditemukan. Ditandai jelas ke mitra
-                // supaya tidak dikira jarak tempuh sebenarnya.
-                kurirJarakKm = jarakLurusKm(kurirJemput, kurirTujuan);
-                kurirDurasi = '';
-                kurirOngkir = tarifPaketKurir(kurirJarakKm);
-                perbaruiRingkasanRuteKurir(true);
-            };
-
-            if (!kurirDirService) { pakaiGarisLurus(); return; }
-
-            kurirDirService.route({
-                origin: { lat: kurirJemput.lat, lng: kurirJemput.lng },
-                destination: { lat: kurirTujuan.lat, lng: kurirTujuan.lng },
-                travelMode: google.maps.TravelMode.DRIVING
-            }, (hasil, status) => {
-                if (status === 'OK' && hasil.routes && hasil.routes[0] && hasil.routes[0].legs[0]) {
-                    const leg = hasil.routes[0].legs[0];
-                    if (kurirDirRenderer) kurirDirRenderer.setDirections(hasil);
-                    kurirJarakKm = leg.distance.value / 1000;
-                    kurirDurasi = leg.duration.text || '';
-                    kurirOngkir = tarifPaketKurir(kurirJarakKm);
-                    perbaruiRingkasanRuteKurir();
-                } else {
-                    if (kurirDirRenderer) kurirDirRenderer.setDirections({ routes: [] });
-                    pakaiGarisLurus();
-                }
-            });
-        }
-
-        function perbaruiRingkasanRuteKurir(garisLurus) {
-            const box = document.getElementById('kurir-route-summary');
-            if (!box) return;
-            box.innerHTML = '';
-
-            if (!kurirJemput || !kurirTujuan) {
-                box.textContent = 'Isi titik jemput dan tujuan untuk melihat estimasi jarak dan ongkir.';
-                return;
-            }
-
-            const baris1 = document.createElement('div');
-            baris1.style.cssText = "font-weight:800; font-size:13px; color:#E65100; margin-bottom:3px;";
-            baris1.textContent = 'Estimasi Ongkir: Rp ' + kurirOngkir.toLocaleString('id-ID');
-            box.appendChild(baris1);
-
-            const baris2 = document.createElement('div');
-            baris2.textContent = 'Jarak ' + kurirJarakKm.toFixed(1) + ' km'
-                + (kurirDurasi ? ' • sekitar ' + kurirDurasi : '');
-            box.appendChild(baris2);
-
-            const baris3 = document.createElement('div');
-            baris3.style.cssText = "margin-top:5px; font-size:11px; color:#a16207;";
-            baris3.textContent = garisLurus
-                ? 'Rute jalan tidak ketemu, jadi ini hitungan garis lurus. Ongkir final tetap ditentukan admin.'
-                : 'Angka ini estimasi aplikasi. Ongkir final tetap ditentukan admin.';
-            box.appendChild(baris3);
-        }
-
-        // --- MODE GESER PIN ---
-        window.pilihTitikKurir = (target) => {
-            if (!kurirMap) { showToast("Peta belum siap, tunggu sebentar.", false); return; }
-            kurirPickTarget = target;
-            const acuan = (target === 'tujuan' && kurirTujuan) ? kurirTujuan : (kurirJemput || null);
-            if (acuan) kurirMap.setCenter({ lat: acuan.lat, lng: acuan.lng });
-            document.getElementById('kurir-pick-overlay').style.display = 'block';
-        };
-
-        window.batalPilihTitikKurir = () => {
-            kurirPickTarget = null;
-            document.getElementById('kurir-pick-overlay').style.display = 'none';
-        };
-
-        window.pakaiTitikKurir = () => {
-            if (!kurirPickTarget || !kurirMap) return;
-            const pusat = kurirMap.getCenter();
-            const titik = { lat: pusat.lat(), lng: pusat.lng(), alamat: '' };
-            const target = kurirPickTarget;
-            const idInput = target === 'jemput' ? 'inp-kurir-jemput' : 'inp-kurir-tujuan';
-
-            const selesai = (alamat) => {
-                titik.alamat = alamat || (titik.lat.toFixed(5) + ', ' + titik.lng.toFixed(5));
-                if (target === 'jemput') kurirJemput = titik; else kurirTujuan = titik;
-                document.getElementById(idInput).value = titik.alamat;
-                batalPilihTitikKurir();
-                gambarTitikKurir();
-                hitungRuteKurir();
-            };
-
-            if (kurirGeocoder) {
-                kurirGeocoder.geocode({ location: { lat: titik.lat, lng: titik.lng } }, (hasil, status) => {
-                    selesai((status === 'OK' && hasil && hasil[0]) ? hasil[0].formatted_address : '');
-                });
-            } else {
-                selesai('');
-            }
-        };
-
-        // --- DAFTAR MENU (urutannya sama dengan aplikasi pelanggan) ---
-        function daftarMenuKurir(kataKunci) {
-            const q = String(kataKunci || '').trim().toLowerCase();
-            const hasil = [];
-            urutkanKategori(Object.keys(globalMenuGroups)).forEach(cat => {
-                urutkanMenu(globalMenuGroups[cat]).forEach(item => {
-                    if (item.is_sold_out) return;
-                    if (q && !String(item.nama_menu || '').toLowerCase().includes(q)
-                          && !String(item.tipe || '').toLowerCase().includes(q)) return;
-                    hasil.push(item);
-                });
-            });
-            return hasil;
-        }
-
-        // Digambar dengan createElement/textContent, jadi nama menu selalu jadi teks biasa
-        window.renderDaftarMenuKurir = (kataKunci) => {
-            const wadah = document.getElementById('kurir-menu-list');
-            if (!wadah) return;
-            wadah.innerHTML = '';
-
-            const daftar = daftarMenuKurir(kataKunci);
-            if (daftar.length === 0) {
-                const kosong = document.createElement('div');
-                kosong.style.cssText = "text-align:center; padding:20px 10px; color:#999; font-size:12px;";
-                kosong.textContent = Object.keys(globalMenuGroups).length
-                    ? 'Menu tidak ditemukan.'
-                    : 'Belum ada menu di warung Anda.';
-                wadah.appendChild(kosong);
-                perbaruiRingkasanKurir();
-                return;
-            }
-
-            daftar.forEach(item => {
-                const jml = kurirKeranjang[item.id] || 0;
-
-                const baris = document.createElement('div');
-                baris.style.cssText = "display:flex; align-items:center; gap:9px; padding:7px 4px; border-bottom:1px solid #f4f4f5;";
-
-                const img = document.createElement('img');
-                img.loading = 'lazy';
-                img.style.cssText = "width:40px; height:40px; border-radius:9px; object-fit:cover; background:#f1f5f9; flex-shrink:0;";
-                img.src = fixImgUrl(item.foto_url) || 'https://cdn-icons-png.flaticon.com/512/1046/1046857.png';
-                img.onerror = function () { this.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046857.png'; };
-                baris.appendChild(img);
-
-                const info = document.createElement('div');
-                info.style.cssText = "flex:1; min-width:0;";
-                const nama = document.createElement('div');
-                nama.style.cssText = "font-size:12.5px; font-weight:700; color:var(--dark); line-height:1.3; overflow-wrap:anywhere;";
-                nama.textContent = item.nama_menu || '(tanpa nama)';
-                info.appendChild(nama);
-                const harga = document.createElement('div');
-                harga.style.cssText = "font-size:11.5px; font-weight:800; color:var(--primary); margin-top:2px;";
-                harga.textContent = 'Rp ' + Number(item.harga || 0).toLocaleString('id-ID');
-                info.appendChild(harga);
-                baris.appendChild(info);
-
-                const stepper = document.createElement('div');
-                stepper.style.cssText = "display:flex; align-items:center; gap:7px; flex-shrink:0;";
-
-                if (jml > 0) {
-                    const kurang = document.createElement('button');
-                    kurang.type = 'button';
-                    kurang.textContent = '−';
-                    kurang.style.cssText = "width:26px; height:26px; border-radius:8px; border:1px solid var(--primary); background:#fff; color:var(--primary); font-size:15px; font-weight:800; cursor:pointer; line-height:1;";
-                    kurang.addEventListener('click', () => ubahJumlahKurir(item.id, -1, kataKunci));
-                    stepper.appendChild(kurang);
-
-                    const angka = document.createElement('span');
-                    angka.style.cssText = "font-size:13px; font-weight:800; min-width:16px; text-align:center;";
-                    angka.textContent = String(jml);
-                    stepper.appendChild(angka);
-                }
-
-                const tambah = document.createElement('button');
-                tambah.type = 'button';
-                tambah.textContent = '+';
-                tambah.style.cssText = "width:26px; height:26px; border-radius:8px; border:none; background:var(--primary); color:#fff; font-size:15px; font-weight:800; cursor:pointer; line-height:1;";
-                tambah.addEventListener('click', () => ubahJumlahKurir(item.id, 1, kataKunci));
-                stepper.appendChild(tambah);
-
-                baris.appendChild(stepper);
-                wadah.appendChild(baris);
-            });
-
-            perbaruiRingkasanKurir();
-        };
-
-        function ubahJumlahKurir(id, delta, kataKunci) {
-            const baru = (kurirKeranjang[id] || 0) + delta;
-            if (baru <= 0) delete kurirKeranjang[id];
-            else if (baru <= 99) kurirKeranjang[id] = baru;
-            renderDaftarMenuKurir(kataKunci);
-        }
-
-        function isiKeranjangKurir() {
-            const isi = [];
-            Object.keys(kurirKeranjang).forEach(id => {
-                const item = currentProducts[id];
-                if (!item) return;
-                const jml = kurirKeranjang[id];
-                const hargaSatuan = Number(item.harga) || 0;
-                isi.push({ nama: item.nama_menu || '(tanpa nama)', jml: jml, subtotal: hargaSatuan * jml });
-            });
-            return isi;
-        }
-
-        function perbaruiRingkasanKurir() {
-            const box = document.getElementById('kurir-ringkasan');
-            if (!box) return;
-            const isi = isiKeranjangKurir();
-            if (isi.length === 0) { box.textContent = 'Belum ada menu yang dipilih.'; return; }
-            const totalItem = isi.reduce((a, b) => a + b.jml, 0);
-            const totalHarga = isi.reduce((a, b) => a + b.subtotal, 0);
-            box.textContent = totalItem + ' item • Total makanan Rp ' + totalHarga.toLocaleString('id-ID');
-        }
 
         window.closeKurirModal = () => {
             document.getElementById('modal-kurir').style.display = 'none';
-            batalPilihTitikKurir();
-            kurirKeranjang = {};
+        };
+
+        window.formatTagihKurir = (el) => {
+            const n = parseInt(String(el.value).replace(/\D/g, ''), 10) || 0;
+            el.value = n ? n.toLocaleString('id-ID') : '';
         };
 
         window.sendKurirWA = () => {
-            const catatan = document.getElementById('inp-kurir-detail').value.trim();
-            const namaPenerima = document.getElementById('inp-kurir-nama').value.trim();
-            const waPenerima = document.getElementById('inp-kurir-wa').value.trim();
-            const teksJemput = document.getElementById('inp-kurir-jemput').value.trim();
-            const teksTujuan = document.getElementById('inp-kurir-tujuan').value.trim();
-            const isi = isiKeranjangKurir();
+            const ambil = (id, maks) => document.getElementById(id).value.trim().slice(0, maks);
+            const jemput = ambil('inp-kurir-jemput', 150);
+            const tujuan = ambil('inp-kurir-tujuan', 300);
+            const patokan = ambil('inp-kurir-patokan', 120);
+            const nama = ambil('inp-kurir-nama', 60);
+            const wa = ambil('inp-kurir-wa', 16);
+            const catatan = ambil('inp-kurir-detail', 300);
+            const tagih = Math.min(100000000, parseInt(ambil('inp-kurir-tagih', 20).replace(/\D/g, ''), 10) || 0);
+            const waAngka = wa.replace(/\D/g, '');
 
-            if (!teksJemput) return showToast("Titik jemput belum diisi!", false);
-            if (!teksTujuan) return showToast("Titik tujuan belum diisi!", false);
-            if (isi.length === 0 && !catatan) return showToast("Pilih menunya dulu, atau tulis di kolom catatan.", false);
-
-            const petaLink = (t) => t ? `\nhttps://www.google.com/maps?q=${t.lat},${t.lng}` : '';
+            if (!jemput) return showToast("Tempat jemput belum diisi!", false);
+            if (tujuan.length < 5) { document.getElementById('inp-kurir-tujuan').focus(); return showToast("Alamat tujuan belum diisi lengkap!", false); }
+            if (wa && (waAngka.length < 9 || waAngka.length > 15)) return showToast("No. WA penerima tidak valid.", false);
 
             let text = `Halo Admin Projekgo,\n\nSaya mau pesan kurir dari warung *${currentUser.name}*.\n\n`;
-            text += `*Titik Jemput:*\n${teksJemput}${petaLink(kurirJemput)}\n\n`;
-            text += `*Titik Tujuan:*\n${teksTujuan}${petaLink(kurirTujuan)}\n`;
-
-            if (kurirJemput && kurirTujuan && kurirJarakKm > 0) {
-                text += `\n*Jarak:* ${kurirJarakKm.toFixed(1)} km${kurirDurasi ? ' (sekitar ' + kurirDurasi + ')' : ''}`;
-                text += `\n*Estimasi Ongkir:* Rp ${kurirOngkir.toLocaleString('id-ID')} _(estimasi aplikasi, mohon dikonfirmasi)_\n`;
-            }
-
-            if (isi.length > 0) {
-                const totalHarga = isi.reduce((a, b) => a + b.subtotal, 0);
-                text += `\n*Detail Pesanan:*\n`;
-                text += isi.map(i => `${i.jml}x ${i.nama} - Rp ${i.subtotal.toLocaleString('id-ID')}`).join('\n');
-                text += `\n*Total Makanan:* Rp ${totalHarga.toLocaleString('id-ID')}\n`;
-            }
-            if (catatan) text += `\n*Patokan/Catatan:*\n${catatan}\n`;
-            if (namaPenerima) text += `\n*Nama Penerima:* ${namaPenerima}`;
-            if (waPenerima) text += `\n*No. WA Penerima:* ${waPenerima}`;
+            text += `*Jemput di:*\n${jemput}`;
+            const lat = Number(selectedLat), lng = Number(selectedLng);
+            if (selectedLat && selectedLng && Number.isFinite(lat) && Number.isFinite(lng)) text += `\nhttps://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
+            text += `\n\n*Antar ke:*\n${tujuan}`;
+            if (patokan) text += `\nPatokan: ${patokan}`;
+            if (nama) text += `\n\n*Nama Penerima:* ${nama}`;
+            if (waAngka) text += `${nama ? '' : '\n'}\n*No. WA Penerima:* ${waAngka}`;
+            if (tagih) text += `\n\n*Tagih ke penerima:* Rp ${tagih.toLocaleString('id-ID')}`;
+            if (catatan) text += `\n\n*Catatan:*\n${catatan}`;
             text += `\n\nMohon segera diproses untuk dijemput. Terima kasih!`;
 
             window.open(`https://wa.me/62882008667068?text=${encodeURIComponent(text)}`, '_blank');
@@ -4617,10 +4386,16 @@
                         }
                     }
 
-                    container.innerHTML += `<div style="background:white;padding:15px;border-radius:12px;margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;"><strong>${displayName}</strong><span style="color:#FFC107;">★ ${r.rating}</span></div><div style="font-size:13px;color:#555;margin-top:4px;">${esc(r.text || '')}</div></div>`;
+                    container.innerHTML += `<div style="background:white;padding:15px;border-radius:12px;margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;"><strong>${esc(displayName)}</strong><span style="color:#FFC107;">★ ${(Number(r.rating) || 0).toFixed(1)}</span></div><div style="font-size:13px;color:#555;margin-top:4px;">${esc(r.text || '')}</div></div>`;
                 });
                 document.getElementById('stat-orders').innerText = c;
                 document.getElementById('stat-rating').innerText = c > 0 ? (tr/c).toFixed(1) : "0.0";
+                // Badge merah di tombol Toko untuk ulasan yang belum dilihat
+                if (document.getElementById('content-profile')?.classList.contains('active')) {
+                    jumlahUlasanSekarang = c; window.tandaiUlasanDilihat();
+                } else {
+                    window.perbaruiBadgeUlasan(c);
+                }
             });
         }
 
