@@ -445,6 +445,42 @@
         }
 
     </style>
+    <style>
+        /* ===== LOGIN GMAIL (4d, 4 Nov 2026) ===== */
+        .gm-gbtn{width:100%;min-height:52px;border-radius:14px;border:1.5px solid #DADCE0;background:#fff;color:#1F1F1F;font-family:inherit;font-size:15.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+        .gm-gbtn:disabled{opacity:.6;cursor:wait}
+        .gm-info{width:100%;margin-top:20px;padding:14px;border-radius:14px;background:#F5F6F8;display:flex;gap:12px;align-items:flex-start;text-align:left;font-size:12.5px;line-height:1.5;color:#333}
+        .gm-info b{display:block;font-size:13px;color:#1A1A1A}
+        .gm-layar{display:none;position:fixed;inset:0;z-index:9998;background:#F5F6F8;overflow-y:auto}
+        .gm-wrap{max-width:440px;margin:0 auto;padding:22px 20px 32px;display:flex;flex-direction:column;gap:18px}
+        .gm-akun{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:#fff;border:1px solid #ECECEC}
+        .gm-avatar{width:40px;height:40px;border-radius:99px;background:#E8F0FE;color:#1A56DB;display:grid;place-items:center;font-weight:800;font-size:16px;flex:none}
+        .gm-akun-nama{font-size:14px;font-weight:800}
+        .gm-akun-email{font-size:12.5px;color:#555;word-break:break-all}
+        .gm-teks{background:none;border:0;padding:8px;font-family:inherit;font-size:13.5px;font-weight:800;color:#C2410C;cursor:pointer;min-height:44px}
+        .gm-h1{margin:0;font-size:23px;font-weight:800;letter-spacing:-.02em}
+        .gm-p{margin:8px 0 0;font-size:14px;line-height:1.55;color:#444}
+        .gm-kartu{display:flex;flex-direction:column;gap:14px;padding:18px 16px;border-radius:18px;background:#fff;border:1px solid #ECECEC}
+        .gm-lbl{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:700;color:#4A4A4A}
+        .gm-inp{min-height:50px;padding:0 14px;border:2px solid #EEE;border-radius:12px;background:#FAFAFA;font-family:inherit;font-size:16px;color:#1A1A1A;width:100%;box-sizing:border-box}
+        .gm-inp:focus{outline:none;border-color:var(--primary)}
+        .gm-utama{width:100%;min-height:52px;border-radius:14px;border:0;background:#E85D00;color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer}
+        .gm-utama:disabled{opacity:.6;cursor:wait}
+        .gm-dua{width:100%;min-height:48px;border-radius:14px;border:1.5px solid #E0E0E0;background:#fff;color:#1A1A1A;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+        .gm-catatan{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:14px;background:#FFF7ED;font-size:12.5px;line-height:1.55;color:#5A3A1A}
+        .gm-galat{display:none;background:#FEF2F2;color:#B91C1C;font-size:12.5px;font-weight:600;padding:12px;border-radius:10px;line-height:1.5}
+        .gm-tengah{text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}
+        .gm-kecil{font-size:12.5px;color:#6B6B6B;font-weight:600}
+        .gm-ikon-besar{width:72px;height:72px;border-radius:99px;background:#FFF3E0;color:#E85D00;display:grid;place-items:center;margin:0 auto}
+        .gm-baris{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:9px 0;border-bottom:1px solid #F0F0F0}
+        .gm-baris:last-child{border-bottom:0}
+        .gm-baris span{color:#666;font-weight:600}
+        .gm-baris b{font-weight:800;text-align:right;word-break:break-word}
+        .gm-st{display:flex;gap:12px;align-items:flex-start}
+        .gm-bul{width:28px;height:28px;flex:none;border-radius:99px;display:grid;place-items:center;font-size:12px;font-weight:800}
+        .gm-st b{display:block;font-size:14px;font-weight:800}
+        .gm-st span{font-size:12.5px;color:#555}
+    </style>
 </head>
 <body>
 
@@ -612,14 +648,80 @@
             <div style="font-weight:800; margin-bottom:5px; color: var(--dark); font-size: 18px;">Aplikasi Mitra Penjual</div>
             <p class="login-desc">Masuk untuk mengelola warung Anda.</p>
             
-            <input type="text" id="login-id" class="login-input" placeholder="Alamat Email">
-            <input type="password" id="login-pin" class="login-input" placeholder="PIN Keamanan">
-            
-            <button class="btn-login" onclick="login()">Masuk ke Dashboard</button>
+            <button type="button" id="btn-masuk-google" class="gm-gbtn" onclick="login()"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Masuk dengan Google</button>
+            <p style="margin:12px 0 0; font-size:12.5px; color:#555; text-align:center; line-height:1.5;">Tidak perlu mengingat PIN. Cukup pilih akun Google yang sudah ada di HP Anda.</p>
+            <div class="gm-info">
+                <i class="ph-bold ph-arrows-clockwise" style="font-size:20px; color:#C2410C; flex:none; margin-top:1px;"></i>
+                <div><b>Dulu masuk pakai email &amp; PIN?</b>Masuk dengan Google dulu, lalu hubungkan warung lama Anda. Cukup sekali.</div>
+            </div>
             
             <!-- TOMBOL DAFTAR MERCHANT -->
             <div style="margin-top: 30px; font-size: 13px; color: #888; font-weight: 600;">Belum mendaftar sebagai mitra?</div>
-            <button class="btn-cancel" style="color: var(--primary); font-weight: 800; margin-top: 10px; background: #FFF3E0; border-radius: 12px; padding: 12px; width: 100%;" onclick="openRegisterModal()">Daftar Menjadi Merchant</button>
+            <button class="btn-cancel" style="color: var(--primary); font-weight: 800; margin-top: 10px; background: #FFF3E0; border-radius: 12px; padding: 12px; width: 100%;" onclick="daftarMerchant()">Daftar Menjadi Merchant</button>
+        </div>
+    </div>
+
+    <!-- ===== HUBUNGKAN WARUNG LAMA (seller lama, sekali saja) ===== -->
+    <div id="hubungkan-screen" class="gm-layar">
+        <div class="gm-wrap">
+            <div class="gm-akun">
+                <div class="gm-avatar" id="hb-avatar">?</div>
+                <div style="flex:1; min-width:0;"><div class="gm-akun-nama" id="hb-nama"></div><div class="gm-akun-email" id="hb-email"></div></div>
+                <button type="button" class="gm-teks" style="font-size:12.5px;" onclick="gantiAkunGoogle()">Ganti akun</button>
+            </div>
+            <div>
+                <h1 class="gm-h1">Hubungkan warung lama Anda</h1>
+                <p class="gm-p">Masukkan email dan PIN yang dulu dipakai masuk. Ini hanya <b>sekali</b>, untuk membuktikan Anda pemilik warungnya.</p>
+            </div>
+            <div class="gm-galat" id="hb-galat" role="alert"></div>
+            <div class="gm-kartu">
+                <label class="gm-lbl">Email lama
+                    <input class="gm-inp" type="email" id="hb-email-lama" autocomplete="off" autocapitalize="none" placeholder="contoh: warungbudi12@projekgo.id">
+                </label>
+                <label class="gm-lbl">PIN lama
+                    <input class="gm-inp" type="password" id="hb-pin-lama" inputmode="numeric" autocomplete="off" placeholder="PIN yang dulu dipakai masuk">
+                </label>
+                <button type="button" class="gm-utama" id="hb-kirim" onclick="kirimPindahGmail()">Kirim permintaan</button>
+            </div>
+            <div class="gm-catatan">
+                <i class="ph-bold ph-info" style="font-size:20px; color:#C2410C; flex:none;"></i>
+                <div>Setelah admin ProjekGo menyetujui, warung Anda langsung terbuka di akun Google ini. Seterusnya cukup <b>Masuk dengan Google</b>, tanpa PIN.</div>
+            </div>
+            <div class="gm-tengah">
+                <span class="gm-kecil">Lupa PIN lama?</span>
+                <a class="gm-teks" href="https://wa.me/62882008667068?text=Halo%20admin%2C%20saya%20seller%20ProjekGo%20dan%20lupa%20PIN%20lama.%20Saya%20mau%20pindah%20login%20ke%20Gmail." target="_blank" rel="noopener" style="text-decoration:none; display:inline-flex; align-items:center;">Minta bantuan admin lewat WhatsApp</a>
+            </div>
+            <div style="height:1px; background:#E4E4E4;"></div>
+            <div class="gm-tengah">
+                <span class="gm-kecil">Belum punya warung di ProjekGo?</span>
+                <button type="button" class="gm-teks" onclick="openRegisterModal()">Daftar Menjadi Merchant</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MENUNGGU PERSETUJUAN ADMIN ===== -->
+    <div id="menunggu-screen" class="gm-layar">
+        <div class="gm-wrap" style="padding-top:40px;">
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
+                <div class="gm-ikon-besar"><i class="ph-bold ph-clock" style="font-size:34px;"></i></div>
+                <h1 class="gm-h1" id="mg-judul">Menunggu persetujuan admin</h1>
+                <p class="gm-p" style="margin:0; max-width:34ch;">Permintaan Anda sudah kami terima. Biasanya disetujui di hari yang sama.</p>
+            </div>
+            <div class="gm-kartu" style="gap:0; padding:6px 16px 10px;">
+                <div class="gm-baris"><span>Warung</span><b id="mg-warung"></b></div>
+                <div class="gm-baris"><span>Akun Google</span><b id="mg-gmail"></b></div>
+                <div class="gm-baris"><span>Dikirim</span><b id="mg-waktu"></b></div>
+            </div>
+            <div class="gm-kartu">
+                <div class="gm-st"><div class="gm-bul" style="background:#E8F5E9; color:#2E7D32;"><i class="ph-bold ph-check"></i></div><div><b>Masuk dengan Google</b><span>Selesai</span></div></div>
+                <div class="gm-st"><div class="gm-bul" style="background:#E8F5E9; color:#2E7D32;"><i class="ph-bold ph-check"></i></div><div><b id="mg-tahap2">Permintaan terkirim</b><span id="mg-tahap2-ket">Email dan PIN lama cocok</span></div></div>
+                <div class="gm-st"><div class="gm-bul" style="background:#FFF3E0; color:#C2410C;">3</div><div><b>Disetujui admin</b><span>Halaman ini otomatis berganti ke dashboard warung</span></div></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button type="button" class="gm-utama" onclick="ruteSeller()">Periksa lagi</button>
+                <a class="gm-dua" id="mg-wa" href="https://wa.me/62882008667068" target="_blank" rel="noopener"><i class="ph-fill ph-whatsapp-logo" style="color:#1E8E3E; font-size:18px;"></i> Tanya admin lewat WhatsApp</a>
+                <button type="button" class="gm-teks" onclick="gantiAkunGoogle()">Keluar / ganti akun Google</button>
+            </div>
         </div>
     </div>
 
@@ -1597,12 +1699,22 @@
 
     <!-- JAVASCRIPT -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDoc, getDocs, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
+        // 4 Nov 2026: aplikasi seller pindah ke proyek onbid (satu Firebase untuk semua aplikasi ProjekGo).
         const firebaseConfig = {
+            apiKey: "AIzaSyBCp2PBN1ASET6QjuQ3PWdC1gysQv0z_OY",
+            authDomain: "onbid-2f87a.firebaseapp.com",
+            projectId: "onbid-2f87a",
+            storageBucket: "onbid-2f87a.firebasestorage.app",
+            messagingSenderId: "223888282484",
+            appId: "1:223888282484:web:2fc05ed67ca1fab39e1221"
+        };
+        // Proyek lama, HANYA dipakai sekali untuk mencocokkan email + PIN lama saat seller pindah ke Gmail.
+        const firebaseConfigLama = {
             apiKey: "AIzaSyAc4ZnBU6xAil7Un4Y53Jxncj_B6eURHBo",
             authDomain: "projekgo-app.firebaseapp.com",
             projectId: "projekgo-app",
@@ -1763,106 +1875,41 @@
             return url;
         };
 
+        // ===== MASUK DENGAN GOOGLE (menggantikan email + PIN) =====
+        // Setelah Google berhasil, onAuthStateChanged -> ruteSeller() yang menentukan layar berikutnya.
         window.login = async () => {
-            const emailInput = document.getElementById('login-id').value.trim().toLowerCase(); 
-            const pinInput = document.getElementById('login-pin').value.trim();
-            
-            if(!emailInput || !pinInput) return showToast("Lengkapi Email dan PIN!", false);
-            
-            const btn = document.querySelector('.btn-login');
-            btn.innerHTML = "Memeriksa..."; btn.disabled = true;
-            sedangLoginManual = true;
-            pinSaatLogin = pinInput;
-            
+            const btn = document.getElementById('btn-masuk-google');
+            if (btn) btn.disabled = true;
+            const provider = new GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
             try {
-                // 1. Login langsung menggunakan sistem asli Firebase Auth
-                await signInWithEmailAndPassword(auth, emailInput, pinInput);
-                
-                // 2. Jika berhasil, cari data detail warung di database Firestore
-                const q = query(collection(db, "vendors"), where("email", "==", emailInput));
-                const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
-                    // CEK LOGIKA MULTI-CABANG
-                    if (querySnapshot.size === 1) {
-                        // KONDISI 1: HANYA ADA 1 CABANG (Langsung Masuk Dashboard)
-                        const docSnap = querySnapshot.docs[0];
-                        currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
-                        
-                        // Simpan memori cabang (berisi 1)
-                        window.userBranches = [{ id: docSnap.id, name: docSnap.data().nama_warung, data: docSnap.data() }];
-                        
-                        localStorage.setItem('vendor_user', JSON.stringify(currentUser));
-                        initDashboard();
-                    } else {
-                        // KONDISI 2: PUNYA BANYAK CABANG (Tampilkan Modal Pilihan)
-                        window.userBranches = [];
-                        let htmlList = "";
-                        
-                        querySnapshot.forEach((docSnap) => {
-                            const data = docSnap.data();
-                            const shopId = docSnap.id;
-                            const shopName = data.nama_warung || "Toko Tanpa Nama";
-                            const shopAddress = data.alamat || "Alamat belum diatur";
-                            
-                            // Simpan ke array global untuk fitur Ganti Toko nanti
-                            window.userBranches.push({ id: shopId, name: shopName, data: data });
-                            
-                            // Render UI masing-masing cabang ke dalam list modal
-                            htmlList += `
-                            <div onclick="pilihCabang('${shopId}', '${shopName.replace(/'/g, "\\'")}')" style="background: white; border: 1px solid #eee; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; margin-bottom: 8px;">
-                                <div style="width: 40px; height: 40px; background: #E3F2FD; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #1976D2; flex-shrink: 0;">
-                                    <i class="ph-fill ph-storefront" style="font-size: 20px;"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 800; font-size: 14px; color: var(--dark);">${shopName}</div>
-                                    <div style="font-size: 11px; color: #666; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${shopAddress}</div>
-                                </div>
-                                <i class="ph-bold ph-caret-right" style="color: #ccc;"></i>
-                            </div>`;
-                        });
-                        
-                        // Masukkan list HTML ke dalam kontainer modal cabang
-                        document.getElementById('cabang-list-container').innerHTML = htmlList;
-                        
-                        // Sembunyikan halaman login dan Tampilkan Modal Cabang
-                        document.getElementById('login-page').style.display = 'none';
-                        document.getElementById('dashboard').style.display = 'block'; 
-                        document.getElementById('modal-cabang').style.display = 'flex';
-                        
-                        // Kembalikan status tombol login (karena tidak masuk ke dashboard langsung)
-                        btn.innerHTML = "Masuk ke Dashboard"; 
-                        btn.disabled = false;
-                    }
-                } else {
-                    // Fallback jika id dokumen adalah alamat email itu sendiri
-                    const docSnap = await getDoc(doc(db, "vendors", emailInput));
-                    if (docSnap.exists()) {
-                        currentUser = { id: docSnap.id, name: docSnap.data().nama_warung };
-                        window.userBranches = [{ id: docSnap.id, name: docSnap.data().nama_warung, data: docSnap.data() }];
-                        localStorage.setItem('vendor_user', JSON.stringify(currentUser));
-                        initDashboard();
-                    } else {
-                        // Jika login auth sukses tapi data warung tidak ada di database
-                        await signOut(auth);
-                        showToast("Akun terdaftar, tapi data warung tidak ditemukan!", false);
-                        btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false;
-                    }
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                if (error.code === 'auth/popup-blocked' || error.code === 'auth/operation-not-supported-in-this-environment') {
+                    try { await signInWithRedirect(auth, provider); return; } catch (e2) { error = e2; }
                 }
-            } catch (error) { 
-                console.error("Login Error:", error);
-                // Menangani pesan error spesifik dari Firebase Auth
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    showToast("Email atau PIN salah!", false);
-                } else if (error.code === 'auth/too-many-requests') {
-                    showToast("Terlalu banyak percobaan gagal. Coba lagi nanti.", false);
-                } else {
-                    showToast("Gagal Login: " + error.message, false); 
+                if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+                    console.error("Login Google gagal:", error);
+                    showToast(error.code === 'auth/network-request-failed' ? "Internet bermasalah, coba lagi." : "Gagal masuk dengan Google. Coba lagi.", false);
                 }
-                btn.innerHTML = "Masuk ke Dashboard"; btn.disabled = false; 
+                sessionStorage.removeItem('ingin_daftar');
             } finally {
-                sedangLoginManual = false;
+                if (btn) btn.disabled = false;
             }
+        };
+
+        // Tombol "Daftar Menjadi Merchant" di halaman login: masuk Google dulu, lalu formulir terbuka.
+        window.daftarMerchant = () => {
+            if (auth.currentUser) { openRegisterModal(); return; }
+            sessionStorage.setItem('ingin_daftar', '1');
+            window.login();
+        };
+
+        window.gantiAkunGoogle = async () => {
+            hentikanPantauSeller();
+            try { await signOut(auth); } catch (e) {}
+            localStorage.removeItem('vendor_user');
+            location.reload();
         };
 
         window.logout = async () => { 
@@ -1917,14 +1964,15 @@
                     const bgStyle = isCurrentStore ? 'background: #FFF3E0; border: 1px solid #FFE0B2;' : 'background: white; border: 1px solid #eee;';
                     const indicator = isCurrentStore ? '<div style="font-size:10px; color:var(--primary); font-weight:800; margin-top:4px;"><i class="ph-fill ph-check-circle"></i> Sedang Aktif</div>' : '';
 
+                    const idxCabang = window.userBranches.length - 1;
                     htmlList += `
-                    <div onclick="pilihCabang('${shopId}', '${shopName.replace(/'/g, "\\'")}')" style="${bgStyle} padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; margin-bottom: 8px;">
+                    <div onclick="pilihCabangKe(${idxCabang})" style="${bgStyle} padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; margin-bottom: 8px;">
                         <div style="width: 40px; height: 40px; background: #E3F2FD; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: #1976D2; flex-shrink: 0;">
                             <i class="ph-fill ph-storefront" style="font-size: 20px;"></i>
                         </div>
                         <div style="flex: 1;">
-                            <div style="font-weight: 800; font-size: 14px; color: var(--dark);">${shopName}</div>
-                            <div style="font-size: 11px; color: #666; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${shopAddress}</div>
+                            <div style="font-weight: 800; font-size: 14px; color: var(--dark);">${esc(shopName)}</div>
+                            <div style="font-size: 11px; color: #666; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${esc(shopAddress)}</div>
                             ${indicator}
                         </div>
                         ${isCurrentStore ? '' : '<i class="ph-bold ph-caret-right" style="color: #ccc;"></i>'}
@@ -1938,6 +1986,12 @@
                 console.error("Gagal mengambil cabang:", error);
                 listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:var(--danger); font-size:12px;">Terjadi kesalahan saat memuat cabang.</div>';
             }
+        };
+
+        // Dipanggil dari daftar cabang: pakai nomor urut, bukan teks nama (aman dari kode di nama warung).
+        window.pilihCabangKe = (i) => {
+            const b = (window.userBranches || [])[i];
+            if (b) window.pilihCabang(b.id, b.name);
         };
 
         window.pilihCabang = (id, nama_warung) => {
@@ -2405,8 +2459,8 @@
                 if(snap.exists()) {
                     const data = snap.data();
 
-                    // Wajib buat PIN sendiri dulu sebelum boleh masuk dashboard.
-                    if (data.pin_wajib_ganti === true) {
+                    // Login sekarang lewat Google: layar wajib buat PIN tidak dipakai lagi.
+                    if (false && data.pin_wajib_ganti === true) {
                         document.getElementById('loading-screen').style.display = 'none';
                         document.getElementById('dashboard').style.display = 'none';
                         document.getElementById('login-page').style.display = 'none';
@@ -3920,10 +3974,13 @@
         // Mengembalikan dokumen pengajuan yang masih menunggu, atau null kalau tidak ada.
         // Kalau pengecekan gagal (misal aturan Firestore menutup akses baca), sengaja
         // mengembalikan undefined supaya pemanggilnya tahu bedanya "tidak ada" dan "gagal cek".
+        // Rules hanya mengizinkan calon seller membaca pengajuannya SENDIRI, jadi pencarian
+        // selalu memakai uid akun Google yang sedang login (parameter lama diabaikan).
         async function cariPengajuanTertunda(kolom, nilai) {
-            if (!nilai) return null;
+            const u = auth.currentUser;
+            if (!u) return null;
             try {
-                const snap = await getDocs(query(collection(db, "pengajuan_mitra"), where(kolom, "==", nilai)));
+                const snap = await getDocs(query(collection(db, "pengajuan_mitra"), where("uid", "==", u.uid)));
                 let hasil = null;
                 snap.forEach(d => {
                     const data = d.data() || {};
@@ -3998,6 +4055,8 @@
                     alamat: alamat,
                     deskripsi_produk: produk,
                     email_terdaftar: userEmail, // Penanda rahasia untuk Admin
+                    uid: auth.currentUser.uid,
+                    email: (auth.currentUser.email || '').toLowerCase(),
                     tipe_pengajuan: "Cabang Baru",
                     tanggal_pengajuan: new Date().toISOString(),
                     status: "Menunggu Tinjauan"
@@ -4027,6 +4086,7 @@
         };
 
         window.openRegisterModal = () => {
+            if (!auth.currentUser) { window.daftarMerchant(); return; }
             document.getElementById('modal-register').style.display = 'flex';
         };
 
@@ -4103,7 +4163,7 @@
                         reader.readAsDataURL(fileHalal);
                     });
                     // Memanfaatkan fungsi uploadToFirebaseStorage yang sudah ada
-                    sertifikatUrl = await uploadToFirebaseStorage(base64Data, `pengajuan_mitra/${Date.now()}_sertifikat_halal.jpg`);
+                    sertifikatUrl = await uploadToFirebaseStorage(base64Data, `pengajuan_mitra/${auth.currentUser.uid}/${Date.now()}_sertifikat_halal.jpg`);
                 }
 
                 btn.innerHTML = "Menyelesaikan...";
@@ -4122,11 +4182,14 @@
                     has_sertifikat_halal: halal === 'Bersertifikat',
                     url_sertifikat_halal: sertifikatUrl,
                     setuju_tnc: tnc,
+                    uid: auth.currentUser.uid,
+                    email: (auth.currentUser.email || '').toLowerCase(),
                     tanggal_pengajuan: new Date().toISOString(),
                     status: "Menunggu Tinjauan"
                 });
 
                 showToast("Pendaftaran berhasil dikirim!");
+                setTimeout(() => { closeRegisterModal(); ruteSeller(); }, 600);
                 
                 // Reset semua isian form
                 document.getElementById('reg-pemilik').value = '';
@@ -4490,62 +4553,180 @@
             }
         };
 
-        // --- PEMULIHAN SESI ---
-        // Sebelumnya sesi dipulihkan langsung dari localStorage tanpa bertanya ke Firebase,
-        // sehingga siapa pun bisa mengetik satu baris di Console dan membuka dashboard warung
-        // mana pun. Sekarang Firebase yang menentukan siapa yang login; localStorage hanya
-        // dipakai untuk mengingat cabang mana yang terakhir dibuka.
-        onAuthStateChanged(auth, async (user) => {
-            if (sedangLoginManual) return;   // biarkan login() yang menangani
+        // ===== PENENTU LAYAR SETELAH LOGIN (4d, 4 Nov 2026) =====
+        // Firebase yang menentukan siapa yang login; localStorage hanya mengingat cabang terakhir.
+        //   punya warung (Gmail tercatat di data warung)  -> dashboard
+        //   permintaan pindah Gmail / pendaftaran menunggu -> layar Menunggu
+        //   belum punya apa-apa                             -> layar Hubungkan warung lama
+        let pantauSeller = [];
+        let sudahDashboard = false;
+        function hentikanPantauSeller() { pantauSeller.forEach(f => { try { f(); } catch (e) {} }); pantauSeller = []; }
+        function tampilkanLayar(id) {
+            ['login-page', 'hubungkan-screen', 'menunggu-screen', 'dashboard', 'pin-wajib-screen'].forEach(x => {
+                const el = document.getElementById(x);
+                if (el) el.style.display = 'none';
+            });
+            document.getElementById('loading-screen').style.display = 'none';
+            if (id) document.getElementById(id).style.display = (id === 'login-page') ? 'flex' : 'block';
+        }
+        function isiAkun(user) {
+            const nama = user.displayName || (user.email || '').split('@')[0];
+            document.getElementById('hb-avatar').textContent = (nama || '?').trim().charAt(0).toUpperCase() || '?';
+            document.getElementById('hb-nama').textContent = nama;
+            document.getElementById('hb-email').textContent = user.email || '';
+        }
+        function galatHubungkan(teks) {
+            const el = document.getElementById('hb-galat');
+            el.textContent = teks || '';
+            el.style.display = teks ? 'block' : 'none';
+        }
+        function masukDashboard(docs) {
+            window.userBranches = docs.map(d => ({ id: d.id, name: d.data().nama_warung, data: d.data() }));
+            let pilihan = docs[0];
+            try {
+                const tersimpan = JSON.parse(localStorage.getItem('vendor_user') || 'null');
+                const cocok = tersimpan && docs.find(d => d.id === tersimpan.id);
+                if (cocok) pilihan = cocok;
+            } catch (e) { /* localStorage rusak, abaikan */ }
+            currentUser = { id: pilihan.id, name: pilihan.data().nama_warung };
+            localStorage.setItem('vendor_user', JSON.stringify(currentUser));
+            if (sudahDashboard) return;
+            sudahDashboard = true;
+            tampilkanLayar(null);
+            initDashboard();
+        }
+        function tampilkanMenunggu(jenis, data, user) {
+            const gmail = (user.email || '').toLowerCase();
+            document.getElementById('mg-judul').textContent = jenis === 'daftar' ? 'Pendaftaran sedang ditinjau' : 'Menunggu persetujuan admin';
+            document.getElementById('mg-tahap2').textContent = jenis === 'daftar' ? 'Formulir pendaftaran terkirim' : 'Permintaan terkirim';
+            document.getElementById('mg-tahap2-ket').textContent = jenis === 'daftar' ? 'Tim kami sedang meninjau data warung Anda' : 'Email dan PIN lama cocok';
+            document.getElementById('mg-warung').textContent = (jenis === 'daftar' ? data.nama_warung : data.nama_warung) || '-';
+            document.getElementById('mg-gmail').textContent = gmail;
+            const t = jenis === 'daftar' ? Date.parse(data.tanggal_pengajuan || '') : Number(data.dibuat_at || 0);
+            document.getElementById('mg-waktu').textContent = t ? new Date(t).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+            const pesan = (jenis === 'daftar' ? 'Halo admin, saya sudah daftar merchant ProjekGo atas nama warung "' : 'Halo admin, saya minta login ProjekGo Mitra dipindah ke Gmail untuk warung "')
+                + (data.nama_warung || '') + '". Gmail saya: ' + gmail;
+            document.getElementById('mg-wa').href = 'https://wa.me/62882008667068?text=' + encodeURIComponent(pesan);
+            tampilkanLayar('menunggu-screen');
 
+            // Begitu admin menyetujui (Gmail tercatat di data warung), langsung masuk dashboard.
+            hentikanPantauSeller();
+            pantauSeller.push(onSnapshot(query(collection(db, "vendors"), where("email", "==", gmail)), (snap) => {
+                if (!snap.empty) { hentikanPantauSeller(); masukDashboard(snap.docs); }
+            }, () => {}));
+            if (jenis === 'pindah') {
+                pantauSeller.push(onSnapshot(doc(db, "pindah_gmail", user.uid), (d) => {
+                    if (d.exists() && d.data().status === 'ditolak') { hentikanPantauSeller(); window.ruteSeller(); }
+                }, () => {}));
+            }
+        }
+
+        window.ruteSeller = async (userParam) => {
+            const user = userParam || auth.currentUser;
+            hentikanPantauSeller();
             if (!user) {
                 localStorage.removeItem('vendor_user');
                 window.userBranches = [];
                 currentUser = null;
-                document.getElementById('dashboard').style.display = 'none';
-                document.getElementById('pin-wajib-screen').style.display = 'none';
-                document.getElementById('login-page').style.display = 'flex';
-                document.getElementById('loading-screen').style.display = 'none';
+                sudahDashboard = false;
+                tampilkanLayar('login-page');
                 return;
             }
+            // Hanya akun Google yang dipakai. Sesi lama email + PIN dikeluarkan.
+            const viaGoogle = (user.providerData || []).some(p => p.providerId === 'google.com');
+            if (!viaGoogle) { try { await signOut(auth); } catch (e) {} return; }
 
+            const gmail = (user.email || '').toLowerCase();
             try {
-                const email = (user.email || '').toLowerCase();
-                let docs = [];
+                const snap = await getDocs(query(collection(db, "vendors"), where("email", "==", gmail)));
+                if (!snap.empty) { masukDashboard(snap.docs); return; }
 
-                const snap = await getDocs(query(collection(db, "vendors"), where("email", "==", email)));
-                snap.forEach(d => docs.push(d));
-
-                if (docs.length === 0) {
-                    const satu = await getDoc(doc(db, "vendors", email));
-                    if (satu.exists()) docs.push(satu);
-                }
-
-                if (docs.length === 0) {
-                    await signOut(auth);
-                    showToast('Akun terdaftar, tapi data warung tidak ditemukan.', false);
-                    return;
-                }
-
-                window.userBranches = docs.map(d => ({ id: d.id, name: d.data().nama_warung, data: d.data() }));
-
-                // Pakai cabang terakhir HANYA kalau cabang itu memang milik email ini.
-                let pilihan = docs[0];
+                let pindah = null;
                 try {
-                    const tersimpan = JSON.parse(localStorage.getItem('vendor_user') || 'null');
-                    const cocok = tersimpan && docs.find(d => d.id === tersimpan.id);
-                    if (cocok) pilihan = cocok;
-                } catch (e) { /* localStorage rusak, abaikan */ }
+                    const p = await getDoc(doc(db, "pindah_gmail", user.uid));
+                    if (p.exists()) pindah = p.data();
+                } catch (e) { console.warn("Cek pindah Gmail gagal:", e); }
+                if (pindah && pindah.status === 'menunggu') { tampilkanMenunggu('pindah', pindah, user); return; }
 
-                currentUser = { id: pilihan.id, name: pilihan.data().nama_warung };
-                localStorage.setItem('vendor_user', JSON.stringify(currentUser));
-                initDashboard();
+                const pengajuan = await cariPengajuanTertunda();
+                if (pengajuan) { tampilkanMenunggu('daftar', pengajuan, user); return; }
+
+                isiAkun(user);
+                galatHubungkan(pindah && pindah.status === 'ditolak'
+                    ? 'Permintaan sebelumnya ditolak admin. Periksa lagi email dan PIN lama, atau hubungi admin lewat WhatsApp.'
+                    : '');
+                tampilkanLayar('hubungkan-screen');
+                if (sessionStorage.getItem('ingin_daftar') === '1') {
+                    sessionStorage.removeItem('ingin_daftar');
+                    openRegisterModal();
+                }
             } catch (e) {
-                console.error('Gagal memulihkan sesi:', e);
-                document.getElementById('login-page').style.display = 'flex';
-                document.getElementById('loading-screen').style.display = 'none';
+                console.error('Gagal memeriksa akun:', e);
+                tampilkanLayar('login-page');
+                showToast('Gagal memuat data akun. Periksa internet lalu coba lagi.', false);
             }
-        });
+        };
+
+        onAuthStateChanged(auth, (user) => { window.ruteSeller(user); });
+
+        // ===== KIRIM PERMINTAAN PINDAH KE GMAIL =====
+        // 1) cocokkan email + PIN lama ke sistem lama (projekgo-app), 2) cari warungnya,
+        // 3) simpan permintaan. Persetujuan akhir tetap di tangan admin (ADPRO > Pindah Gmail).
+        window.kirimPindahGmail = async () => {
+            const user = auth.currentUser;
+            if (!user) return window.ruteSeller();
+            const emailLama = document.getElementById('hb-email-lama').value.trim().toLowerCase();
+            const pinLama = document.getElementById('hb-pin-lama').value.trim();
+            galatHubungkan('');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLama)) return galatHubungkan('Tulis email lama dengan lengkap, misalnya warungbudi12@projekgo.id.');
+            if (!pinLama) return galatHubungkan('PIN lama belum diisi.');
+
+            const btn = document.getElementById('hb-kirim');
+            btn.disabled = true; btn.textContent = 'Memeriksa...';
+            try {
+                try {
+                    const appLama = getApps().find(a => a.name === 'lama') || initializeApp(firebaseConfigLama, 'lama');
+                    const authLama = getAuth(appLama);
+                    await signInWithEmailAndPassword(authLama, emailLama, pinLama);
+                    await signOut(authLama);
+                } catch (e) {
+                    const k = e.code || '';
+                    if (/invalid-credential|wrong-password|user-not-found|invalid-email|invalid-login/.test(k)) return galatHubungkan('Email atau PIN lama salah.');
+                    if (/too-many-requests/.test(k)) return galatHubungkan('Terlalu banyak percobaan. Tunggu beberapa menit lalu coba lagi.');
+                    if (/user-disabled/.test(k)) return galatHubungkan('Akun lama ini sudah dinonaktifkan. Hubungi admin lewat WhatsApp.');
+                    console.error('Cek PIN lama gagal:', e);
+                    return galatHubungkan('Gagal memeriksa PIN lama. Periksa internet lalu coba lagi.');
+                }
+
+                btn.textContent = 'Mencari warung...';
+                let docs = (await getDocs(query(collection(db, "vendors"), where("email", "==", emailLama)))).docs;
+                if (docs.length === 0) {
+                    const satu = await getDoc(doc(db, "vendors", emailLama));
+                    if (satu.exists()) docs = [satu];
+                }
+                if (docs.length === 0) return galatHubungkan('Email dan PIN cocok, tapi warungnya belum ditemukan di sistem baru. Hubungi admin lewat WhatsApp.');
+
+                btn.textContent = 'Mengirim...';
+                await setDoc(doc(db, "pindah_gmail", user.uid), {
+                    uid: user.uid,
+                    gmail: (user.email || '').toLowerCase(),
+                    nama_google: String(user.displayName || '').slice(0, 100),
+                    email_lama: emailLama,
+                    vendor_ids: docs.slice(0, 20).map(d => d.id),
+                    nama_warung: docs.map(d => d.data().nama_warung || d.id).join(', ').slice(0, 300),
+                    status: 'menunggu',
+                    dibuat_at: Date.now()
+                });
+                document.getElementById('hb-pin-lama').value = '';
+                showToast('Permintaan terkirim. Tunggu persetujuan admin ya.');
+                window.ruteSeller();
+            } catch (e) {
+                console.error('Kirim pindah Gmail gagal:', e);
+                galatHubungkan('Permintaan belum terkirim. Coba lagi sebentar lagi.');
+            } finally {
+                btn.disabled = false; btn.textContent = 'Kirim permintaan';
+            }
+        };
 
 
         // --- LOGIKA SPLASH SCREEN ---
