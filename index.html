@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Meta untuk PWA -->
-    <meta name="theme-color" content="#FF6600">
+    <meta name="theme-color" content="#FFFFFF">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://i.ibb.co.com/zHHqtYQD/Mitra-Seller.png">
@@ -481,6 +481,154 @@
         .gm-st b{display:block;font-size:14px;font-weight:800}
         .gm-st span{font-size:12.5px;color:#555}
     </style>
+    <style id="gaya-mitra">
+        /* ===== PEDOMAN TAMPILAN MITRA (10 Nov 2026) =====
+           Latar & kartu putih, garis 1,5 px #E2D8CC, tombol oranye tua #CC4A00 (tulisan putih terbaca),
+           huruf Plus Jakarta Sans, ukuran terkecil 13 px. */
+        :root { --primary: #CC4A00; --dark: #1C1C1E; --bg: #FFFFFF; --gray: #7A6F64; --success: #1E7A34; --danger: #C62828;
+                --merek: #FF6600; --garis: #E2D8CC; --teks2: #6B6258; --muda: #FFF1E6; --oranye-teks: #B84300; }
+        body { background: #fff; padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+        button, input, select, textarea { font-family: inherit; }
+
+        /* Login */
+        #login-page { background: #fff; align-items: stretch; justify-content: flex-start; padding: 0; overflow-y: auto; }
+        .login-container { box-shadow: none; border-radius: 0; max-width: 440px; margin: 0 auto; padding: 64px 24px 32px; align-items: stretch; min-height: 100%; }
+        .mx-login-logo { width: 64px; height: 64px; border-radius: 18px; background: var(--merek); color: #1C1C1E; display: grid; place-items: center; font-weight: 800; font-size: 24px; }
+        .mx-login-judul { margin: 24px 0 8px; font-size: 30px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; }
+        .mx-login-teks { margin: 0 0 22px; font-size: 16px; line-height: 1.55; color: var(--teks2); }
+        .mx-login-poin { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+        .mx-login-poin div { display: flex; gap: 12px; align-items: center; font-size: 15px; }
+        .mx-login-poin i { width: 28px; height: 28px; flex: 0 0 28px; border-radius: 8px; background: var(--muda); color: var(--primary); display: grid; place-items: center; font-size: 16px; }
+        .gm-info { background: #fff; border: 1.5px solid var(--garis); font-size: 14px; color: var(--teks2); }
+
+        /* Kepala */
+        .header.mx-head { position: sticky; top: 0; z-index: 40; background: #fff; display: flex; align-items: center; gap: 12px; padding: 16px 20px 12px; }
+        .mx-avatar { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 12px; background: var(--merek); color: #1C1C1E; display: grid; place-items: center; font-weight: 800; font-size: 16px; }
+        .mx-judul { flex: 1; min-width: 0; }
+        .mx-label { font-size: 13px; font-weight: 700; color: var(--teks2); }
+        .mx-head .shop-name { font-size: 19px; font-weight: 800; cursor: default; }
+        .mx-head .shop-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mx-head .shop-id { font-size: 12px; opacity: 1; color: var(--gray); margin: 1px 0 0; }
+        .mx-kembali, .mx-ganti { height: 44px; border-radius: 12px; border: 1.5px solid var(--garis); background: #fff; color: #1C1C1E; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; font-size: 13.5px; cursor: pointer; }
+        .mx-kembali { width: 44px; flex: 0 0 44px; }
+        .mx-ganti { padding: 0 12px; }
+        #btn-back-home i { font-size: 20px; }
+
+        /* Bagian konten */
+        .content-section { padding: 4px 20px 24px; }
+        .mx-h { margin: 22px 0 12px; font-size: 17px; font-weight: 800; }
+        .mx-h1 { margin: 6px 0 16px; font-size: 24px; font-weight: 800; }
+        .mx-kartu { background: #fff; border: 1.5px solid var(--garis); border-radius: 20px; padding: 18px; }
+        .mx-kartu + .mx-kartu { margin-top: 14px; }
+        .mx-kartu h2 { margin: 0 0 4px; font-size: 21px; font-weight: 800; }
+        .mx-kartu p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--teks2); }
+        .mx-tombol { width: 100%; min-height: 52px; border: 0; border-radius: 14px; background: var(--primary); color: #fff; font-size: 16px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; margin-top: 14px; }
+        .mx-tombol-dua { width: 100%; min-height: 46px; border-radius: 14px; border: 1.5px solid var(--primary); background: #fff; color: var(--oranye-teks); font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; margin-top: 10px; }
+        .mx-baris { width: 100%; min-height: 56px; display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #fff; border: 1.5px solid var(--garis); border-radius: 16px; color: #1C1C1E; font-size: 15px; font-weight: 700; text-align: left; cursor: pointer; text-decoration: none; }
+        .mx-baris + .mx-baris { margin-top: 10px; }
+        .mx-baris > i:first-child { font-size: 22px; color: var(--primary); flex: 0 0 auto; }
+        .mx-baris span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .mx-baris small { font-size: 13px; font-weight: 500; color: var(--teks2); }
+        .mx-baris > i:last-child { color: var(--gray); font-size: 18px; }
+        .mx-baris.mx-merah { color: var(--danger); border-color: #F2C6C6; }
+        .mx-baris.mx-merah > i:first-child { color: var(--danger); }
+        .mx-chip { display: inline-block; padding: 5px 11px; border-radius: 999px; background: var(--muda); color: var(--oranye-teks); font-size: 13px; font-weight: 700; margin-top: 6px; }
+        .mx-catatan { margin-top: 14px; padding: 14px 16px; border-radius: 16px; background: var(--muda); border: 1.5px solid #F2CDB0; color: #7A3A12; font-size: 14px; line-height: 1.55; }
+
+        /* Status warung (kartu putih, ID lama tetap dipakai kode) */
+        .orange-card, .orange-card.closed { background: #fff; color: #1C1C1E; border: 1.5px solid var(--garis); box-shadow: none; border-radius: 20px; padding: 18px; margin-bottom: 16px; }
+        .orange-card::before { display: none; }
+        .mx-status-atas { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .mx-status-lbl { font-size: 13px; font-weight: 700; color: var(--teks2); margin-bottom: 4px; }
+        .mx-status-teks { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 800; text-transform: uppercase; color: var(--success); }
+        .orange-card.closed .mx-status-teks { color: var(--danger); }
+        .mx-titik { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+        .modern-slider { background-color: #D9D2CA; border-color: #D9D2CA; }
+        .home-status-info { background: #E6F4EA; color: #1E7A34; border: 0; font-size: 13px; }
+        .home-status-info i { color: #1E7A34; }
+        .mx-jam-btn { margin-top: 14px; width: 100%; min-height: 46px; border-radius: 14px; border: 1.5px solid var(--garis); background: #fff; color: #1C1C1E; font-size: 14.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+        .ij-card { border: 1.5px solid var(--garis); box-shadow: none; margin-bottom: 4px; }
+        .ij-judul { font-size: 15px; }
+        .ij-teks { font-size: 13px; color: var(--teks2); }
+        .ij-teks.kecil { font-size: 13px; color: var(--gray); }
+        .ij-btn { background: var(--primary); font-size: 13.5px; min-height: 44px; }
+
+        /* Kelola warung */
+        .services-container { background: transparent; box-shadow: none; padding: 0; border-radius: 0; }
+        .service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .service-item { height: 88px; border: 1.5px solid var(--garis); border-radius: 16px; background: #fff; justify-content: center; font-size: 13px; font-weight: 700; color: #1C1C1E; padding: 0 4px; }
+        .service-icon { width: auto; height: auto; border: 0; box-shadow: none; background: none; font-size: 26px; border-radius: 0; }
+        .service-icon i { color: var(--primary) !important; }
+        .svc-badge { top: 8px; left: auto; right: 8px; border: 0; }
+        .svc-badge.label { left: auto; right: 6px; }
+
+        /* Kartu Antar Hemat di Beranda warung */
+        .mx-antar-kartu { margin-top: 16px; background: var(--muda); border: 1.5px solid #F2CDB0; border-radius: 20px; padding: 18px; }
+        .mx-antar-atas { display: flex; gap: 12px; align-items: flex-start; }
+        .mx-antar-ikon { width: 44px; height: 44px; flex: 0 0 44px; border-radius: 12px; background: #fff; color: var(--primary); display: grid; place-items: center; font-size: 24px; }
+        .mx-antar-kartu b { display: block; font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+        .mx-antar-kartu p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--teks2); }
+        .mx-antar-kartu .mx-tombol { margin-top: 14px; min-height: 48px; font-size: 15px; }
+        .mx-antar-kartu .mx-kecil { display: block; margin-top: 10px; font-size: 13px; line-height: 1.5; color: #7A3A12; }
+
+        /* Banner lama */
+        .b0 { background: #1C1C1E; box-shadow: none; }
+        .b0::before { display: none; }
+
+        /* Menu, profil, modal, formulir */
+        .menu-item, .status-card { border: 1.5px solid var(--garis); box-shadow: none; }
+        .menu-category-header { border-bottom: 1.5px solid var(--garis); }
+        .filter-pill { border: 1.5px solid var(--garis); font-size: 13px; color: #1C1C1E; padding: 8px 16px; }
+        .filter-pill.active { background: #1C1C1E; border-color: #1C1C1E; color: #fff; box-shadow: none; }
+        .variant-custom-box { border-width: 1.5px; }
+        .form-label { font-size: 13.5px; font-weight: 700; color: #1C1C1E; }
+        .form-input, .form-textarea { border: 1.5px solid var(--garis); border-radius: 12px; font-size: 15px; }
+        .btn-submit { background: var(--primary); border-radius: 14px; font-size: 15px; font-weight: 800; min-height: 52px; }
+        .modal-content { border-radius: 22px 22px 0 0; }
+        .fab-add { bottom: calc(92px + env(safe-area-inset-bottom)); background: var(--primary); box-shadow: 0 6px 16px rgba(204,74,0,.28); }
+        #inp-cari-menu { border: 1.5px solid var(--garis) !important; font-size: 15px !important; min-height: 48px; }
+
+        /* Beranda toko pengiriman */
+        .mx-angka3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .mx-angka3 button { background: #fff; border: 1.5px solid var(--garis); border-radius: 16px; padding: 14px 12px; text-align: left; display: flex; flex-direction: column; gap: 6px; cursor: pointer; color: #1C1C1E; }
+        .mx-angka3 b { font-size: 26px; font-weight: 800; line-height: 1; }
+        .mx-angka3 span { font-size: 13px; line-height: 1.35; color: var(--teks2); font-weight: 600; }
+        .mx-angka3 .mx-sorot { background: var(--muda); border-color: #F2CDB0; }
+        .mx-angka3 .mx-sorot b { color: var(--oranye-teks); }
+        .mx-angka3 .mx-biru b { color: #1F5AA6; }
+        .mx-daftar { padding: 4px 16px; }
+        .mx-daftar-baris { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #EFE8DF; }
+        .mx-daftar-baris:first-child { border-top: 0; }
+        .mx-daftar-baris div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+        .mx-daftar-baris b { font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mx-daftar-baris small { font-size: 13px; color: var(--teks2); }
+        .mx-label-st { padding: 6px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+        .st-jalan { background: #E8F0FB; color: #1F5AA6; }
+        .st-cari { background: #F3EFEA; color: var(--teks2); }
+        .st-selesai { background: #E6F4EA; color: #1E7A34; }
+        .mx-kosong { padding: 14px 0; font-size: 14px; color: var(--teks2); }
+        .mx-link { display: block; width: 100%; margin-top: 12px; background: none; border: 0; color: var(--oranye-teks); font-size: 14.5px; font-weight: 700; min-height: 44px; cursor: pointer; }
+
+        /* Akun */
+        .mx-akun-kartu { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+        .mx-akun-kartu b { display: block; font-size: 17px; font-weight: 800; }
+        .mx-akun-kartu small { display: block; font-size: 13.5px; color: var(--teks2); word-break: break-all; }
+
+        /* Tab Antar: halaman Antar Hemat di dalam bingkai, penuh layar di atas tab bawah */
+        #content-antar.active { position: fixed; left: 0; right: 0; top: 0; bottom: calc(72px + env(safe-area-inset-bottom)); padding: 0; z-index: 800; background: #fff; }
+        #antar-wadah, #antar-wadah iframe { width: 100%; height: 100%; border: 0; display: block; }
+        body.mx-di-antar { overflow: hidden; }
+
+        /* Tab bawah */
+        .mx-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; background: #fff; border-top: 1.5px solid var(--garis); display: flex; padding-bottom: env(safe-area-inset-bottom); }
+        .mx-nav button { flex: 1; height: 72px; border: 0; border-top: 3px solid transparent; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--teks2); font-size: 12.5px; font-weight: 700; cursor: pointer; position: relative; }
+        .mx-nav button i { font-size: 24px; }
+        .mx-nav button[aria-current="page"] { color: var(--oranye-teks); font-weight: 800; border-top-color: var(--merek); }
+        .mx-nav-badge { position: absolute; top: 8px; left: calc(50% + 6px); min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--primary); color: #fff; font-size: 11.5px; font-weight: 800; line-height: 20px; }
+        body.mode-toko .mx-hanya-warung { display: none !important; }
+        body.mode-warung .mx-hanya-toko { display: none !important; }
+        body:not(.mode-warung):not(.mode-toko) .mx-nav { display: none; }
+    </style>
 </head>
 <body>
 
@@ -644,9 +792,14 @@
 
     <div id="login-page">
         <div class="login-container">
-            <div class="login-logo">Projekgo</div>
-            <div style="font-weight:800; margin-bottom:5px; color: var(--dark); font-size: 18px;">Aplikasi Mitra Penjual</div>
-            <p class="login-desc">Masuk untuk mengelola warung Anda.</p>
+            <div class="mx-login-logo" aria-hidden="true">PG</div>
+            <h1 class="mx-login-judul">Mitra ProjekGo</h1>
+            <p class="mx-login-teks">Satu aplikasi untuk warung dan toko pengiriman. Kelola menu, jam buka, dan kirim paket ke pelanggan.</p>
+            <div class="mx-login-poin">
+                <div><i class="ph-bold ph-check" aria-hidden="true"></i>Warung tampil buka/tutup otomatis sesuai jam</div>
+                <div><i class="ph-bold ph-check" aria-hidden="true"></i>Kirim paket, ongkir gabungan lebih hemat</div>
+                <div><i class="ph-bold ph-check" aria-hidden="true"></i>Biaya aplikasi Rp0, tanpa potongan</div>
+            </div>
             
             <button type="button" id="btn-masuk-google" class="gm-gbtn" onclick="login()"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Masuk dengan Google</button>
             <p style="margin:12px 0 0; font-size:12.5px; color:#555; text-align:center; line-height:1.5;">Tidak perlu mengingat PIN. Cukup pilih akun Google yang sudah ada di HP Anda.</p>
@@ -763,57 +916,36 @@
 
     <div id="dashboard" style="display:none;">
         
-        <!-- DASHBOARD HEADER -->
-        <div class="header">
-            <div style="font-size: 11px; color: #666; margin-bottom: 2px;">Pilih toko</div>
-            <div style="display:flex; justify-content:space-between; align-items: center;">
-                <div style="display:flex; align-items:center; gap: 10px;">
-                    <button id="btn-back-home" onclick="switchTab('home')" style="display:none; background:white; border:1px solid #ddd; color:var(--dark); width: 35px; height: 35px; border-radius:10px; justify-content:center; align-items:center; cursor: pointer; box-shadow:0 2px 5px rgba(0,0,0,0.05);"><i class="ph-bold ph-arrow-left" style="font-size:18px;"></i></button>
-                    <div>
-                        <div class="shop-name">
-                            <span id="display-name">Memuat...</span> 
-                            <div id="badge-andalan-header" class="badge-andalan" title="Mitra Andalan"><i class="ph-bold ph-check"></i></div>
-                            <i class="ph-bold ph-caret-down" style="font-size: 14px; margin-left: 5px;"></i>
-                        </div>
-                        <div class="shop-id" id="display-id" style="margin-bottom:0;">ID: ...</div>
-                    </div>
+        <!-- DASHBOARD HEADER (tampilan Mitra 10 Nov 2026) -->
+        <div class="header mx-head">
+            <button type="button" id="btn-back-home" class="mx-kembali" onclick="switchTab('home')" style="display:none;" aria-label="Kembali ke Beranda"><i class="ph-bold ph-arrow-left"></i></button>
+            <div class="mx-avatar" id="mx-avatar" aria-hidden="true">PG</div>
+            <div class="mx-judul">
+                <div class="mx-label" id="mx-label">Mitra warung</div>
+                <div class="shop-name">
+                    <span id="display-name">Memuat...</span>
+                    <div id="badge-andalan-header" class="badge-andalan" title="Mitra Andalan"><i class="ph-bold ph-check"></i></div>
                 </div>
-                
-                <div style="display:flex; align-items:center; gap: 8px;">
-                    <!-- Tombol Ganti Toko -->
-                    <div onclick="bukaModalCabang()" style="padding: 6px 12px; background:#e3f2fd; border-radius: 8px; color:#1976d2; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" title="Ganti Toko">
-                        <i class="ph-bold ph-swap"></i> Ganti
-                    </div>
-                    <!-- Tombol Keluar Akun di Kanan Atas -->
-                    <div onclick="logout()" style="width:36px; height:36px; background:#ffebee; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--danger); cursor:pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" title="Keluar">
-                        <i class="ph-bold ph-sign-out" style="font-size: 20px;"></i>
-                    </div>
-                </div>
+                <div class="shop-id mx-hanya-warung" id="display-id">ID: ...</div>
             </div>
+            <button type="button" class="mx-ganti mx-hanya-warung" id="mx-ganti" onclick="bukaModalCabang()" title="Ganti toko"><i class="ph-bold ph-swap"></i> Ganti</button>
         </div>
 
         <!-- BERANDA UTAMA -->
         <div id="content-home" class="content-section active">
             
-            <!-- ORANGE CARD STATUS TOKO -->
+            <!-- KARTU STATUS WARUNG (ID lama tetap) -->
             <div class="orange-card open" id="home-status-card">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div class="status-icon-box">
-                            <i class="ph-fill ph-storefront" style="font-size: 26px;"></i>
-                        </div>
-                        <div>
-                            <div style="font-size: 13px; font-weight: 600; opacity: 0.9; margin-bottom: 2px;">Status Warung</div>
-                            <div style="font-size: 24px; font-weight: 800; letter-spacing: -0.5px;" id="home-status-text">Memuat...</div>
-                        </div>
+                <div class="mx-status-atas">
+                    <div>
+                        <div class="mx-status-lbl">Status warung</div>
+                        <div class="mx-status-teks"><span class="mx-titik" aria-hidden="true"></span><span id="home-status-text">Memuat...</span></div>
                     </div>
-                    
-                    <label class="modern-toggle">
+                    <label class="modern-toggle" aria-label="Buka atau tutup warung">
                         <input type="checkbox" id="home-shop-toggle" onchange="toggleHomeShopStatus()">
                         <span class="modern-slider"></span>
                     </label>
                 </div>
-                <!-- PESAN INFO AKAN MUNCUL SAAT BUKA -->
                 <div id="home-status-info-badge" class="home-status-info hidden">
                     <i class="ph-fill ph-whatsapp-logo"></i>
                     <div>Jika ada pesanan, Admin Projekgo akan memesan melalui <b>WHATSAPP</b> Anda.</div>
@@ -831,60 +963,59 @@
                 </div>
             </div>
 
-            <!-- LAYANAN UTAMA GRID -->
+            <!-- KELOLA WARUNG -->
             <div class="services-container">
-                <h4 style="margin: 0 0 18px 0; font-size: 16px; font-weight: 800; color: var(--dark);">Layanan utama</h4>
-                
+                <h2 class="mx-h">Kelola warung</h2>
                 <div class="service-grid">
-                    <!-- Tombol Aktif: TOKO & MENU -->
-                    <div class="service-item" onclick="switchTab('profile')">
+                    <button type="button" class="service-item" onclick="switchTab('profile')">
                         <span class="svc-badge" id="badge-toko" aria-label="Ulasan baru"></span>
-                        <div class="service-icon"><i class="ph-fill ph-storefront" style="color:#2196F3;"></i></div>
+                        <div class="service-icon"><i class="ph-fill ph-storefront"></i></div>
                         <span>Toko</span>
-                    </div>
-                    <div class="service-item" onclick="switchTab('menu')">
-                        <div class="service-icon"><i class="ph-fill ph-list-dashes" style="color:var(--primary);"></i></div>
+                    </button>
+                    <button type="button" class="service-item" onclick="switchTab('menu')">
+                        <div class="service-icon"><i class="ph-fill ph-list-dashes"></i></div>
                         <span>Menu</span>
-                    </div>
-
-                    <!-- Layanan Lainnya -->
-                    <div class="service-item" onclick="openFlashSaleModal()">
+                    </button>
+                    <button type="button" class="service-item" onclick="openFlashSaleModal()">
                         <span class="svc-badge label" id="badge-flash" aria-label="Flash Sale belum diisi"></span>
-                        <div class="service-icon"><i class="ph-fill ph-lightning" style="color:#FF9800;"></i></div>
+                        <div class="service-icon"><i class="ph-fill ph-lightning"></i></div>
                         <span>Flash Sale</span>
-                    </div>
+                    </button>
+                    <button type="button" class="service-item" onclick="openPromoModal()">
+                        <span class="svc-badge label" id="badge-promo" aria-label="Promo belum diisi"></span>
+                        <div class="service-icon"><i class="ph-fill ph-ticket"></i></div>
+                        <span>Promo</span>
+                    </button>
+                    <button type="button" class="service-item" onclick="openTokoLainnyaModal()">
+                        <div class="service-icon"><i class="ph-fill ph-buildings"></i></div>
+                        <span>Toko lainnya</span>
+                    </button>
+                    <button type="button" class="service-item" onclick="openBantuanModal()">
+                        <div class="service-icon"><i class="ph-fill ph-question"></i></div>
+                        <span>Bantuan</span>
+                    </button>
+                    <!-- Disembunyikan seperti sebelumnya -->
                     <div class="service-item" onclick="openQRModal()" style="display: none;">
-                        <div class="service-icon"><i class="ph-fill ph-qr-code" style="color:#00BCD4;"></i></div>
+                        <div class="service-icon"><i class="ph-fill ph-qr-code"></i></div>
                         <span>QR Meja</span>
                     </div>
-                    
-                    <div class="service-item" onclick="openKurirModal()">
-                        <div class="service-icon"><i class="ph-fill ph-package" style="color:#4CAF50;"></i></div>
-                        <span>Anter Makanan</span>
-                    </div>
-                    <div class="service-item" onclick="openBantuanModal()">
-                        <div class="service-icon"><i class="ph-fill ph-question" style="color:#FFB300;"></i></div>
-                        <span>Bantuan</span>
-                    </div>
-                    
                     <div class="service-item" onclick="openTagihanModal()" style="display: none;">
-                        <div class="service-icon"><i class="ph-fill ph-receipt" style="color:#D81B60;"></i></div>
+                        <div class="service-icon"><i class="ph-fill ph-receipt"></i></div>
                         <span>Tagihan</span>
-                    </div>
-                    <div class="service-item" onclick="openPromoModal()">
-                        <span class="svc-badge label" id="badge-promo" aria-label="Promo belum diisi"></span>
-                        <div class="service-icon"><i class="ph-fill ph-ticket" style="color:#E53935;"></i></div>
-                        <span>Promo</span>
-                    </div>
-                    
-                    <!-- MENU BARU: TOKO LAINNYA -->
-                    <div class="service-item" onclick="openTokoLainnyaModal()">
-                        <div class="service-icon"><i class="ph-fill ph-buildings" style="color:#9C27B0;"></i></div>
-                        <span>Toko Lainnya</span>
                     </div>
                 </div>
             </div>
-            
+
+            <!-- ANTAR HEMAT (pengganti tombol Anter Makanan) -->
+            <section class="mx-antar-kartu" id="mx-antar-kartu">
+                <div class="mx-antar-atas">
+                    <div class="mx-antar-ikon"><i class="ph-fill ph-package"></i></div>
+                    <div><b>Antar Hemat</b><p id="mx-antar-teks">Kirim pesanan ke beberapa pelanggan sekaligus, ongkir gabungan bisa hemat hingga 50%.</p></div>
+                </div>
+                <button type="button" class="mx-tombol" id="mx-antar-btn" onclick="bukaAntarDariBeranda()">Kirim paket</button>
+                <span class="mx-kecil" id="mx-antar-ket" hidden></span>
+            </section>
+
             <!-- BANNER: BIAYA APLIKASI Rp0 & HARGA TETAP ASLI -->
             <div class="b0" role="note" aria-label="Biaya aplikasi PROJEKGO untuk mitra Rp0">
                 <div class="b0-atas">
@@ -905,35 +1036,12 @@
                 <i class="ph-fill ph-heart b0-hati" aria-hidden="true"></i>
             </div>
 
-            <!-- BANNER LIHAT TOKO -->
-            <div style="background: #FFF3E0; border-radius: 16px; padding: 15px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="openKatalog()">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="background: white; border-radius: 8px; padding: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);"><i class="ph-fill ph-storefront" style="font-size: 28px; color: var(--primary);"></i></div>
-                    <div>
-                        <div style="font-weight: 800; font-size: 13px; color: var(--dark);">Lihat Toko Anda</div>
-                        <div style="font-size: 11px; color: #666; margin-top: 2px;">Tampilan warung di aplikasi pelanggan</div>
-                    </div>
-                </div>
-                <button style="background: var(--primary); color: white; border: none; border-radius: 20px; padding: 6px 15px; font-weight: 700; font-size: 12px; box-shadow: 0 2px 8px rgba(255, 102, 0, 0.3); pointer-events: none;">Lihat</button>
-            </div>
-
-            <!-- BANNER INSTALL PWA (PENGGANTI AKTIVITAS TERAKHIR) -->
-            <div style="background: linear-gradient(135deg, #e0f2fe, #bae6fd); border-radius: 16px; padding: 15px; margin-top: 15px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border: 1px solid #7dd3fc; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.1);" onclick="triggerManualPWA()">
-                <div style="display: flex; align-items: center; gap: 12px; max-width: 73%;">
-                    <div style="background: white; border-radius: 12px; padding: 8px; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.15); display: flex; align-items: center; justify-content: center;">
-                        <i class="ph-fill ph-device-mobile-camera" style="font-size: 26px; color: #0284c7;"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 800; font-size: 13px; color: #0369a1;">Pasang Aplikasi di HP Yuk!</div>
-                        <div style="font-size: 10px; color: #0c4a6e; margin-top: 3px; line-height: 1.4;">
-                            <b>Keuntungan:</b> Tanpa download PlayStore, hemat memori hp, anti-lemot, & akses kelola warung secepat kilat!
-                        </div>
-                    </div>
-                </div>
-                <button style="background: #0284c7; color: white; border: none; border-radius: 20px; padding: 8px 12px; font-weight: 800; font-size: 11px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); display: flex; align-items: center; gap: 4px; pointer-events: none; flex-shrink: 0;">
-                    <i class="ph-bold ph-download-simple"></i> Pasang
-                </button>
-            </div>
+            <!-- LIHAT TOKO -->
+            <button type="button" class="mx-baris" style="margin-top:16px;" onclick="openKatalog()">
+                <i class="ph-fill ph-storefront"></i>
+                <span><b>Lihat warung di katalog</b><small>Tampilan warung di aplikasi pelanggan</small></span>
+                <i class="ph-bold ph-caret-right"></i>
+            </button>
 
         </div>
 
@@ -1184,6 +1292,49 @@
             <div style="height: 40px;"></div>
         </div>
         
+        <!-- ===== BERANDA TOKO PENGIRIMAN ===== -->
+        <div id="content-tokohome" class="content-section">
+            <section class="mx-kartu">
+                <h2>Kirim paket ke pelanggan</h2>
+                <p>Isi nama dan nomor penerima, lalu kirim link lokasi lewat WhatsApp. Penerima tinggal menekan "Kirim lokasi saya".</p>
+                <button type="button" class="mx-tombol" onclick="bukaAntar('input')"><i class="ph-bold ph-plus"></i> Kirim paket baru</button>
+            </section>
+            <div id="th-info" class="mx-catatan" hidden></div>
+            <h2 class="mx-h">Paket hari ini</h2>
+            <div class="mx-angka3">
+                <button type="button" onclick="bukaAntar('daftar')"><b id="th-menunggu">–</b><span>Menunggu lokasi</span></button>
+                <button type="button" class="mx-sorot" onclick="bukaAntar('daftar')"><b id="th-siap">–</b><span>Siap diantar</span></button>
+                <button type="button" class="mx-biru" onclick="bukaAntar('daftar')"><b id="th-jalan">–</b><span>Dalam perjalanan</span></button>
+            </div>
+            <section class="mx-kartu mx-daftar" id="th-terbaru" style="margin-top:14px;"><div class="mx-kosong">Memuat…</div></section>
+            <button type="button" class="mx-link" onclick="bukaAntar('riwayat')">Lihat semua riwayat</button>
+        </div>
+
+        <!-- ===== ANTAR HEMAT (halaman antar/index.html di dalam bingkai) ===== -->
+        <div id="content-antar" class="content-section"><div id="antar-wadah"></div></div>
+
+        <!-- ===== AKUN ===== -->
+        <div id="content-akun" class="content-section">
+            <h1 class="mx-h1">Akun</h1>
+            <section class="mx-kartu mx-akun-kartu">
+                <div class="mx-avatar" id="ak-avatar" aria-hidden="true">?</div>
+                <div style="min-width:0;"><b id="ak-nama">-</b><small id="ak-email"></small><span class="mx-chip" id="ak-jenis">Mitra warung</span></div>
+            </section>
+            <button type="button" class="mx-baris mx-hanya-warung" onclick="switchTab('profile')"><i class="ph-fill ph-storefront"></i><span><b>Profil &amp; jam buka warung</b><small>Foto, nama, WhatsApp, kategori, jadwal</small></span><i class="ph-bold ph-caret-right"></i></button>
+            <button type="button" class="mx-baris mx-hanya-warung" onclick="bukaModalCabang()"><i class="ph-bold ph-swap"></i><span><b>Ganti toko / cabang</b><small>Kalau satu Gmail punya beberapa warung</small></span><i class="ph-bold ph-caret-right"></i></button>
+            <button type="button" class="mx-baris" onclick="triggerManualPWA()"><i class="ph-fill ph-device-mobile-camera"></i><span><b>Pasang aplikasi di HP</b><small>Tanpa Play Store, hemat memori</small></span><i class="ph-bold ph-caret-right"></i></button>
+            <button type="button" class="mx-baris" onclick="aktifkanNotifMitra()"><i class="ph-fill ph-bell-ringing"></i><span><b>Notifikasi paket diterima</b><small id="ak-notif-ket">Kabar saat paket Antar Hemat sampai</small></span><i class="ph-bold ph-caret-right"></i></button>
+            <button type="button" class="mx-baris" onclick="openBantuanModal()"><i class="ph-fill ph-whatsapp-logo"></i><span><b>Bantuan admin ProjekGo</b><small>Lewat WhatsApp</small></span><i class="ph-bold ph-caret-right"></i></button>
+            <button type="button" class="mx-baris mx-merah" style="margin-top:22px;" onclick="logout()"><i class="ph-bold ph-sign-out"></i><span><b>Keluar</b></span></button>
+        </div>
+
+        <!-- ===== TAB BAWAH ===== -->
+        <nav class="mx-nav" id="mx-nav" aria-label="Menu utama">
+            <button type="button" data-nav="home" aria-current="page"><i class="ph-bold ph-house"></i>Beranda</button>
+            <button type="button" data-nav="menu" class="mx-hanya-warung"><i class="ph-bold ph-list-dashes"></i>Menu</button>
+            <button type="button" data-nav="antar"><i class="ph-bold ph-package"></i>Antar<span class="mx-nav-badge" id="nav-badge-antar" hidden></span></button>
+            <button type="button" data-nav="akun"><i class="ph-bold ph-user-circle"></i>Akun</button>
+        </nav>
     </div>
 
     <!-- MODAL PILIH CABANG (TAMPILAN UI) -->
@@ -2085,13 +2236,19 @@
         };
 
         window.switchTab = (tab) => {
-            if (tab === 'home') {
-                document.getElementById('btn-back-home').style.display = 'none';
-            } else {
-                document.getElementById('btn-back-home').style.display = 'flex';
-            }
+            // Toko pengiriman tidak punya Beranda warung / Menu
+            if (window.__modeMitra === 'toko' && ['home', 'menu', 'profile'].includes(tab)) tab = 'tokohome';
+            if (!document.getElementById(`content-${tab}`)) tab = 'home';
+            const utama = ['home', 'tokohome', 'menu', 'antar', 'akun'];
+            document.getElementById('btn-back-home').style.display = utama.includes(tab) ? 'none' : 'flex';
             document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
             document.getElementById(`content-${tab}`).classList.add('active');
+            const kunciNav = (tab === 'tokohome' || tab === 'profile') ? 'home' : tab;
+            document.querySelectorAll('#mx-nav [data-nav]').forEach(b => {
+                if (b.dataset.nav === kunciNav) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+            });
+            document.body.classList.toggle('mx-di-antar', tab === 'antar');
+            if (tab === 'antar' && typeof window.siapkanAntar === 'function') window.siapkanAntar();
             window.scrollTo(0,0);
             if (tab === 'profile' && typeof window.tandaiUlasanDilihat === 'function') window.tandaiUlasanDilihat();
         };
@@ -4612,7 +4769,7 @@
             // Begitu admin menyetujui (Gmail tercatat di data warung), langsung masuk dashboard.
             hentikanPantauSeller();
             pantauSeller.push(onSnapshot(query(collection(db, "vendors"), where("email", "==", gmail)), (snap) => {
-                if (!snap.empty) { hentikanPantauSeller(); masukDashboard(snap.docs); }
+                if (!snap.empty) { hentikanPantauSeller(); masukDashboard(snap.docs); aturModeWarung(user); }
             }, () => {}));
             if (jenis === 'pindah') {
                 pantauSeller.push(onSnapshot(doc(db, "pindah_gmail", user.uid), (d) => {
@@ -4639,7 +4796,11 @@
             const gmail = (user.email || '').toLowerCase();
             try {
                 const snap = await getDocs(query(collection(db, "vendors"), where("email", "==", gmail)));
-                if (!snap.empty) { masukDashboard(snap.docs); return; }
+                if (!snap.empty) { masukDashboard(snap.docs); aturModeWarung(user); return; }
+
+                // Toko pengiriman (bukan warung): Gmail terdaftar di Antar Hemat
+                const akunAntar = await cekAkunAntar(gmail);
+                if (akunAntar) { masukToko(akunAntar, user); return; }
 
                 let pindah = null;
                 try {
@@ -4728,6 +4889,193 @@
             }
         };
 
+
+
+        // ======================================================================
+        // APLIKASI MITRA GABUNGAN (10 Nov 2026)
+        //  - mode "warung"  : Beranda warung, Menu, Antar, Akun
+        //  - mode "toko"    : Beranda toko pengiriman, Antar, Akun (tanpa menu/jam buka)
+        //  Antar Hemat = halaman antar/index.html (situs yang sama) di dalam bingkai. Sesi Gmail-nya
+        //  dipakai bersama, jadi mitra tidak login dua kali. Hak akses data tetap dijaga Firestore Rules.
+        // ======================================================================
+        window.__modeMitra = null;
+        window.__antarAktif = null;        // warung: apakah Gmail ini juga terdaftar di Antar Hemat
+        let bingkaiAntar = null, bingkaiSiap = false, tabAntarTertunda = null;
+
+        async function cekAkunAntar(gmail) {
+            try {
+                const s = await getDoc(doc(db, "antar_akun", gmail));
+                if (!s.exists()) return null;
+                const a = s.data() || {};
+                return (a.aktif !== false && typeof a.mitraId === 'string' && a.mitraId) ? { mitraId: a.mitraId, nama: String(a.nama || '') } : null;
+            } catch (e) { return null; }   // belum terdaftar / rules menolak = bukan mitra Antar
+        }
+
+        function inisialNama(t) {
+            const k = String(t || '').trim().split(/\s+/).filter(Boolean);
+            return ((k[0] || '?').charAt(0) + (k[1] ? k[1].charAt(0) : '')).toUpperCase();
+        }
+        function isiTabAkun(user, jenis) {
+            const nama = user.displayName || (user.email || '').split('@')[0];
+            document.getElementById('ak-avatar').textContent = inisialNama(nama);
+            document.getElementById('ak-nama').textContent = nama || '-';
+            document.getElementById('ak-email').textContent = user.email || '';
+            document.getElementById('ak-jenis').textContent = jenis;
+            perbaruiKetNotif();
+        }
+        // Avatar kepala ikut nama toko yang tampil
+        (function () {
+            const el = document.getElementById('display-name');
+            const av = document.getElementById('mx-avatar');
+            const segar = () => { av.textContent = inisialNama(el.textContent && el.textContent !== 'Memuat...' ? el.textContent : 'PG'); };
+            new MutationObserver(segar).observe(el, { childList: true, characterData: true, subtree: true });
+        })();
+
+        function bukaDariTautan() {
+            try {
+                const p = new URLSearchParams(location.search);
+                if (p.get('buka') === 'antar') {
+                    history.replaceState(null, '', location.pathname);
+                    setTimeout(() => window.bukaAntar('input'), 300);
+                }
+            } catch (e) {}
+        }
+
+        async function aturModeWarung(user) {
+            if (window.__modeMitra) return;
+            window.__modeMitra = 'warung';
+            document.body.classList.add('mode-warung');
+            document.getElementById('mx-label').textContent = 'Mitra warung';
+            isiTabAkun(user, 'Mitra warung');
+            window.__antarAktif = !!(await cekAkunAntar((user.email || '').toLowerCase()));
+            perbaruiKartuAntar();
+            bukaDariTautan();
+        }
+
+        async function masukToko(akun, user) {
+            if (sudahDashboard) return;
+            sudahDashboard = true;
+            window.__modeMitra = 'toko';
+            window.__antarAktif = true;
+            currentUser = null;
+            document.body.classList.add('mode-toko');
+            tampilkanLayar('dashboard');
+            document.getElementById('mx-label').textContent = 'Toko pengiriman';
+            document.getElementById('display-name').textContent = 'Toko pengiriman';
+            isiTabAkun(user, 'Toko pengiriman');
+            try {
+                const m = await getDoc(doc(db, "antar_mitra", akun.mitraId));
+                if (m.exists() && m.data().nama) document.getElementById('display-name').textContent = String(m.data().nama);
+            } catch (e) { /* nama menyusul dari halaman Antar */ }
+            window.switchTab('tokohome');
+            window.siapkanAntar();          // dimuat sejak awal supaya ringkasan Beranda terisi
+            bukaDariTautan();
+        }
+
+        function perbaruiKartuAntar() {
+            const btn = document.getElementById('mx-antar-btn');
+            const ket = document.getElementById('mx-antar-ket');
+            if (!btn) return;
+            if (window.__antarAktif) {
+                btn.textContent = 'Kirim paket';
+                ket.hidden = true;
+            } else {
+                // Belum didaftarkan admin: tetap bisa pesan kurir lewat WhatsApp seperti dulu
+                btn.textContent = 'Pesan kurir lewat WhatsApp';
+                ket.hidden = false;
+                ket.textContent = 'Antar Hemat (kirim banyak paket, ongkir gabungan) belum aktif untuk warung ini. Buka tab Antar untuk minta diaktifkan.';
+            }
+        }
+        window.bukaAntarDariBeranda = () => {
+            if (window.__antarAktif) window.bukaAntar('input');
+            else openKurirModal();
+        };
+
+        window.siapkanAntar = () => {
+            if (bingkaiAntar) return;
+            bingkaiAntar = document.createElement('iframe');
+            bingkaiAntar.title = 'Antar Hemat';
+            bingkaiAntar.src = 'antar/index.html';
+            bingkaiAntar.setAttribute('allow', 'geolocation; clipboard-write');
+            bingkaiAntar.addEventListener('load', () => { bingkaiSiap = true; kirimTabAntar(); });
+            document.getElementById('antar-wadah').appendChild(bingkaiAntar);
+        };
+        function kirimTabAntar() {
+            if (!tabAntarTertunda || !bingkaiAntar || !bingkaiSiap) return;
+            try { bingkaiAntar.contentWindow.postMessage({ t: 'ah-tab', tab: tabAntarTertunda }, location.origin); } catch (e) {}
+            tabAntarTertunda = null;
+        }
+        window.bukaAntar = (tab) => {
+            tabAntarTertunda = ['input', 'daftar', 'riwayat', 'setelan'].includes(tab) ? tab : null;
+            window.switchTab('antar');
+            kirimTabAntar();
+        };
+
+        // Ringkasan dari halaman Antar -> Beranda toko & badge tab Antar.
+        // Hanya diterima dari bingkai Antar milik sendiri (asal-usul sama), dan ditulis sebagai teks biasa.
+        const LABEL_ST = { menunggu: ['Cari rider', 'st-cari'], diproses: ['Cari rider', 'st-cari'], dibawa: ['Di jalan', 'st-jalan'], selesai: ['Selesai', 'st-selesai'] };
+        window.addEventListener('message', (e) => {
+            if (e.origin !== location.origin || !bingkaiAntar || e.source !== bingkaiAntar.contentWindow) return;
+            const d = e.data || {};
+            if (d.t !== 'ah-ringkas') return;
+            bingkaiSiap = true; kirimTabAntar();
+            const angka = (v) => (Number.isFinite(v) && v >= 0) ? String(Math.min(v, 999)) : '–';
+            const badge = document.getElementById('nav-badge-antar');
+            badge.hidden = !(d.siap > 0); badge.textContent = angka(d.siap);
+            if (window.__modeMitra === 'warung') {
+                if (d.keadaan === 'ok' || d.keadaan === 'tolak') { window.__antarAktif = d.keadaan === 'ok'; perbaruiKartuAntar(); }
+                return;
+            }
+            if (window.__modeMitra !== 'toko') return;
+            if (d.keadaan === 'ok' && d.nama) document.getElementById('display-name').textContent = String(d.nama).slice(0, 60);
+            const info = document.getElementById('th-info');
+            info.hidden = d.keadaan !== 'tolak';
+            if (d.keadaan === 'tolak') info.textContent = 'Antar Hemat untuk akun ini sedang tidak aktif. Hubungi admin ProjekGo lewat menu Akun > Bantuan.';
+            document.getElementById('th-menunggu').textContent = angka(d.menunggu);
+            document.getElementById('th-siap').textContent = angka(d.siap);
+            document.getElementById('th-jalan').textContent = angka(d.jalan);
+            const wadah = document.getElementById('th-terbaru');
+            wadah.textContent = '';
+            const daftar = Array.isArray(d.terbaru) ? d.terbaru.slice(0, 4) : [];
+            if (!daftar.length) {
+                const k = document.createElement('div'); k.className = 'mx-kosong';
+                k.textContent = d.keadaan === 'ok' ? 'Belum ada pengantaran hari ini.' : 'Memuat…';
+                wadah.appendChild(k); return;
+            }
+            daftar.forEach((p) => {
+                const baris = document.createElement('div'); baris.className = 'mx-daftar-baris';
+                const kiri = document.createElement('div');
+                const b = document.createElement('b'); b.textContent = String(p.judul || 'Pengantaran').slice(0, 80);
+                const sm = document.createElement('small'); sm.textContent = String(p.ket || '').slice(0, 80);
+                kiri.append(b, sm);
+                const lab = LABEL_ST[p.status] || ['', ''];
+                const st = document.createElement('span'); st.className = 'mx-label-st ' + lab[1]; st.textContent = lab[0];
+                baris.append(kiri);
+                if (lab[0]) baris.append(st);
+                wadah.appendChild(baris);
+            });
+        });
+
+        // Tab bawah
+        document.getElementById('mx-nav').addEventListener('click', (e) => {
+            const b = e.target.closest('[data-nav]');
+            if (b) window.switchTab(b.dataset.nav);
+        });
+
+        function perbaruiKetNotif() {
+            const el = document.getElementById('ak-notif-ket');
+            if (!el) return;
+            const izin = ('Notification' in window) ? Notification.permission : 'tidak';
+            el.textContent = izin === 'granted' ? 'Sudah aktif' : izin === 'denied' ? 'Diblokir di pengaturan browser' : izin === 'tidak' ? 'HP/browser ini tidak mendukung' : 'Kabar saat paket Antar Hemat sampai';
+        }
+        window.aktifkanNotifMitra = async () => {
+            if (!('Notification' in window)) { showToast('HP/browser ini tidak mendukung notifikasi', false); return; }
+            try {
+                const r = await Notification.requestPermission();
+                showToast(r === 'granted' ? 'Notifikasi aktif' : 'Izin notifikasi tidak diberikan', r === 'granted');
+            } catch (e) { showToast('Gagal meminta izin notifikasi', false); }
+            perbaruiKetNotif();
+        };
 
         // --- LOGIKA SPLASH SCREEN ---
         document.addEventListener("DOMContentLoaded", function() {
