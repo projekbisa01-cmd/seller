@@ -5079,17 +5079,19 @@
         // ======================================================================
         // (12 Nov 2026) minimal ongkir: instan Rp8.000 per penerima, gabungan Rp11.000 untuk total satu rute
         const TARIF_WARUNG = { tarifKm: 2700, tarifTitik: 0, ongkirMin: 8000, gabunganMin: 11000, pembulatan: 500 };
-        let antarSiapkan = null;
+        let antarSiapkan = null, antarKodeGagal = '';
         async function siapkanAkunAntarWarung() {
             if (window.__antarAktif) return 'ok';
             if (antarSiapkan) return antarSiapkan;
             antarSiapkan = (async () => {
                 const u = auth.currentUser;
                 const gmail = String(u && u.email || '').toLowerCase();
-                if (!gmail || !currentUser || !currentUser.id || !/^[A-Za-z0-9_-]{1,100}$/.test(currentUser.id)) return 'gagal';
+                antarKodeGagal = '';
+                if (!gmail || !currentUser || !currentUser.id) { antarKodeGagal = 'akun'; return 'gagal'; }
+                if (!/^[A-Za-z0-9_.@-]{1,60}$/.test(currentUser.id)) { antarKodeGagal = 'id'; return 'gagal'; }   // ID warung lama bisa berupa email (mis. sate3639@projekgo.id)
                 let v;
-                try { const s = await getDoc(doc(db, "vendors", currentUser.id)); v = s.exists() ? s.data() : null; } catch (e) { return 'gagal'; }
-                if (!v || String(v.email || '').toLowerCase() !== gmail) return 'gagal';
+                try { const s = await getDoc(doc(db, "vendors", currentUser.id)); v = s.exists() ? s.data() : null; } catch (e) { antarKodeGagal = 'jaringan'; return 'gagal'; }
+                if (!v || String(v.email || '').toLowerCase() !== gmail) { antarKodeGagal = 'gmail'; return 'gagal'; }
                 const lat = Number(v.latitude), lng = Number(v.longitude);
                 if (!isFinite(lat) || !isFinite(lng) || lat < -8.3 || lat > -7.0 || lng < 109.0 || lng > 110.2) return 'lokasi';
                 const mitraId = 'w_' + currentUser.id;
@@ -5107,7 +5109,7 @@
                         mitraId: mitraId, vendorId: currentUser.id, nama: String(u.displayName || '').slice(0, 40),
                         aktif: true, otomatis: true, dibuatOleh: gmail, dibuatAt: serverTimestamp()
                     });
-                } catch (e) { console.warn('[Antar warung] akun', e && e.code); }
+                } catch (e) { console.warn('[Antar warung] akun', e && e.code); antarKodeGagal = /permission/.test(String(e && e.code)) ? 'izin' : 'jaringan'; }
                 const a = await cekAkunAntar(gmail);
                 window.__antarAktif = !!a;
                 return a ? 'ok' : 'gagal';
@@ -5157,7 +5159,7 @@
                 t.textContent = 'Atur lokasi warung';
                 t.onclick = () => { tutupPilihAntar(); if (typeof window.openLocationModal === 'function') window.openLocationModal(false); };
             } else {
-                info.textContent = 'Antar Hemat belum bisa dibuka. Periksa internet lalu coba lagi. Kalau masih gagal, hubungi admin ProjekGo lewat menu Bantuan.';
+                info.textContent = 'Antar Hemat belum bisa dibuka. Periksa internet lalu coba lagi. Kalau masih gagal, hubungi admin ProjekGo lewat menu Bantuan.' + (antarKodeGagal ? ' (kode: ' + antarKodeGagal + ')' : '');
                 t.textContent = 'Coba lagi';
                 t.onclick = () => window.bukaPilihAntar();
             }
