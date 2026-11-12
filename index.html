@@ -619,6 +619,46 @@
         #antar-wadah, #antar-wadah iframe { width: 100%; height: 100%; border: 0; display: block; }
         body.mx-di-antar { overflow: hidden; }
 
+        /* ===== BERANDA WARUNG RINGKAS + ANTAR HEMAT DI KELOLA WARUNG (12 Nov 2026) ===== */
+        #home-status-card { padding: 14px 16px; margin-bottom: 4px; }
+        #home-status-card .mx-status-teks { font-size: 21px; }
+        #home-status-info-badge, #info-jam-otomatis, #mx-antar-kartu { display: none !important; }
+        .mx-jam-ringkas { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--garis); display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--teks2); }
+        .mx-jam-ringkas i { color: var(--primary); font-size: 17px; flex: none; }
+        .mx-jam-ringkas span { flex: 1; min-width: 0; }
+        .mx-jam-ringkas button { border: 0; background: none; color: var(--oranye-teks); font: inherit; font-weight: 800; min-height: 40px; padding: 0 2px; cursor: pointer; }
+        body.mode-warung .service-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 6px; }
+        body.mode-warung .service-item { height: auto; border: 0; background: none; padding: 0; gap: 7px; font-size: 12.5px; line-height: 1.25; text-align: center; }
+        body.mode-warung .service-icon { width: 56px; height: 56px; border-radius: 16px; background: var(--muda); display: grid; place-items: center; font-size: 27px; }
+        body.mode-warung .service-item.mx-ah .service-icon { background: var(--primary); }
+        body.mode-warung .service-item.mx-ah .service-icon i { color: #fff !important; }
+        body.mode-warung .svc-badge { top: -6px; right: calc(50% - 36px); }
+        .mx-ah-label { position: absolute; top: -7px; right: calc(50% - 38px); z-index: 1; background: #E53935; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 99px; line-height: 1.4; }
+        .mx-ah-label.jalan { background: #1F5AA6; }
+        /* Tab Antar tidak dipakai warung (Antar Hemat dibuka dari Kelola warung) */
+        body.mode-warung #mx-nav [data-nav="antar"] { display: none; }
+        body.mode-warung.mx-di-antar #mx-nav { display: none; }
+        body.mode-warung #content-antar.active { bottom: 0; z-index: 1200; }
+        /* Lembar pilihan instan / gabungan */
+        .ahp-latar { position: fixed; inset: 0; z-index: 1300; background: rgba(28,22,16,.5); display: flex; align-items: flex-end; justify-content: center; }
+        .ahp-latar[hidden] { display: none; }
+        .ahp { width: 100%; max-width: 480px; background: #fff; border-radius: 24px 24px 0 0; padding: 12px 18px calc(18px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 12px; max-height: 92vh; overflow-y: auto; }
+        .ahp-pegang { width: 44px; height: 5px; border-radius: 9px; background: #DDD3C8; margin: 0 auto 4px; }
+        .ahp h3 { margin: 0; font-size: 19px; font-weight: 800; }
+        .ahp > p { margin: -6px 0 0; font-size: 14px; color: var(--teks2); line-height: 1.5; }
+        .ahp-op { display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left; border: 1.5px solid var(--garis); border-radius: 18px; padding: 14px; background: #fff; color: #1C1C1E; cursor: pointer; font: inherit; }
+        .ahp-op:active { background: #FFF8F2; }
+        .ahp-op[hidden], .ahp-link[hidden] { display: none; }
+        .ahp-op .ahp-ik { width: 46px; height: 46px; flex: none; border-radius: 14px; display: grid; place-items: center; font-size: 24px; }
+        .ahp-op b { display: block; font-size: 16px; font-weight: 800; }
+        .ahp-op span { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.45; color: var(--teks2); }
+        .ahp-op em { display: inline-block; margin-top: 7px; padding: 4px 10px; border-radius: 99px; font-style: normal; font-size: 12.5px; font-weight: 800; }
+        .ahp-instan .ahp-ik { background: #FDECEA; color: #B42318; } .ahp-instan em { background: #FDECEA; color: #B42318; }
+        .ahp-gabung .ahp-ik { background: #E6F4EA; color: #1E7A34; } .ahp-gabung em { background: #E6F4EA; color: #1E7A34; }
+        .ahp-link { border: 0; background: none; color: var(--oranye-teks); font: inherit; font-size: 14.5px; font-weight: 800; min-height: 44px; cursor: pointer; }
+        .ahp-info { padding: 12px 14px; border-radius: 14px; background: var(--muda); border: 1.5px solid #F2CDB0; color: #7A3A12; font-size: 14px; line-height: 1.55; }
+
+
         /* Tab bawah */
         .mx-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; background: #fff; border-top: 1.5px solid var(--garis); display: flex; padding-bottom: env(safe-area-inset-bottom); }
         .mx-nav button { flex: 1; height: 72px; border: 0; border-top: 3px solid transparent; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--teks2); font-size: 12.5px; font-weight: 700; cursor: pointer; position: relative; }
@@ -946,6 +986,7 @@
                         <span class="modern-slider"></span>
                     </label>
                 </div>
+                <div class="mx-jam-ringkas mx-hanya-warung" id="mx-jam-ringkas"><i class="ph-bold ph-clock-clockwise" aria-hidden="true"></i><span id="mx-jam-teks">Atur jam buka, warung buka-tutup otomatis</span><button type="button" onclick="window.bukaAturJam()">Atur jam</button></div>
                 <div id="home-status-info-badge" class="home-status-info hidden">
                     <i class="ph-fill ph-whatsapp-logo"></i>
                     <div>Jika ada pesanan, Admin Projekgo akan memesan melalui <b>WHATSAPP</b> Anda.</div>
@@ -975,6 +1016,11 @@
                     <button type="button" class="service-item" onclick="switchTab('menu')">
                         <div class="service-icon"><i class="ph-fill ph-list-dashes"></i></div>
                         <span>Menu</span>
+                    </button>
+                    <button type="button" class="service-item mx-ah" id="mx-ah-btn" onclick="window.bukaPilihAntar()">
+                        <span class="mx-ah-label" id="mx-ah-label">BARU</span>
+                        <div class="service-icon"><i class="ph-fill ph-package"></i></div>
+                        <span>Antar Hemat</span>
                     </button>
                     <button type="button" class="service-item" onclick="openFlashSaleModal()">
                         <span class="svc-badge label" id="badge-flash" aria-label="Flash Sale belum diisi"></span>
@@ -1335,6 +1381,24 @@
             <button type="button" data-nav="antar"><i class="ph-bold ph-package"></i>Antar<span class="mx-nav-badge" id="nav-badge-antar" hidden></span></button>
             <button type="button" data-nav="akun"><i class="ph-bold ph-user-circle"></i>Akun</button>
         </nav>
+    </div>
+
+    <!-- ANTAR HEMAT: pilih instan / gabungan (12 Nov 2026) -->
+    <div class="ahp-latar" id="ahp-latar" hidden>
+        <div class="ahp" role="dialog" aria-modal="true" aria-labelledby="ahp-judul" id="ahp-isi">
+            <div class="ahp-pegang" aria-hidden="true"></div>
+            <h3 id="ahp-judul">Mau diantar bagaimana?</h3>
+            <p>Rider ProjekGo menjemput pesanan di warungmu.</p>
+            <button type="button" class="ahp-op ahp-instan" onclick="window.bukaAntarWarung('instan')">
+                <span class="ahp-ik"><i class="ph-fill ph-lightning"></i></span>
+                <span style="margin:0;"><b>Antar instan</b><span>1 pelanggan, rider langsung jalan. Paling cepat sampai.</span><em>Paling cepat</em></span>
+            </button>
+            <button type="button" class="ahp-op ahp-gabung" onclick="window.bukaAntarWarung('gabungan')">
+                <span class="ahp-ik"><i class="ph-bold ph-path"></i></span>
+                <span style="margin:0;"><b>Antar gabungan</b><span>Digabung dengan paket pelanggan lain yang searah. Ongkir dibagi, sampai sedikit lebih lama.</span><em>Lebih hemat</em></span>
+            </button>
+            <button type="button" class="ahp-link" onclick="window.bukaAntarWarung('berjalan')">Lihat pengiriman berjalan &amp; riwayat ›</button>
+        </div>
     </div>
 
     <!-- MODAL PILIH CABANG (TAMPILAN UI) -->
@@ -1851,7 +1915,7 @@
     <!-- JAVASCRIPT -->
     <script type="module">
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDoc, getDocs, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, where, onSnapshot, getDoc, getDocs, setDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
@@ -2195,6 +2259,16 @@
             if (!kartu) return;
             const hari = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
             const terisi = jadwal && typeof jadwal === 'object' && hari.some(h => jadwal[h] && (jadwal[h].libur === true || (jadwal[h].buka && jadwal[h].tutup)));
+            // Baris ringkas di kartu status (12 Nov 2026)
+            const tj = document.getElementById('mx-jam-teks');
+            if (tj) {
+                const ini = terisi ? jadwal[hari[(new Date().getDay() + 6) % 7]] : null;
+                const jamOk = (v) => typeof v === 'string' && /^\d{1,2}[:.]\d{2}$/.test(v) ? v.replace(':', '.') : '';
+                tj.textContent = !terisi ? 'Atur jam buka, warung buka-tutup otomatis'
+                    : (ini && ini.libur === true) ? 'Otomatis · hari ini libur'
+                    : (ini && jamOk(ini.buka) && jamOk(ini.tutup)) ? 'Otomatis ' + jamOk(ini.buka) + '–' + jamOk(ini.tutup)
+                    : 'Buka-tutup otomatis aktif';
+            }
             kartu.classList.toggle('sudah', !!terisi);
             document.getElementById('ij-judul').textContent = terisi ? 'Buka-tutup otomatis sudah aktif ✓' : 'Warung bisa buka-tutup otomatis';
             document.querySelector('#ij-btn span').textContent = terisi ? 'Lihat / Ubah Jam Buka' : 'Atur Jam Buka';
@@ -4936,7 +5010,7 @@
                 const p = new URLSearchParams(location.search);
                 if (p.get('buka') === 'antar') {
                     history.replaceState(null, '', location.pathname);
-                    setTimeout(() => window.bukaAntar('input'), 300);
+                    setTimeout(() => { if (window.__modeMitra === 'warung') window.bukaPilihAntar(); else window.bukaAntar('input'); }, 300);
                 }
             } catch (e) {}
         }
@@ -4949,6 +5023,8 @@
             isiTabAkun(user, 'Mitra warung');
             window.__antarAktif = !!(await cekAkunAntar((user.email || '').toLowerCase()));
             perbaruiKartuAntar();
+            if (!window.__antarAktif) setTimeout(() => { siapkanAkunAntarWarung().then((h) => { if (h === 'ok') window.siapkanAntar(); }).catch(() => {}); }, 2500);
+            else setTimeout(() => window.siapkanAntar(), 2500);   // dimuat diam-diam supaya ikon bisa menandai pengiriman yang berjalan
             bukaDariTautan();
         }
 
@@ -4973,6 +5049,8 @@
         }
 
         function perbaruiKartuAntar() {
+            const lab = document.getElementById('mx-ah-label');
+            if (lab && !lab.classList.contains('jalan')) lab.hidden = !!window.__antarAktif && (function () { try { return localStorage.getItem('mx_ah_dilihat') === '1'; } catch (e) { return false; } })();
             const btn = document.getElementById('mx-antar-btn');
             const ket = document.getElementById('mx-antar-ket');
             if (!btn) return;
@@ -4991,11 +5069,110 @@
             else openKurirModal();
         };
 
+        // ======================================================================
+        //  ANTAR HEMAT LANGSUNG TERSEDIA UNTUK WARUNG (12 Nov 2026)
+        //  Warung yang masuk dengan Gmail pemilik otomatis mendapat Antar Hemat:
+        //  dibuat sekali antar_mitra/w_<idWarung> (titik jemput = lokasi warung, tarif standar
+        //  Rp2.700/km tanpa biaya tambahan) + antar_akun/<gmail>. Rules hanya mengizinkan pemilik
+        //  warung itu sendiri, dan tarif dikunci (min. instan Rp8.000, min. gabungan Rp11.000);
+        //  mengubah/menonaktifkan tetap hanya admin.
+        // ======================================================================
+        // (12 Nov 2026) minimal ongkir: instan Rp8.000 per penerima, gabungan Rp11.000 untuk total satu rute
+        const TARIF_WARUNG = { tarifKm: 2700, tarifTitik: 0, ongkirMin: 8000, gabunganMin: 11000, pembulatan: 500 };
+        let antarSiapkan = null;
+        async function siapkanAkunAntarWarung() {
+            if (window.__antarAktif) return 'ok';
+            if (antarSiapkan) return antarSiapkan;
+            antarSiapkan = (async () => {
+                const u = auth.currentUser;
+                const gmail = String(u && u.email || '').toLowerCase();
+                if (!gmail || !currentUser || !currentUser.id || !/^[A-Za-z0-9_-]{1,100}$/.test(currentUser.id)) return 'gagal';
+                let v;
+                try { const s = await getDoc(doc(db, "vendors", currentUser.id)); v = s.exists() ? s.data() : null; } catch (e) { return 'gagal'; }
+                if (!v || String(v.email || '').toLowerCase() !== gmail) return 'gagal';
+                const lat = Number(v.latitude), lng = Number(v.longitude);
+                if (!isFinite(lat) || !isFinite(lng) || lat < -8.3 || lat > -7.0 || lng < 109.0 || lng > 110.2) return 'lokasi';
+                const mitraId = 'w_' + currentUser.id;
+                const hp = String(v.no_wa || '').replace(/[^0-9+]/g, '').slice(0, 20);
+                try {
+                    await setDoc(doc(db, "antar_mitra", mitraId), Object.assign({
+                        vendorId: currentUser.id, nama: String(v.nama_warung || currentUser.name || 'Warung').slice(0, 60),
+                        alamat: String(v.alamat || '').slice(0, 120), hp: hp,
+                        asalLat: lat, asalLng: lng, pembayar: 'mitra', aktif: true, otomatis: true,
+                        dibuatOleh: gmail, dibuatAt: serverTimestamp()
+                    }, TARIF_WARUNG));
+                } catch (e) { console.warn('[Antar warung] mitra', e && e.code); /* mungkin sudah ada: lanjut ke akun */ }
+                try {
+                    await setDoc(doc(db, "antar_akun", gmail), {
+                        mitraId: mitraId, vendorId: currentUser.id, nama: String(u.displayName || '').slice(0, 40),
+                        aktif: true, otomatis: true, dibuatOleh: gmail, dibuatAt: serverTimestamp()
+                    });
+                } catch (e) { console.warn('[Antar warung] akun', e && e.code); }
+                const a = await cekAkunAntar(gmail);
+                window.__antarAktif = !!a;
+                return a ? 'ok' : 'gagal';
+            })();
+            const h = await antarSiapkan;
+            antarSiapkan = null;
+            perbaruiKartuAntar();
+            return h;
+        }
+        // Lokasi warung berubah -> titik jemput Antar Hemat ikut (hanya untuk akun Antar otomatis milik warung ini)
+        let antarLokasiDicek = '';
+        async function selaraskanLokasiAntar() {
+            try {
+                if (!window.__antarAktif || !currentUser || !currentUser.id) return;
+                const mitraId = 'w_' + currentUser.id;
+                const [sv, sm] = await Promise.all([getDoc(doc(db, "vendors", currentUser.id)), getDoc(doc(db, "antar_mitra", mitraId))]);
+                if (!sv.exists() || !sm.exists()) return;
+                const v = sv.data(), m = sm.data();
+                const lat = Number(v.latitude), lng = Number(v.longitude);
+                const kunci = lat + ',' + lng;
+                if (!isFinite(lat) || !isFinite(lng) || antarLokasiDicek === kunci) return;
+                antarLokasiDicek = kunci;
+                if (m.asalLat === lat && m.asalLng === lng) return;
+                await updateDoc(doc(db, "antar_mitra", mitraId), { asalLat: lat, asalLng: lng, alamat: String(v.alamat || '').slice(0, 120), diubahOleh: String(auth.currentUser.email || '').toLowerCase(), diubahAt: serverTimestamp() });
+            } catch (e) { /* bukan akun otomatis / tidak berubah */ }
+        }
+        function tutupPilihAntar() { document.getElementById('ahp-latar').hidden = true; }
+        document.getElementById('ahp-latar').addEventListener('click', (e) => { if (e.target.id === 'ahp-latar') tutupPilihAntar(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !document.getElementById('ahp-latar').hidden) tutupPilihAntar(); });
+        window.bukaPilihAntar = async () => {
+            const latar = document.getElementById('ahp-latar');
+            const isi = document.getElementById('ahp-isi');
+            isi.querySelectorAll('.ahp-info, .ahp-tmb').forEach(x => x.remove());
+            isi.querySelectorAll('.ahp-op, .ahp-link').forEach(x => x.hidden = false);
+            latar.hidden = false;
+            if (window.__antarAktif) { selaraskanLokasiAntar(); return; }
+            isi.querySelectorAll('.ahp-op, .ahp-link').forEach(x => x.hidden = true);
+            const tunggu = document.createElement('div'); tunggu.className = 'ahp-info'; tunggu.textContent = 'Menyiapkan Antar Hemat untuk warungmu…';
+            isi.appendChild(tunggu);
+            const h = await siapkanAkunAntarWarung();
+            tunggu.remove();
+            if (h === 'ok') { isi.querySelectorAll('.ahp-op, .ahp-link').forEach(x => x.hidden = false); return; }
+            const info = document.createElement('div'); info.className = 'ahp-info';
+            const t = document.createElement('button'); t.type = 'button'; t.className = 'mx-tombol ahp-tmb';
+            if (h === 'lokasi') {
+                info.textContent = 'Atur dulu titik lokasi warungmu di peta. Titik ini dipakai rider untuk menjemput pesanan.';
+                t.textContent = 'Atur lokasi warung';
+                t.onclick = () => { tutupPilihAntar(); if (typeof window.openLocationModal === 'function') window.openLocationModal(false); };
+            } else {
+                info.textContent = 'Antar Hemat belum bisa dibuka. Periksa internet lalu coba lagi. Kalau masih gagal, hubungi admin ProjekGo lewat menu Bantuan.';
+                t.textContent = 'Coba lagi';
+                t.onclick = () => window.bukaPilihAntar();
+            }
+            isi.appendChild(info); isi.appendChild(t);
+        };
+        window.bukaAntarWarung = (jenis) => {
+            tutupPilihAntar();
+            window.bukaAntar(['instan', 'gabungan', 'berjalan'].includes(jenis) ? jenis : 'berjalan');
+        };
+
         window.siapkanAntar = () => {
             if (bingkaiAntar) return;
             bingkaiAntar = document.createElement('iframe');
             bingkaiAntar.title = 'Antar Hemat';
-            bingkaiAntar.src = 'antar/index.html';
+            bingkaiAntar.src = window.__modeMitra === 'warung' ? 'antar/index.html?mode=warung' : 'antar/index.html';
             bingkaiAntar.setAttribute('allow', 'geolocation; clipboard-write');
             bingkaiAntar.addEventListener('load', () => { bingkaiSiap = true; kirimTabAntar(); });
             document.getElementById('antar-wadah').appendChild(bingkaiAntar);
@@ -5006,7 +5183,8 @@
             tabAntarTertunda = null;
         }
         window.bukaAntar = (tab) => {
-            tabAntarTertunda = ['input', 'daftar', 'riwayat', 'setelan'].includes(tab) ? tab : null;
+            tabAntarTertunda = ['input', 'daftar', 'riwayat', 'setelan', 'instan', 'gabungan', 'berjalan'].includes(tab) ? tab : null;
+            if (window.__modeMitra === 'warung') { try { localStorage.setItem('mx_ah_dilihat', '1'); } catch (e) {} perbaruiKartuAntar(); }
             window.switchTab('antar');
             kirimTabAntar();
         };
@@ -5017,13 +5195,22 @@
         window.addEventListener('message', (e) => {
             if (e.origin !== location.origin || !bingkaiAntar || e.source !== bingkaiAntar.contentWindow) return;
             const d = e.data || {};
+            if (d.t === 'ah-tutup') { if (window.__modeMitra === 'warung') window.switchTab('home'); return; }
             if (d.t !== 'ah-ringkas') return;
             bingkaiSiap = true; kirimTabAntar();
             const angka = (v) => (Number.isFinite(v) && v >= 0) ? String(Math.min(v, 999)) : '–';
             const badge = document.getElementById('nav-badge-antar');
             badge.hidden = !(d.siap > 0); badge.textContent = angka(d.siap);
             if (window.__modeMitra === 'warung') {
-                if (d.keadaan === 'ok' || d.keadaan === 'tolak') { window.__antarAktif = d.keadaan === 'ok'; perbaruiKartuAntar(); }
+                if (d.keadaan === 'ok' || d.keadaan === 'tolak') { window.__antarAktif = d.keadaan === 'ok'; }
+                // Ikon Antar Hemat: tanda jumlah pengiriman yang sedang berjalan
+                const lab = document.getElementById('mx-ah-label');
+                if (lab) {
+                    const n = Number.isFinite(d.jalan) && d.jalan > 0 ? Math.min(d.jalan, 99) : 0;
+                    lab.classList.toggle('jalan', n > 0);
+                    if (n > 0) { lab.textContent = n + ' jalan'; lab.hidden = false; }
+                    else { lab.textContent = 'BARU'; perbaruiKartuAntar(); }
+                }
                 return;
             }
             if (window.__modeMitra !== 'toko') return;
