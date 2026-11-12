@@ -219,12 +219,30 @@
   html.tertanam .head { padding-top: 14px; position: sticky; }
   .luar-wa { margin-top: 12px; width: 100%; }
 
+  /* ===== MODE WARUNG (12 Nov 2026): dibuka dari ikon "Antar Hemat" di Kelola warung =====
+     Tanpa tab: tiap layar (instan / gabungan / pengiriman) punya tombol kembali sendiri. */
+  .wh-kembali { display: none; }
+  html.mode-warung .wh-kembali { display: grid; place-items: center; width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1.5px solid var(--garis); background: #fff; color: var(--teks); font-size: 24px; font-weight: 800; line-height: 1; }
+  html.mode-warung .head-atas { justify-content: flex-start; }
+  html.mode-warung .head h1 { font-size: 19px; }
+  html.mode-warung .tabs, html.mode-warung #i-hemat, html.mode-warung #info-input-bawah, html.mode-warung .luar-wa { display: none !important; }
+  .w-saja { display: none; }
+  html.mode-warung .w-saja { display: block; }
+  .w-judul { margin: 6px 2px 0; font-size: 16px; font-weight: 800; }
+  .w-kartu-instan { display: flex; gap: 12px; align-items: center; }
+  .w-kartu-instan .isi { flex: 1; min-width: 0; }
+  .w-kartu-instan b { font-size: 15px; font-weight: 800; }
+  .w-tambah { width: 100%; min-height: 48px; border-radius: 14px; border: 1.5px dashed #CC4A00; background: #fff; color: #B84300; font-size: 15px; font-weight: 800; }
+  .w-tautan { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 16px; border: 1.5px solid #C9D9EE; background: #EEF4FC; color: #1F5AA6; font-size: 14.5px; font-weight: 800; }
+  #w-gab-peta .peta { margin-top: 0; height: 190px; }
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="head">
     <div class="head-atas">
+      <button type="button" class="wh-kembali" id="wh-kembali" aria-label="Kembali">‹</button>
       <div style="min-width:0;"><small>Antar Hemat</small><h1 id="judul-app">Antar Hemat</h1></div>
       <div class="akun" id="akun" hidden><span id="akun-email"></span><button type="button" id="btn-keluar">Keluar</button></div>
     </div>
@@ -309,11 +327,15 @@
       </div>
       <div class="bantu" id="bayar-ket"></div>
     </div>
-    <div class="info">Paket yang disimpan masuk ke <b>Daftar</b>. Saat siap, ceklis paket yang mau diantar lalu tekan <b>Antar sekarang</b>: 1 paket = instan, 2 paket atau lebih = gabungan (lebih hemat).</div>
+    <div id="w-instan-list" class="w-saja" style="display:none;"></div>
+    <div class="info" id="info-input-bawah">Paket yang disimpan masuk ke <b>Daftar</b>. Saat siap, ceklis paket yang mau diantar lalu tekan <b>Antar sekarang</b>: 1 paket = instan, 2 paket atau lebih = gabungan (lebih hemat).</div>
   </main>
 
   <!-- ===== DAFTAR ===== -->
-  <main id="v-daftar" hidden><div id="daftar" style="display:flex; flex-direction:column; gap:12px;"></div></main>
+  <main id="v-daftar" hidden>
+    <section class="card" id="w-gab-peta" hidden><div class="peta" id="peta-gab" role="img" aria-label="Peta paket gabungan"></div><div class="bantu" id="peta-gab-ket">Titik W = warung. Angka = urutan antar.</div></section>
+    <div id="daftar" style="display:flex; flex-direction:column; gap:12px;"></div>
+  </main>
 
   <!-- ===== RIWAYAT ===== -->
   <main id="v-riwayat" hidden><div id="riwayat" style="display:flex; flex-direction:column; gap:12px;"></div></main>
@@ -342,7 +364,8 @@
       <div class="grid2" style="margin-top:12px;">
         <div><label class="lbl" for="mf-km">Tarif per km</label><input class="fld" id="mf-km" type="number" min="0" step="100" inputmode="numeric" value="2700"></div>
         <div><label class="lbl" for="mf-titik">Per titik (gabungan)</label><input class="fld" id="mf-titik" type="number" min="0" step="100" inputmode="numeric" value="2000"></div>
-        <div><label class="lbl" for="mf-min">Ongkir minimal</label><input class="fld" id="mf-min" type="number" min="0" step="500" inputmode="numeric" value="0"></div>
+        <div><label class="lbl" for="mf-min">Ongkir minimal instan</label><input class="fld" id="mf-min" type="number" min="0" step="500" inputmode="numeric" value="0"></div>
+        <div><label class="lbl" for="mf-gabmin">Ongkir minimal gabungan (total)</label><input class="fld" id="mf-gabmin" type="number" min="0" step="500" inputmode="numeric" value="0"></div>
         <div><label class="lbl" for="mf-bulat">Pembulatan ke atas</label><input class="fld" id="mf-bulat" type="number" min="500" step="500" inputmode="numeric" value="500"></div>
       </div>
       <label class="lbl" for="mf-bayar">Ongkir dibayar oleh</label>
@@ -404,6 +427,8 @@
     if (dibingkai && !asalSama && !indukProjekGo) { document.documentElement.style.display = 'none'; window.__bingkaiAsing = true; }
   })();
   window.__diMitra = window.__tertanam || location.hostname === 'seller.projekgo.id';
+  window.__modeWarung = !!window.__tertanam && /(?:^|[?&])mode=warung(?:&|$)/.test(location.search.slice(1));
+  if (window.__modeWarung) document.documentElement.classList.add('mode-warung');
   if (window.__tertanam) document.documentElement.classList.add('tertanam');
   // Dibuka langsung di seller.projekgo.id/antar/ -> pindah ke aplikasi Mitra, tab Antar
   if (!window.__tertanam && !window.__bingkaiAsing && window.self === window.top && location.hostname === 'seller.projekgo.id') location.replace('/?buka=antar');
@@ -435,7 +460,8 @@ const URL_LOKASI = 'https://rider.projekgo.id/antar/lokasi.html';   // halaman p
 const PUSAT_DEFAULT = { lat: -7.6083, lng: 109.5131 };   // Gombong
 const BATAS = { latMin: -8.3, latMax: -7.0, lngMin: 109.0, lngMax: 110.2 };   // Kebumen & sekitarnya
 const MAKS_TITIK = 25;
-const BAWAAN_MITRA = { tarifKm: 2700, tarifTitik: 2000, ongkirMin: 0, pembulatan: 500, pembayar: 'mitra', aktif: true };
+const BAWAAN_MITRA = { tarifKm: 2700, tarifTitik: 2000, ongkirMin: 0, gabunganMin: 0, pembulatan: 500, pembayar: 'mitra', aktif: true };
+const WARUNG = window.__modeWarung === true;   // dibuka dari ikon Antar Hemat di aplikasi Mitra warung (12 Nov 2026)
 
 const $ = (id) => document.getElementById(id);
 const S = {
@@ -672,7 +698,11 @@ function kirimRingkas() {
 window.addEventListener('message', (e) => {
   if (e.origin !== location.origin || e.source !== window.parent) return;
   const d = e.data || {};
-  if (d.t === 'ah-tab' && ['input', 'daftar', 'riwayat', 'setelan'].includes(d.tab)) { S.tab = d.tab; render(); window.scrollTo(0, 0); }
+  if (d.t === 'ah-tab' && ['input', 'daftar', 'riwayat', 'setelan', 'instan', 'gabungan', 'berjalan'].includes(d.tab)) {
+    S.tab = !WARUNG ? (['instan', 'gabungan', 'berjalan'].includes(d.tab) ? 'input' : d.tab)
+      : ({ input: 'instan', daftar: 'gabungan', riwayat: 'berjalan', setelan: 'berjalan' }[d.tab] || d.tab);
+    render(); window.scrollTo(0, 0);
+  }
 });
 function render0() {
   const login = !!S.user;
@@ -688,13 +718,20 @@ function render0() {
   $('pilih-mitra').hidden = !(ok && S.role === 'admin');
   const adaMitra = !!S.mitraId && !!S.mitra;
   if (ok && S.role === 'admin' && !adaMitra && S.tab !== 'mitra') S.tab = 'mitra';
-  ['input', 'daftar', 'riwayat', 'setelan', 'mitra'].forEach((t) => { $('v-' + t).hidden = !ok || S.tab !== t || (t !== 'mitra' && !adaMitra); });
-  $('bawah-input').hidden = !ok || S.tab !== 'input' || !adaMitra;
-  $('bawah-daftar').hidden = !ok || S.tab !== 'daftar' || !adaMitra;
+  if (WARUNG && !['instan', 'tambah', 'gabungan', 'berjalan'].includes(S.tab)) S.tab = 'instan';
+  const v = WARUNG ? ({ instan: 'input', tambah: 'input', gabungan: 'daftar', berjalan: 'riwayat' }[S.tab]) : S.tab;
+  ['input', 'daftar', 'riwayat', 'setelan', 'mitra'].forEach((t) => { $('v-' + t).hidden = !ok || v !== t || (t !== 'mitra' && !adaMitra); });
+  $('bawah-input').hidden = !ok || v !== 'input' || !adaMitra;
+  $('bawah-daftar').hidden = !ok || v !== 'daftar' || !adaMitra;
+  if (WARUNG) {
+    $('w-gab-peta').hidden = !(ok && adaMitra && S.tab === 'gabungan');
+    $('w-instan-list').style.display = ok && adaMitra && S.tab === 'instan' ? 'flex' : 'none';
+  }
   document.querySelectorAll('#tabs [data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === S.tab)));
   if (!login) return;
   $('akun-email').textContent = (S.role === 'admin' ? 'Admin · ' : '') + S.user.email;
-  $('judul-app').textContent = (S.mitra && S.mitra.nama) ? S.mitra.nama : 'Antar Hemat';
+  $('judul-app').textContent = WARUNG ? ({ instan: 'Antar instan', tambah: 'Tambah paket gabungan', gabungan: 'Antar gabungan', berjalan: 'Pengiriman' }[S.tab] || 'Antar Hemat')
+    : ((S.mitra && S.mitra.nama) ? S.mitra.nama : 'Antar Hemat');
   if (!ok) return;
   if (S.role === 'admin') renderPilihMitra();
   const siap = S.kirim.filter((k) => k.status === 'baru').length;
@@ -703,9 +740,9 @@ function render0() {
   const info = $('info-asal');
   if (adaMitra && !asal()) { info.hidden = false; info.textContent = S.role === 'admin' ? 'Titik ambil mitra ini belum diatur. Buka tab Mitra lalu atur pin di peta.' : 'Titik ambil paket belum diatur admin ProjekGo, jadi ongkir belum bisa dihitung.'; }
   else info.hidden = true;
-  if (S.tab === 'input' && adaMitra) renderInput();
-  if (S.tab === 'daftar' && adaMitra) renderDaftar();
-  if (S.tab === 'riwayat' && adaMitra) renderRiwayat();
+  if (v === 'input' && adaMitra) renderInput();
+  if (v === 'daftar' && adaMitra) renderDaftar();
+  if (v === 'riwayat' && adaMitra) renderRiwayat();
   if (S.tab === 'setelan' && adaMitra) renderSetelan();
   if (S.tab === 'mitra') renderKelolaMitra();
 }
@@ -725,6 +762,31 @@ function renderInput() {
   const lokasiOk = d.sumber === 'link' || d.lat != null;
   $('btn-simpan').disabled = S.menyimpan || !(nama && hpSah(hp) && lokasiOk);
   $('btn-simpan').textContent = S.menyimpan ? 'Menyimpan…' : (d.sumber === 'link' ? 'Simpan & kirim link lokasi' : 'Simpan ke daftar');
+  if (WARUNG) {
+    if (S.tab === 'instan') {
+      if (!S.menyimpan) $('btn-simpan').textContent = d.sumber === 'link' ? 'Kirim link lokasi ke penerima' : (d.ongkirInstan != null ? 'Panggil rider sekarang · ' + rp(d.ongkirInstan) : 'Panggil rider sekarang');
+      if (d.sumber === 'tempel' && d.lat != null && d.ongkirInstan == null) $('btn-simpan').disabled = true;   // tunggu ongkir terhitung
+      renderInstanWarung();
+    } else if (S.tab === 'tambah' && !S.menyimpan) $('btn-simpan').textContent = d.sumber === 'link' ? 'Simpan & kirim link lokasi' : 'Simpan ke daftar gabungan';
+  }
+}
+// Paket instan milik warung yang belum dipanggil (menunggu lokasi / siap dipanggil)
+function renderInstanWarung() {
+  const w = $('w-instan-list'); if (!w) return;
+  const daftar = S.kirim.filter((k) => k.rencana === 'instan').sort((a, b) => msDari(b.dibuatAt) - msDari(a.dibuatAt));
+  const jalan = S.permintaan.filter((p) => ['menunggu', 'diproses', 'dibawa'].includes(p.status)).length;
+  const h = [];
+  if (jalan) h.push(`<button type="button" class="w-tautan" data-w="berjalan"><span>${jalan} pengiriman sedang berjalan</span><span aria-hidden="true">›</span></button>`);
+  if (daftar.length) {
+    h.push('<div class="w-judul">Menunggu dipanggil</div>');
+    daftar.forEach((k) => {
+      if (k.status === 'tunggu_lokasi') { h.push(`<div class="card" style="padding:4px 16px;">${itemTunggu(k)}</div>`); return; }
+      h.push(`<div class="card"><div class="w-kartu-instan"><div class="isi"><b>${esc(k.nama)}</b><div class="bantu" style="margin-top:2px;">Lokasi sudah masuk · ${esc(km1(k.jarakKm))} dari warung</div><div style="margin-top:6px;">${tagBayar(bayarPaket(k))}</div></div><span class="rp" style="font-weight:800;">${esc(rp(k.ongkirInstan))}</span></div>
+        <div class="baris-btn"><button type="button" class="btn btn-pri" style="flex:1;" data-aksi="panggil" data-id="${esc(k.id)}">Panggil rider sekarang</button><button type="button" class="btn btn-merah btn-kecil" data-aksi="batal" data-id="${esc(k.id)}">Hapus</button></div></div>`);
+    });
+  }
+  const html = h.join('');
+  if (w.dataset.isi !== html) { w.innerHTML = html; w.dataset.isi = html; }
 }
 
 function itemSiap(k) {
@@ -841,6 +903,7 @@ function kartuTungguRider(p) {
   </section>`;
 }
 function renderDaftar() {
+  if (WARUNG) return renderGabunganWarung();
   const siap = S.kirim.filter((k) => k.status === 'baru').sort((a, b) => msDari(a.dibuatAt) - msDari(b.dibuatAt));
   const tunggu = S.kirim.filter((k) => k.status === 'tunggu_lokasi').sort((a, b) => msDari(b.dibuatAt) - msDari(a.dibuatAt));
   [...S.dipilih].forEach((id) => { if (!siap.some((k) => k.id === id)) S.dipilih.delete(id); });
@@ -860,11 +923,63 @@ function renderDaftar() {
   $('daftar').innerHTML = h.join('');
   renderBawahDaftar(siap);
 }
+// Layar "Antar gabungan" (mode warung): hanya paket gabungan, peta urutan rute, tombol tambah paket
+function renderGabunganWarung() {
+  const gab = (k) => k.rencana !== 'instan';
+  const siap = S.kirim.filter((k) => k.status === 'baru' && gab(k)).sort((a, b) => msDari(a.dibuatAt) - msDari(b.dibuatAt));
+  const tunggu = S.kirim.filter((k) => k.status === 'tunggu_lokasi' && gab(k)).sort((a, b) => msDari(b.dibuatAt) - msDari(a.dibuatAt));
+  [...S.dipilih].forEach((id) => { if (!siap.some((k) => k.id === id)) S.dipilih.delete(id); });
+  const semuaDipilih = siap.length && siap.every((k) => S.dipilih.has(k.id));
+  const jalan = S.permintaan.filter((p) => ['menunggu', 'diproses', 'dibawa'].includes(p.status)).length;
+  const h = [];
+  h.push('<div class="info">Tambahkan paket satu per satu. Setelah siap, ceklis paketnya lalu tekan <b>Antar gabungan</b>: rider mengantar semua paket dalam satu rute searah, ongkirnya dibagi.</div>');
+  if (jalan) h.push(`<button type="button" class="w-tautan" data-aksi="ke-berjalan"><span>${jalan} pengiriman sedang berjalan</span><span aria-hidden="true">›</span></button>`);
+  h.push(`<section class="card"><div class="grup-head"><div><h2>Siap digabung</h2><div class="sub">${siap.length} paket · ceklis yang mau diantar bersama</div></div>${siap.length > 1 ? `<button type="button" class="pilih-semua" data-aksi="pilih-semua">${semuaDipilih ? 'Batal pilih' : 'Pilih semua'}</button>` : ''}</div>
+    <div style="margin-top:6px;">${siap.length ? siap.map(itemSiap).join('') : '<div class="kosong">Belum ada paket. Tekan "Tambah paket" di bawah.</div>'}</div></section>`);
+  h.push('<button type="button" class="w-tambah" data-aksi="tambah">+ Tambah paket</button>');
+  const dipilihList = siap.filter((k) => S.dipilih.has(k.id));
+  if (dipilihList.length >= 2 && dipilihList.length <= MAKS_TITIK && asal()) jadwalHitung(dipilihList);
+  if (dipilihList.length) h.push(rincianHTML(dipilihList));
+  if (tunggu.length) h.push(`<section class="card"><div class="grup-head"><div><h2>Menunggu lokasi penerima</h2><div class="sub">${tunggu.length} paket · pindah ke "Siap digabung" begitu lokasi masuk</div></div></div><div style="margin-top:6px;">${tunggu.map(itemTunggu).join('')}</div></section>`);
+  $('daftar').innerHTML = h.join('');
+  renderBawahDaftar(siap);
+  gambarPetaGab(siap, dipilihList);
+}
+// Peta kecil: W = warung, paket terpilih diberi nomor urut rute (abu-abu = belum dipilih)
+let petaGab = null, penandaGab = [];
+async function gambarPetaGab(siap, pilih) {
+  const a = asal(); if (!a) return;
+  await tungguMaps();
+  if (S.tab !== 'gabungan') return;
+  if (!petaGab) petaGab = new google.maps.Map($('peta-gab'), { center: a, zoom: 13, disableDefaultUI: true, zoomControl: true, gestureHandling: 'cooperative', clickableIcons: false });
+  penandaGab.forEach((m) => m.setMap(null)); penandaGab = [];
+  const b = new google.maps.LatLngBounds(); b.extend(a);
+  const titik = (pos, teks, warna, judul) => {
+    const m = new google.maps.Marker({ map: petaGab, position: pos, title: judul, label: { text: teks, color: '#fff', fontWeight: '800', fontSize: '12px' },
+      icon: { path: google.maps.SymbolPath.CIRCLE, scale: 12, fillColor: warna, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });
+    penandaGab.push(m); b.extend(pos);
+  };
+  titik(a, 'W', '#1C1C1E', 'Warung (titik jemput)');
+  const rc = pilih.length >= 2 && S.rc && S.rc.kunci === kunciPilih(pilih) && S.rc.status === 'ok' ? S.rc.r : null;
+  const urutan = rc ? rc.urut.map((k) => k.id) : pilih.map((k) => k.id);
+  siap.forEach((k) => {
+    if (k.lat == null) return;
+    const i = urutan.indexOf(k.id);
+    titik({ lat: k.lat, lng: k.lng }, i >= 0 ? String(i + 1) : '•', i >= 0 ? '#CC4A00' : '#A39A90', k.nama);
+  });
+  if (penandaGab.length > 1) petaGab.fitBounds(b, 40); else { petaGab.setCenter(a); petaGab.setZoom(14); }
+}
 function renderRiwayat() {
   const peng = S.permintaan.slice().sort((a, b) => msDari(b.dibuatAt) - msDari(a.dibuatAt));
   const riwayat = peng.filter((p) => p.status === 'selesai' || p.status === 'batal');
   const aktifHari = peng.filter((p) => p.status !== 'batal');
   const h = [];
+  if (WARUNG) {
+    // Layar "Pengiriman": yang sedang berjalan di atas, lalu ringkasan & riwayat hari ini
+    peng.filter((p) => p.status === 'dibawa').forEach((p) => h.push(kartuJalan(p)));
+    peng.filter((p) => p.status === 'menunggu' || p.status === 'diproses').forEach((p) => h.push(kartuTungguRider(p)));
+    if (!peng.some((p) => ['menunggu', 'diproses', 'dibawa'].includes(p.status))) h.push('<div class="card kosong">Tidak ada pengiriman yang sedang berjalan.</div>');
+  }
   if (aktifHari.length) {
     const tot = aktifHari.reduce((a, p) => { const t = totalBayar(p.titik, p); a.toko += t.toko; a.pen += t.penerima; return a; }, { toko: 0, pen: 0 });
     h.push(`<section class="card bayar-ringkas"><span class="lbl" style="margin-bottom:2px;">Ongkir hari ini</span><div><span>Total dibayar toko</span><b>${esc(rp(tot.toko))}</b></div><div><span>Ditagih rider ke penerima</span><b style="color:#8A5A00;">${esc(rp(tot.pen))}</b></div></section>`);
@@ -873,7 +988,10 @@ function renderRiwayat() {
   h.push(riwayat.length ? riwayat.map(kartuPengantaran).join('') : '<div class="card kosong">Belum ada pengantaran yang selesai hari ini.</div>');
   $('riwayat').innerHTML = h.join('');
 }
-$('riwayat').addEventListener('click', (e) => { const el = e.target.closest('[data-aksi="foto"]'); if (el) lihatFoto(el.dataset.bid); });
+$('riwayat').addEventListener('click', (e) => {
+  const el = e.target.closest('[data-aksi="foto"]'); if (el) { lihatFoto(el.dataset.bid); return; }
+  const bt = e.target.closest('[data-aksi="batal-permintaan"]'); if (bt) batalPermintaan(bt.dataset.pid);
+});
 function renderBawahDaftar(siap) {
   const pilih = (siap || S.kirim.filter((k) => k.status === 'baru')).filter((k) => S.dipilih.has(k.id));
   const n = pilih.length;
@@ -904,7 +1022,7 @@ function renderKelolaMitra() {
   $('mf-daftar').innerHTML = S.semuaMitra.length ? S.semuaMitra.map((m) => `<div class="mitra-kartu" style="margin-top:8px;">
       <div class="grup-head"><b style="font-size:14.5px;">${esc(m.nama)}</b><span class="tag ${m.aktif === false ? 't-krem' : 't-hijau'}">${m.aktif === false ? 'Nonaktif' : 'Aktif'}</span></div>
       <div class="bantu" style="margin-top:0;">📍 ${esc(m.alamat || '-')}${m.asalLat == null ? ' · pin belum diatur' : ''}</div>
-      <div class="chips" style="margin-top:2px;"><span class="chip">${esc(rp(m.tarifKm))}/km · ${esc(rp(m.tarifTitik))}/paket</span><span class="chip">Bayar: ${m.pembayar === 'penerima' ? 'penerima' : 'mitra'}</span></div>
+      <div class="chips" style="margin-top:2px;"><span class="chip">${esc(rp(m.tarifKm))}/km · ${esc(rp(m.tarifTitik))}/paket${m.ongkirMin ? ' · min instan ' + esc(rp(m.ongkirMin)) : ''}${m.gabunganMin ? ' · min gabungan ' + esc(rp(m.gabunganMin)) : ''}</span><span class="chip">Bayar: ${m.pembayar === 'penerima' ? 'penerima' : 'mitra'}</span></div>
       <div class="baris-btn" style="margin-top:4px;"><button type="button" class="btn btn-sec btn-kecil" data-mf-edit="${esc(m.id)}">Ubah</button><button type="button" class="btn btn-hantu btn-kecil" data-mf-lihat="${esc(m.id)}">Lihat pengiriman</button></div>
     </div>`).join('') : '<div class="kosong">Belum ada mitra. Isi formulir di atas untuk menambah mitra pertama.</div>';
   $('mf-judul').textContent = S.mfId ? 'Ubah mitra' : 'Tambah mitra';
@@ -917,7 +1035,7 @@ function isiFormMitra(m) {
   S.mfId = m ? m.id : null;
   const v = Object.assign({}, BAWAAN_MITRA, m || {});
   $('mf-nama').value = m ? (m.nama || '') : ''; $('mf-alamat').value = m ? (m.alamat || '') : ''; $('mf-hp').value = m ? (m.hp || '') : '';
-  $('mf-km').value = v.tarifKm; $('mf-titik').value = v.tarifTitik; $('mf-min').value = v.ongkirMin; $('mf-bulat').value = v.pembulatan;
+  $('mf-km').value = v.tarifKm; $('mf-titik').value = v.tarifTitik; $('mf-min').value = v.ongkirMin; $('mf-gabmin').value = v.gabunganMin || 0; $('mf-bulat').value = v.pembulatan;
   $('mf-bayar').value = v.pembayar === 'penerima' ? 'penerima' : 'mitra'; $('mf-aktif').value = v.aktif === false ? '0' : '1';
   $('mf-status').hidden = true;
   if (S.unsubMfAkun) { S.unsubMfAkun(); S.unsubMfAkun = null; } S.mfAkun = [];
@@ -1016,6 +1134,8 @@ $('btn-simpan').addEventListener('click', async () => {
     status: pakaiTitik ? 'baru' : 'tunggu_lokasi', tokenLokasi: token, bayar: bayarDraft(),
     dibuatOleh: S.user.email, dibuatAt: serverTimestamp()
   };
+  if (WARUNG) data.rencana = S.tab === 'instan' ? 'instan' : 'gabungan';
+  const tabSimpan = S.tab;
   try {
     const wb = writeBatch(db);
     if (token) wb.set(doc(db, 'antar_lokasi', token), {
@@ -1028,20 +1148,49 @@ $('btn-simpan').addEventListener('click', async () => {
     resetDraft();
     if (token) {
       const k = Object.assign({ id: ref.id }, data);
-      bukaSheet(`<div><h3>Tersimpan ✓</h3><div class="sub">Sekarang kirim link lokasi ke ${esc(k.nama)}. Begitu penerima mengirim lokasinya, paket otomatis pindah ke "Siap diantar".</div></div>
+      bukaSheet(`<div><h3>Tersimpan ✓</h3><div class="sub">Sekarang kirim link lokasi ke ${esc(k.nama)}. ${WARUNG && tabSimpan === 'instan' ? 'Begitu lokasinya masuk, tombol <b>Panggil rider sekarang</b> muncul di layar Antar instan.' : 'Begitu penerima mengirim lokasinya, paket otomatis pindah ke "Siap ' + (WARUNG ? 'digabung' : 'diantar') + '".'}</div></div>
         <div class="pesan-wa">${esc(pesanLinkPenerima(k.nama, token))}</div>
         <a class="btn btn-wa" href="${esc(waLinkPenerima(k))}" target="_blank" rel="noopener noreferrer" data-tutup-sheet="1">Kirim ke WhatsApp ${esc(k.nama)}</a>
         <div class="duo"><button type="button" class="btn btn-hantu" data-salin-sheet="${esc(k.id)}">Salin pesan</button><button type="button" class="btn btn-sec" data-tutup-sheet="1">Nanti saja</button></div>`);
       S.salinSheet = pesanLinkPenerima(k.nama, token);
-    } else toast('Tersimpan ke Daftar · siap diantar');
+    } else if (WARUNG && tabSimpan === 'instan') { S.menyimpan = false; renderInput(); panggilInstan(ref.id); return; }
+    else if (WARUNG) { toast('Paket masuk daftar gabungan'); S.tab = 'gabungan'; S.menyimpan = false; render(); window.scrollTo(0, 0); return; }
+    else toast('Tersimpan ke Daftar · siap diantar');
+    if (WARUNG && tabSimpan === 'tambah') S.tab = 'gabungan';
   } catch (e) { toast(pesanError(e)); }
-  S.menyimpan = false; renderInput();
+  S.menyimpan = false; if (WARUNG) render(); else renderInput();
 });
 $('sheet-isi').addEventListener('click', (e) => {
   if (e.target.closest('[data-salin-sheet]')) { salin(S.salinSheet || ''); return; }
   if (e.target.closest('[data-pesan]')) { pesanSekarang(e.target.closest('[data-pesan]')); return; }
   if (e.target.closest('[data-pesan-instan]')) { pesanInstanSemua(e.target.closest('[data-pesan-instan]')); return; }
   if (e.target.closest('[data-tutup-sheet]')) { setTimeout(tutupSheet, 50); }
+});
+
+/* ----- mode warung: panggil rider instan untuk 1 paket ----- */
+async function panggilInstan(id) {
+  let k = cariKirim(id);
+  for (let i = 0; !k && i < 30; i++) { await new Promise((r) => setTimeout(r, 100)); k = cariKirim(id); }
+  if (!k || k.status !== 'baru' || k.lat == null) { toast('Paket belum siap dipanggil. Tunggu sebentar lalu coba lagi.'); return; }
+  S.dipilih = new Set([id]); S.rc = null;
+  await siapkanAntar();
+}
+$('w-instan-list').addEventListener('click', async (e) => {
+  const t = e.target.closest('[data-w="berjalan"]'); if (t) { S.tab = 'berjalan'; render(); window.scrollTo(0, 0); return; }
+  const el = e.target.closest('[data-aksi]'); if (!el) return;
+  const a = el.dataset.aksi, id = el.dataset.id, k = cariKirim(id);
+  if (a === 'panggil') return panggilInstan(id);
+  if (a === 'salin-link') { if (k) salin(pesanLinkPenerima(k.nama, k.tokenLokasi)); return; }
+  if (a === 'batal') {
+    if (!k || !confirm('Hapus paket untuk ' + k.nama + '?')) return;
+    try { await updateDoc(doc(db, 'antar_kirim', id), { status: 'batal', dibatalkanOleh: S.user.email }); if (k.tokenLokasi) await updateDoc(doc(db, 'antar_lokasi', k.tokenLokasi), { status: 'batal' }).catch(() => {}); }
+    catch (er) { toast(pesanError(er)); }
+  }
+});
+$('wh-kembali').addEventListener('click', () => {
+  if (!$('sheet').hidden) { tutupSheet(); return; }
+  if (S.tab === 'tambah') { S.tab = 'gabungan'; resetDraft(); render(); window.scrollTo(0, 0); return; }
+  try { window.parent.postMessage({ t: 'ah-tutup' }, location.origin); } catch (e) {}
 });
 
 /* ----- daftar: pilih & antar ----- */
@@ -1067,7 +1216,24 @@ function bagiOngkir(totalRumus, anggota, bulat) {
     return bagian;
   });
 }
-function kunciPilih(pilih) { const m = M(); return pilih.map((k) => k.id + ':' + k.lat + ',' + k.lng).sort().join('|') + '#' + m.tarifKm + ',' + m.tarifTitik + ',' + m.pembulatan + ',' + (S.mitraId || ''); }
+// (12 Nov 2026) Warung: bagian tiap penerima dibulatkan, tapi jumlahnya PAS sama dengan total rute
+// (tanpa tambahan dari pembulatan). Bagian tidak pernah lebih mahal dari ongkir instannya.
+function bagiPas(total, anggota, bulat) {
+  const b = Math.max(1, bulat || 1);
+  const bobot = anggota.map((k) => Math.max(0.1, k.jarakKm || 0));
+  const jumlah = bobot.reduce((a, x) => a + x, 0);
+  const batas = anggota.map((k) => (k.ongkirInstan != null ? k.ongkirInstan : Infinity));
+  const bagian = anggota.map((k, i) => Math.min(batas[i], Math.floor((total * bobot[i] / jumlah) / b) * b));
+  let sisa = total - bagian.reduce((a, x) => a + x, 0);
+  const urutBobot = anggota.map((_, i) => i).sort((x, y) => bobot[y] - bobot[x]);
+  for (let putar = 0; sisa >= b && putar < 1000; putar++) {
+    let tambah = false;
+    for (const i of urutBobot) { if (sisa < b) break; if (bagian[i] + b <= batas[i]) { bagian[i] += b; sisa -= b; tambah = true; } }
+    if (!tambah) break;
+  }
+  return bagian;
+}
+function kunciPilih(pilih) { const m = M(); return pilih.map((k) => k.id + ':' + k.lat + ',' + k.lng).sort().join('|') + '#' + m.tarifKm + ',' + m.tarifTitik + ',' + m.pembulatan + ',' + (m.ongkirMin || 0) + ',' + (m.gabunganMin || 0) + ',' + (S.mitraId || ''); }
 async function lengkapiInstan(a, k) {
   if (k.jarakKm != null && k.ongkirInstan != null) return k;
   const r = await rute(a, { lat: k.lat, lng: k.lng });
@@ -1092,8 +1258,9 @@ async function hitungRencana(pilih) {
   const r = await rute(a, { lat: akhir.lat, lng: akhir.lng }, tengah.map((k) => ({ lat: k.lat, lng: k.lng })), true);
   const urut = (r.routes[0].waypoint_order || []).map((i) => tengah[i]).concat([akhir]);
   const jarakKm = r.routes[0].legs.reduce((x, l) => x + l.distance.value, 0) / 1000;
-  const totalRumus = bulatAtas(jarakKm * m.tarifKm + m.tarifTitik * urut.length);
-  const bagian = bagiOngkir(totalRumus, urut, m.pembulatan);
+  // (12 Nov 2026) total gabungan punya ongkir minimal sendiri (warung: Rp11.000)
+  const totalRumus = Math.max(Number(m.gabunganMin) || 0, bulatAtas(jarakKm * m.tarifKm + m.tarifTitik * urut.length));
+  const bagian = m.otomatis === true ? bagiPas(totalRumus, urut, m.pembulatan) : bagiOngkir(totalRumus, urut, m.pembulatan);
   return { jenis: 'gabungan', urut, bagian, total: bagian.reduce((x, y) => x + y, 0), totalRumus, instanSum, tidakSearah: totalRumus > instanSum, jarakKm, ruteLink: ruteLink(a, urut) };
 }
 // Rincian ongkir dihitung otomatis setiap pilihan berubah (ditunda sebentar supaya hemat permintaan Maps)
@@ -1105,7 +1272,7 @@ function jadwalHitung(pilih) {
   S.rcTimer = setTimeout(async () => {
     try { const r = await hitungRencana(pilih); if (S.rc && S.rc.kunci === kunci) S.rc = { kunci, status: 'ok', r }; }
     catch (e) { if (S.rc && S.rc.kunci === kunci) S.rc = { kunci, status: 'gagal' }; }
-    if (S.tab === 'daftar') renderDaftar();
+    if (S.tab === 'daftar' || (WARUNG && S.tab === 'gabungan')) renderDaftar();
   }, 700);
 }
 function barisOngkir(k, nominal, coret, no) {
@@ -1198,7 +1365,7 @@ async function pesanInstanSemua(tombol) {
     });
     wb.update(doc(db, 'antar_kirim', k.id), { status: 'diminta', tipe: 'instan', urutan: 1, ongkirFinal: ongkir, permintaanId: ref.id });
   });
-  try { await wb.commit(); S.dipilih.clear(); tutupSheet(); toast(r.urut.length + ' pesanan instan terkirim ke admin ProjekGo'); }
+  try { await wb.commit(); S.dipilih.clear(); tutupSheet(); toast(r.urut.length + ' pesanan instan terkirim ke admin ProjekGo'); if (WARUNG) { S.tab = 'berjalan'; render(); window.scrollTo(0, 0); } }
   catch (e) { toast(pesanError(e)); tombol.disabled = false; tombol.textContent = 'Kirim instan'; }
 }
 async function pesanSekarang(tombol) {
@@ -1219,7 +1386,7 @@ async function pesanSekarang(tombol) {
     status: 'menunggu', dilihatAdmin: false, dibuatOleh: S.user.email, dibuatAt: serverTimestamp()
   });
   r.urut.forEach((k, i) => wb.update(doc(db, 'antar_kirim', k.id), { status: 'diminta', tipe: r.jenis, urutan: i + 1, ongkirFinal: r.bagian[i], permintaanId: ref.id }));
-  try { await wb.commit(); S.dipilih.clear(); tutupSheet(); toast('Pesanan terkirim ke admin ProjekGo'); }
+  try { await wb.commit(); S.dipilih.clear(); tutupSheet(); toast('Pesanan terkirim ke admin ProjekGo'); if (WARUNG) { S.tab = 'berjalan'; render(); window.scrollTo(0, 0); } }
   catch (e) { toast(pesanError(e)); tombol.disabled = false; tombol.textContent = 'Pesan'; }
 }
 async function batalPermintaan(pid) {
@@ -1245,6 +1412,9 @@ $('daftar').addEventListener('click', async (e) => {
   const el = e.target.closest('[data-aksi]');
   if (el) {
     const a = el.dataset.aksi, id = el.dataset.id;
+    if (a === 'tambah') { S.tab = 'tambah'; resetDraft(); render(); window.scrollTo(0, 0); return; }
+    if (a === 'ke-berjalan') { S.tab = 'berjalan'; render(); window.scrollTo(0, 0); return; }
+    if (a === 'pilih-semua' && WARUNG) { const siap = S.kirim.filter((k) => k.status === 'baru' && k.rencana !== 'instan'); const semua = siap.every((k) => S.dipilih.has(k.id)); S.dipilih = new Set(semua ? [] : siap.slice(0, MAKS_TITIK).map((k) => k.id)); renderDaftar(); return; }
     if (a === 'pilih-semua') { const siap = S.kirim.filter((k) => k.status === 'baru'); const semua = siap.every((k) => S.dipilih.has(k.id)); S.dipilih = new Set(semua ? [] : siap.slice(0, MAKS_TITIK).map((k) => k.id)); renderDaftar(); return; }
     if (a === 'foto') return lihatFoto(el.dataset.bid);
     if (a === 'ganti-bayar') {
@@ -1292,9 +1462,9 @@ $('mf-simpan').addEventListener('click', async () => {
   if (!nama) { toast('Isi nama usaha'); return; }
   const hp = hpBersih($('mf-hp').value);
   if (hp && !hpSah(hp)) { toast('Nomor HP kontak tidak valid'); return; }
-  const tarifKm = angka('mf-km', 0), tarifTitik = angka('mf-titik', 0), ongkirMin = angka('mf-min', 0), pembulatan = angka('mf-bulat', 1);
-  if ([tarifKm, tarifTitik, ongkirMin, pembulatan].includes(null)) { toast('Periksa lagi angka tarif'); return; }
-  const data = { nama: nama.slice(0, 60), alamat: $('mf-alamat').value.trim().slice(0, 120), hp: hp.slice(0, 20), tarifKm, tarifTitik, ongkirMin, pembulatan,
+  const tarifKm = angka('mf-km', 0), tarifTitik = angka('mf-titik', 0), ongkirMin = angka('mf-min', 0), gabunganMin = angka('mf-gabmin', 0), pembulatan = angka('mf-bulat', 1);
+  if ([tarifKm, tarifTitik, ongkirMin, gabunganMin, pembulatan].includes(null)) { toast('Periksa lagi angka tarif'); return; }
+  const data = { nama: nama.slice(0, 60), alamat: $('mf-alamat').value.trim().slice(0, 120), hp: hp.slice(0, 20), tarifKm, tarifTitik, ongkirMin, gabunganMin, pembulatan,
     pembayar: $('mf-bayar').value === 'penerima' ? 'penerima' : 'mitra', aktif: $('mf-aktif').value === '1', diubahOleh: S.user.email, diubahAt: serverTimestamp() };
   if (penandaMitra && penandaMitra.getMap()) { const p = penandaMitra.getPosition(); data.asalLat = Math.round(p.lat() * 1e6) / 1e6; data.asalLng = Math.round(p.lng() * 1e6) / 1e6; }
   const id = S.mfId || tokenAcak(12);
@@ -1397,6 +1567,7 @@ onAuthStateChanged(auth, (u) => {
   render();
 });
 function aturTolak(teks) {
+  if (WARUNG) teks = 'Antar Hemat untuk warung ini sedang disiapkan atau dinonaktifkan admin. Kembali ke Beranda lalu ketuk Antar Hemat lagi. Kalau tetap muncul, hubungi admin ProjekGo lewat menu Bantuan.';
   $('tolak-teks').textContent = teks;
   const em = S.user ? String(S.user.email || '').toLowerCase() : '';
   $('tolak-wa').href = 'https://wa.me/62882008667068?text=' + encodeURIComponent('Halo admin, saya mau mengaktifkan Antar Hemat ProjekGo. Gmail saya: ' + em);
