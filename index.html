@@ -5662,7 +5662,9 @@
             /* ---------- layar penuh pesanan masuk ---------- */
             function gambarMasuk() {
                 const daftar = masukList(), L = $('pfs-masuk');
-                if (!daftar.length) { if (!L.hidden) { L.hidden = true; } sedang = ''; matikanBunyi(); return; }
+                // (perbaikan) bunyi dimatikan SEKALI saat layar pesanan masuk ditutup, bukan tiap detik
+                // (dulu ini ikut memotong bunyi tombol "Tes bunyi" sehingga hanya nada pembukanya yang terdengar)
+                if (!daftar.length) { if (!L.hidden) { L.hidden = true; matikanBunyi(); } sedang = ''; return; }
                 const o = daftar[0];
                 if (L.hidden) { L.hidden = false; estPilih = 15; }
                 nyalakanBunyi();
