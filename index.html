@@ -5369,7 +5369,9 @@
          (menu habis -> menu otomatis ditandai HABIS di katalog), "Pesanan sudah jadi", mode warung ramai,
          cetak struk, dan laporan penjualan. Semua isi dari database ditulis lewat textContent. -->
     <style id="pfs-css">
-        .pfs-wrap { padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px; }
+        /* (25 Nov perbaikan) kontainer tab Pesanan & Laporan dibuat lebar: jarak tepi layar cukup 12px */
+        #content-pesanan, #content-laporan { padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); }
+        .pfs-wrap { padding: 14px 0 24px; display: flex; flex-direction: column; gap: 12px; }
         .pfs-kepala { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .pfs-lbl { font-size: 12px; color: var(--teks2, #6B6258); font-weight: 700; }
         .pfs-nama { font-size: 18px; font-weight: 800; color: var(--dark, #1C1C1E); }
@@ -5380,6 +5382,14 @@
         .pfs-ramai { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #FFF7ED; border: 1.5px solid #FED7AA; border-radius: 16px; padding: 12px; }
         .pfs-ramai b { display: block; font-size: 14.5px; }
         .pfs-ramai small { display: block; font-size: 12px; color: var(--teks2, #6B6258); line-height: 1.4; }
+        .pfs-ramai > div { min-width: 0; }
+        /* (25 Nov perbaikan) saklar mode ramai: ukuran tetap (tidak gepeng), warna oranye saat aktif */
+        .pfs-ramai .modern-toggle { flex: none; width: 56px; height: 32px; }
+        .pfs-ramai .modern-slider { background-color: #D9D2CA; border-color: #D9D2CA; }
+        .pfs-ramai .modern-slider:before { width: 24px; height: 24px; left: 2px; bottom: 2px; }
+        .pfs-ramai input:checked + .modern-slider { background-color: #E8590C; border-color: #E8590C; }
+        .pfs-ramai input:checked + .modern-slider:before { transform: translateX(24px); }
+        .pfs-ramai input:focus-visible + .modern-slider { outline: 3px solid #1D4ED8; outline-offset: 2px; }
         .pfs-daftar { display: flex; flex-direction: column; gap: 10px; }
         .pfs-sub { font-size: 13px; font-weight: 800; color: var(--teks2, #6B6258); margin-top: 4px; }
         .pfs-k { border: 1.5px solid var(--garis, #E2D8CC); border-radius: 16px; padding: 12px; background: #fff; display: flex; flex-direction: column; gap: 6px; }
