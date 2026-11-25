@@ -1374,10 +1374,41 @@
             <button type="button" class="mx-baris mx-merah" style="margin-top:22px;" onclick="logout()"><i class="ph-bold ph-sign-out"></i><span><b>Keluar</b></span></button>
         </div>
 
+        <!-- ===== (25 Nov 2026) PESANAN APLIKASI (tab Pesanan & Laporan) ===== -->
+        <div id="content-pesanan" class="content-section">
+            <div class="pfs-wrap">
+                <div class="pfs-kepala"><div class="pfs-nama">Pesanan berjalan</div>
+                    <button type="button" class="pfs-ghost" id="pfs-btn-printer"><i class="ph-bold ph-printer" aria-hidden="true"></i> <span id="pfs-printer-teks">Struk</span></button></div>
+                <div class="pfs-info" id="pfs-info-ikut" hidden></div>
+                <button type="button" class="pfs-bunyi" id="pfs-bunyi" hidden><i class="ph-fill ph-speaker-high" aria-hidden="true"></i> Ketuk sekali supaya bunyi pesanan masuk bisa terdengar</button>
+                <div class="pfs-ramai" id="pfs-ramai-kotak">
+                    <div><b>Mode warung ramai</b><small>Estimasi otomatis +10 menit · badge "Sedang ramai" tampil di aplikasi pelanggan</small></div>
+                    <label class="modern-toggle" aria-label="Mode warung ramai"><input type="checkbox" id="pfs-ramai"><span class="modern-slider"></span></label>
+                </div>
+                <div id="pfs-daftar" class="pfs-daftar" aria-live="polite"></div>
+            </div>
+        </div>
+        <div id="content-laporan" class="content-section">
+            <div class="pfs-wrap">
+                <div class="pfs-nama" style="margin-bottom:8px">Laporan penjualan</div>
+                <div class="pfs-chip" role="group" aria-label="Rentang laporan">
+                    <button type="button" data-r="hari" aria-pressed="true">Harian</button>
+                    <button type="button" data-r="minggu" aria-pressed="false">Mingguan</button>
+                    <button type="button" data-r="bulan" aria-pressed="false">Bulanan</button>
+                </div>
+                <div class="pfs-omzet"><div id="pfs-l-judul">Hari ini</div><div class="pfs-omzet-n" id="pfs-l-omzet">Rp0</div><div id="pfs-l-ket">Memuat...</div></div>
+                <div class="pfs-k"><b>Menu terlaris</b><div id="pfs-l-laris"></div></div>
+                <div class="pfs-k"><b>Histori pesanan</b><div id="pfs-l-histori"></div></div>
+                <a class="pfs-kendala" id="pfs-kendala" href="#" target="_blank" rel="noopener"><i class="ph-fill ph-whatsapp-logo" aria-hidden="true"></i> Ada kendala? WhatsApp admin</a>
+            </div>
+        </div>
+
         <!-- ===== TAB BAWAH ===== -->
         <nav class="mx-nav" id="mx-nav" aria-label="Menu utama">
             <button type="button" data-nav="home" aria-current="page"><i class="ph-bold ph-house"></i>Beranda</button>
+            <button type="button" data-nav="pesanan" class="mx-hanya-warung"><i class="ph-bold ph-receipt"></i>Pesanan<span class="mx-nav-badge" id="nav-badge-pesanan" hidden></span></button>
             <button type="button" data-nav="menu" class="mx-hanya-warung"><i class="ph-bold ph-list-dashes"></i>Menu</button>
+            <button type="button" data-nav="laporan" class="mx-hanya-warung"><i class="ph-bold ph-chart-bar"></i>Laporan</button>
             <button type="button" data-nav="antar"><i class="ph-bold ph-package"></i>Antar<span class="mx-nav-badge" id="nav-badge-antar" hidden></span></button>
             <button type="button" data-nav="akun"><i class="ph-bold ph-user-circle"></i>Akun</button>
         </nav>
@@ -2313,7 +2344,7 @@
             // Toko pengiriman tidak punya Beranda warung / Menu
             if (window.__modeMitra === 'toko' && ['home', 'menu', 'profile'].includes(tab)) tab = 'tokohome';
             if (!document.getElementById(`content-${tab}`)) tab = 'home';
-            const utama = ['home', 'tokohome', 'menu', 'antar', 'akun'];
+            const utama = ['home', 'tokohome', 'menu', 'antar', 'akun', 'pesanan', 'laporan'];
             document.getElementById('btn-back-home').style.display = utama.includes(tab) ? 'none' : 'flex';
             document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
             document.getElementById(`content-${tab}`).classList.add('active');
@@ -5331,6 +5362,470 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', semua); else semua();
 })();
 </script>
+    <!-- ===================== PESANAN APLIKASI UNTUK SELLER (25 Nov 2026, tahap 1) =====================
+         Pesanan pelanggan yang sudah diteruskan admin (koleksi pesanan_food, vendor_email = Gmail seller):
+         layar penuh "Orderan masuk" + bunyi berulang sampai diterima, pilih estimasi, tolak + alasan
+         (menu habis -> menu otomatis ditandai HABIS di katalog), "Pesanan sudah jadi", mode warung ramai,
+         cetak struk, dan laporan penjualan. Semua isi dari database ditulis lewat textContent. -->
+    <style id="pfs-css">
+        .pfs-wrap { padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px; }
+        .pfs-kepala { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .pfs-lbl { font-size: 12px; color: var(--teks2, #6B6258); font-weight: 700; }
+        .pfs-nama { font-size: 18px; font-weight: 800; color: var(--dark, #1C1C1E); }
+        .pfs-ghost { flex: none; min-height: 38px; border-radius: 12px; border: 1.5px solid var(--garis, #E2D8CC); background: #fff; font: 800 12.5px inherit; font-family: inherit; color: #1C1C1E; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+        .pfs-info { background: #FFF4D6; color: #6B4500; border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 600; line-height: 1.45; }
+        .pfs-info[hidden], .pfs-bunyi[hidden] { display: none; }
+        .pfs-bunyi { border: 1.5px dashed #E85D00; background: #FFF6EC; color: #B84300; border-radius: 12px; padding: 12px; font: 800 13px inherit; font-family: inherit; display: flex; gap: 8px; align-items: center; justify-content: center; cursor: pointer; }
+        .pfs-ramai { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #FFF7ED; border: 1.5px solid #FED7AA; border-radius: 16px; padding: 12px; }
+        .pfs-ramai b { display: block; font-size: 14.5px; }
+        .pfs-ramai small { display: block; font-size: 12px; color: var(--teks2, #6B6258); line-height: 1.4; }
+        .pfs-daftar { display: flex; flex-direction: column; gap: 10px; }
+        .pfs-sub { font-size: 13px; font-weight: 800; color: var(--teks2, #6B6258); margin-top: 4px; }
+        .pfs-k { border: 1.5px solid var(--garis, #E2D8CC); border-radius: 16px; padding: 12px; background: #fff; display: flex; flex-direction: column; gap: 6px; }
+        .pfs-k > b { font-size: 14.5px; }
+        .pfs-k.hijau { border-color: #BFE3CC; background: #F2FAF5; }
+        .pfs-atas { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .pfs-kode { font-size: 21px; font-weight: 800; letter-spacing: .03em; }
+        .pfs-pil { font-size: 11.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: #F1F0EE; color: #57534E; white-space: nowrap; }
+        .pfs-pil.or { background: #FFF0E5; color: #C2410C; } .pfs-pil.hj { background: #E8F6EC; color: #15803D; } .pfs-pil.bi { background: #E8F0FE; color: #1D4ED8; } .pfs-pil.mr { background: #FDECEA; color: #B42318; }
+        .pfs-kecil { font-size: 12.5px; color: var(--teks2, #6B6258); line-height: 1.45; overflow-wrap: anywhere; }
+        .pfs-it { display: flex; gap: 8px; padding: 6px 0; border-top: 1px dashed #E9E2DA; font-size: 14px; }
+        .pfs-it b { min-width: 26px; } .pfs-it > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+        .pfs-it em { display: block; font-style: normal; font-size: 12.5px; color: #B45309; font-weight: 800; }
+        .pfs-tb { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; margin-top: 4px; }
+        .pfs-tb.satu { grid-template-columns: 1fr; }
+        .pfs-btn { min-height: 46px; border-radius: 12px; border: 1.5px solid var(--garis, #E2D8CC); background: #fff; color: #1C1C1E; font-family: inherit; font-size: 14.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; }
+        .pfs-btn.or { background: #E8590C; border-color: #E8590C; color: #fff; }
+        .pfs-btn.hj { background: #15803D; border-color: #15803D; color: #fff; }
+        .pfs-btn.mr { color: #B42318; border-color: #F3C7C2; }
+        .pfs-btn:disabled { opacity: .5; cursor: not-allowed; }
+        .pfs-btn:focus-visible, .pfs-ghost:focus-visible, .pfs-chip button:focus-visible, .pfs-est button:focus-visible { outline: 3px solid #1D4ED8; outline-offset: 2px; }
+        .pfs-kosong { text-align: center; color: var(--teks2, #6B6258); font-weight: 700; padding: 30px 10px; font-size: 14px; }
+        .pfs-chip { display: flex; gap: 6px; }
+        .pfs-chip button { border: 1.5px solid var(--garis, #E2D8CC); background: #fff; border-radius: 999px; padding: 6px 14px; font-family: inherit; font-weight: 800; font-size: 12.5px; color: #57534E; cursor: pointer; }
+        .pfs-chip button[aria-pressed="true"] { background: #FFF0E5; border-color: #F4BE95; color: #C2410C; }
+        .pfs-omzet { background: linear-gradient(150deg, #F97316, #E8590C); color: #fff; border-radius: 16px; padding: 14px; font-size: 13px; }
+        .pfs-omzet-n { font-size: 28px; font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; }
+        .pfs-baris { display: flex; justify-content: space-between; gap: 8px; padding: 7px 0; border-top: 1px dashed #E9E2DA; font-size: 13.5px; align-items: center; }
+        .pfs-baris span:first-child { min-width: 0; overflow-wrap: anywhere; }
+        .pfs-kendala { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 14px; border: 1.5px solid #BFE3CC; color: #15803D; font-weight: 800; text-decoration: none; background: #fff; }
+        /* layar penuh pesanan masuk */
+        .pfs-masuk { position: fixed; inset: 0; z-index: 99990; background: #fff; display: flex; flex-direction: column; font-family: 'Plus Jakarta Sans', sans-serif; color: #1C1C1E; }
+        .pfs-masuk[hidden] { display: none; }
+        .pfs-m-atas { background: linear-gradient(160deg, #F97316, #E8590C); color: #fff; text-align: center; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px; }
+        .pfs-gel { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 8px; display: grid; place-items: center; font-size: 30px; background: rgba(255,255,255,.22); box-shadow: 0 0 0 10px rgba(255,255,255,.12), 0 0 0 22px rgba(255,255,255,.07); animation: pfsDenyut 1s ease-in-out infinite; }
+        @keyframes pfsDenyut { 50% { transform: scale(1.08); } }
+        @media (prefers-reduced-motion: reduce) { .pfs-gel { animation: none; } }
+        .pfs-m-atas h2 { margin: 0; font-size: 21px; font-weight: 800; }
+        .pfs-waktu { display: inline-block; margin-top: 8px; background: #fff; color: #C2410C; border-radius: 999px; padding: 4px 12px; font-size: 13.5px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .pfs-waktu.telat { background: #7F1D1D; color: #fff; }
+        .pfs-m-isi { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+        .pfs-est { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .pfs-est button { border: 1.5px solid var(--garis, #E2D8CC); background: #fff; border-radius: 10px; padding: 9px 0; font-family: inherit; font-weight: 800; font-size: 13.5px; cursor: pointer; color: #1C1C1E; }
+        .pfs-est button[aria-pressed="true"] { border-color: #E8590C; background: #FFF0E5; color: #C2410C; }
+        .pfs-habis-link { background: none; border: 0; padding: 6px 0; text-align: left; font-family: inherit; font-size: 13.5px; font-weight: 800; color: #B42318; cursor: pointer; }
+        .pfs-m-bawah { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid #eee; }
+        .pfs-m-bawah .pfs-btn { min-height: 54px; font-size: 16px; }
+        .pfs-lain { text-align: center; font-size: 12.5px; font-weight: 800; color: #B42318; }
+        /* lembar tolak */
+        .pfs-tolak { position: fixed; inset: 0; z-index: 99995; background: rgba(28, 22, 16, .55); display: flex; align-items: flex-end; justify-content: center; }
+        .pfs-tolak[hidden] { display: none; }
+        .pfs-tolak form { width: 100%; max-width: 520px; max-height: 90%; overflow-y: auto; background: #fff; border-radius: 22px 22px 0 0; padding: 16px 16px calc(18px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 8px; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
+        .pfs-tolak h3 { margin: 0; font-size: 18px; font-weight: 800; }
+        .pfs-op { display: flex; gap: 10px; align-items: center; border: 1.5px solid var(--garis, #E2D8CC); border-radius: 12px; padding: 11px 12px; font-weight: 700; font-size: 14.5px; cursor: pointer; }
+        .pfs-op:has(input:checked) { border-color: #B42318; background: #FDECEA; }
+        .pfs-op input { width: 18px; height: 18px; accent-color: #B42318; flex: none; }
+        .pfs-habis { margin-left: 26px; display: flex; flex-direction: column; gap: 6px; }
+        .pfs-habis[hidden] { display: none; }
+        .pfs-tolak textarea { width: 100%; box-sizing: border-box; min-height: 64px; border-radius: 12px; border: 1.5px solid var(--garis, #E2D8CC); padding: 10px; font: inherit; font-size: 14px; resize: vertical; }
+        .pfs-galat { color: #B42318; font-size: 13px; font-weight: 800; min-height: 16px; }
+    </style>
+    <div class="pfs-masuk" id="pfs-masuk" hidden role="alertdialog" aria-modal="true" aria-labelledby="pfs-m-judul">
+        <div class="pfs-m-atas">
+            <div class="pfs-gel" aria-hidden="true">🔔</div>
+            <h2 id="pfs-m-judul">Orderan masuk!</h2>
+            <div style="font-size:13px;opacity:.95" id="pfs-m-warung"></div>
+            <div class="pfs-waktu" id="pfs-m-waktu">Terima dalam 3:00</div>
+        </div>
+        <div class="pfs-m-isi" id="pfs-m-isi"></div>
+        <div class="pfs-lain" id="pfs-m-lain" hidden></div>
+        <div class="pfs-m-bawah">
+            <button type="button" class="pfs-btn mr" id="pfs-m-tolak">Tolak</button>
+            <button type="button" class="pfs-btn hj" id="pfs-m-terima">Terima</button>
+        </div>
+    </div>
+    <div class="pfs-tolak" id="pfs-tolak" hidden role="dialog" aria-modal="true" aria-labelledby="pfs-t-judul">
+        <form id="pfs-t-form" novalidate>
+            <h3 id="pfs-t-judul">Kenapa pesanan ditolak?</h3>
+            <div class="pfs-kecil">Alasan ini dikirim ke admin dan pelanggan.</div>
+            <label class="pfs-op"><input type="radio" name="pfs-alasan" value="habis"> Ada menu yang habis</label>
+            <div class="pfs-habis" id="pfs-t-habis" hidden></div>
+            <label class="pfs-op"><input type="radio" name="pfs-alasan" value="tutup"> Warung mau tutup / sudah tutup</label>
+            <label class="pfs-op"><input type="radio" name="pfs-alasan" value="ramai"> Warung terlalu ramai</label>
+            <label class="pfs-op"><input type="radio" name="pfs-alasan" value="lain"> Lainnya (tulis sendiri)</label>
+            <textarea id="pfs-t-teks" maxlength="160" placeholder="Keterangan tambahan (wajib kalau memilih Lainnya)" aria-label="Keterangan tambahan"></textarea>
+            <div class="pfs-galat" id="pfs-t-galat" role="alert"></div>
+            <div class="pfs-tb"><button type="button" class="pfs-btn" id="pfs-t-batal">Kembali</button><button type="submit" class="pfs-btn" style="background:#B42318;border-color:#B42318;color:#fff">Tolak pesanan</button></div>
+        </form>
+    </div>
+    <script type="module">
+        import { getApps } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, doc, onSnapshot, query, where, getDocs, updateDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        (function pesananSeller() {
+            const app = getApps()[0]; if (!app) return;
+            const auth = getAuth(app), db = getFirestore(app);
+            const $ = (id) => document.getElementById(id);
+            const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+            const rp = (n) => 'Rp' + (Number(n) || 0).toLocaleString('id-ID');
+            const ms = (t) => typeof t === 'number' ? t : (t && typeof t.toMillis === 'function') ? t.toMillis() : 0;
+            const jam = (t) => { const m = ms(t); if (!m) return '-'; const d = new Date(m); return String(d.getHours()).padStart(2, '0') + '.' + String(d.getMinutes()).padStart(2, '0'); };
+            const mmss = (dt) => { dt = Math.max(0, Math.round(dt / 1000)); return Math.floor(dt / 60) + ':' + String(dt % 60).padStart(2, '0'); };
+            const tglWib = (d) => { const x = new Date(d.getTime() + 7 * 36e5); return x.getUTCFullYear() + '-' + String(x.getUTCMonth() + 1).padStart(2, '0') + '-' + String(x.getUTCDate()).padStart(2, '0'); };
+            const ID_OK = /^[A-Za-z0-9]{20}$/, PID_OK = /^[A-Za-z0-9_-]{1,64}$/;
+            const tost = (t) => { try { if (typeof window.showToast === 'function') return window.showToast(t); } catch (e) {} };
+            const LABEL = { ke_warung: 'Perlu diterima', dibuat: 'Sedang dibuat', siap: 'Siap diambil', diantar: 'Dibawa rider', selesai: 'Selesai', ditolak: 'Ditolak', batal: 'Batal', cek: 'Dicek admin' };
+            let email = '', data = {}, henti = [], atur = { batas_terima_dtk: 180, warung: [] }, vendorRamai = false, hentiV = null, vidAktif = '';
+            let estPilih = 15, sedang = '', sibuk = false;
+
+            const vendorId = () => { try { const v = JSON.parse(localStorage.getItem('vendor_user') || 'null'); return v && PID_OK.test(String(v.id || '')) ? String(v.id) : ''; } catch (e) { return ''; } };
+            const urut = (a, b) => ms(a.diteruskan_at || a.dibuat_at) - ms(b.diteruskan_at || b.dibuat_at);
+            const masukList = () => Object.values(data).filter((o) => o.status === 'ke_warung').sort(urut);
+
+            /* ---------- bunyi "Orderan masuk... ProjekGo" (berulang sampai diterima) ---------- */
+            // APK Seller Projekgo (tahap 2) memakai bunyi bawaan HP. Di browser memakai file orderan_masuk.mp3
+            // (letakkan di folder yang sama dengan index.html). Kalau file tidak ada -> bunyi "ting" buatan.
+            const audio = new Audio('orderan_masuk.mp3'); audio.loop = true; audio.preload = 'auto';
+            let audioGagal = false, bolehBunyi = false, tingJeda = 0, ctx = null;
+            audio.addEventListener('error', () => { audioGagal = true; });
+            function ting() {
+                try {
+                    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+                    if (ctx.state === 'suspended') ctx.resume();
+                    [[0, 1046.5], [.14, 1318.5], [.28, 1568]].forEach(([t, f]) => {
+                        const o = ctx.createOscillator(), g = ctx.createGain(), n = ctx.currentTime + t;
+                        o.frequency.setValueAtTime(f, n); g.gain.setValueAtTime(.0001, n); g.gain.exponentialRampToValueAtTime(.35, n + .01); g.gain.exponentialRampToValueAtTime(.0001, n + .7);
+                        o.connect(g); g.connect(ctx.destination); o.start(n); o.stop(n + .75);
+                    });
+                } catch (e) {}
+            }
+            function nyalakanBunyi() {
+                if (window.AndroidInterface && typeof window.AndroidInterface.pesananMasukBunyi === 'function') { try { window.AndroidInterface.pesananMasukBunyi(true); } catch (e) {} return; }
+                if (!audioGagal) { const p = audio.play(); if (p && p.catch) p.catch(() => { $('pfs-bunyi').hidden = false; }); }
+                else if (Date.now() - tingJeda > 2500) { tingJeda = Date.now(); ting(); }
+                try { if (navigator.vibrate) navigator.vibrate([600, 300, 600]); } catch (e) {}
+            }
+            function matikanBunyi() {
+                if (window.AndroidInterface && typeof window.AndroidInterface.pesananMasukBunyi === 'function') { try { window.AndroidInterface.pesananMasukBunyi(false); } catch (e) {} }
+                try { audio.pause(); audio.currentTime = 0; } catch (e) {}
+                try { if (navigator.vibrate) navigator.vibrate(0); } catch (e) {}
+            }
+            // browser hanya mengizinkan bunyi setelah layar disentuh sekali
+            function buka() {
+                if (bolehBunyi) return;
+                const p = audio.play();
+                if (p && p.then) p.then(() => { if (!masukList().length) { audio.pause(); audio.currentTime = 0; } bolehBunyi = true; $('pfs-bunyi').hidden = true; }).catch(() => {});
+                try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); ctx.resume(); } catch (e) {}
+            }
+            document.addEventListener('pointerdown', buka, true);
+            $('pfs-bunyi').addEventListener('click', buka);
+
+            /* ---------- tulis ke server ---------- */
+            const PF = (id) => doc(db, 'pesanan_food', id);
+            async function simpan(o, isi, pesan) {
+                if (sibuk) return false; sibuk = true;
+                try { await updateDoc(PF(o.id), isi); if (pesan) tost(pesan); return true; }
+                catch (e) { console.warn('[Pesanan]', e && e.code); tost(e && e.code === 'permission-denied' ? 'Pesanan ini sudah berubah (mungkin dibatalkan). Coba lagi.' : 'Gagal menyimpan. Periksa internet.'); return false; }
+                finally { sibuk = false; }
+            }
+            const estimasiAkhir = () => estPilih + (vendorRamai ? 10 : 0);
+            async function terima(o) {
+                const est = Math.min(120, estimasiAkhir());
+                if (await simpan(o, { status: 'dibuat', diterima_at: serverTimestamp(), estimasi_mnt: est, ramai: vendorRamai }, 'Pesanan ' + o.kode + ' diterima. Siap sekitar ' + est + ' menit.')) {
+                    if (window.AndroidInterface && typeof window.AndroidInterface.cetakStrukOtomatis === 'function') { try { cetak(o, true); } catch (e) {} }
+                }
+            }
+            async function sudahJadi(o) {
+                if (!window.confirm('Pesanan ' + o.kode + ' sudah jadi dan siap diambil rider?')) return;
+                await simpan(o, { status: 'siap', siap_at: serverTimestamp() }, 'Ditandai siap. Serahkan ke rider yang menyebut kode ' + o.kode + '.');
+            }
+
+            /* ---------- tolak ---------- */
+            let tolakO = null;
+            function bukaTolak(o, habisDulu) {
+                tolakO = o; $('pfs-t-galat').textContent = ''; $('pfs-t-teks').value = '';
+                document.querySelectorAll('input[name="pfs-alasan"]').forEach((r) => { r.checked = habisDulu && r.value === 'habis'; });
+                const h = $('pfs-t-habis'); h.textContent = '';
+                const sudah = new Set();
+                (o.items || []).forEach((it) => {
+                    if (!PID_OK.test(String(it.pid || '')) || sudah.has(it.pid)) return; sudah.add(it.pid);
+                    const l = el('label', 'pfs-op'); l.style.fontWeight = '600'; l.style.padding = '8px 10px';
+                    const c = el('input'); c.type = 'checkbox'; c.value = it.pid; l.append(c, document.createTextNode(' ' + it.nama));
+                    h.appendChild(l);
+                });
+                h.hidden = !habisDulu;
+                $('pfs-tolak').hidden = false;
+            }
+            document.querySelectorAll('input[name="pfs-alasan"]').forEach((r) => r.addEventListener('change', () => { $('pfs-t-habis').hidden = !(r.checked && r.value === 'habis') && !document.querySelector('input[name="pfs-alasan"][value="habis"]:checked'); }));
+            $('pfs-t-batal').addEventListener('click', () => { $('pfs-tolak').hidden = true; tolakO = null; });
+            $('pfs-t-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const o = tolakO; if (!o) return;
+                const r = document.querySelector('input[name="pfs-alasan"]:checked'), g = $('pfs-t-galat');
+                if (!r) return g.textContent = 'Pilih alasannya dulu.';
+                const teks = $('pfs-t-teks').value.replace(/\s+/g, ' ').trim().slice(0, 160);
+                const habis = r.value === 'habis' ? Array.from(document.querySelectorAll('#pfs-t-habis input:checked')).map((c) => c.value).filter((v) => PID_OK.test(v)).slice(0, 30) : [];
+                if (r.value === 'habis' && !habis.length) return g.textContent = 'Centang menu yang habis.';
+                if (r.value === 'lain' && teks.length < 3) return g.textContent = 'Tulis alasannya.';
+                if (sibuk) return; sibuk = true;
+                try {
+                    const b = writeBatch(db);
+                    b.update(PF(o.id), { status: 'ditolak', ditolak_at: serverTimestamp(), tolak: { jenis: r.value, teks, habis } });
+                    habis.forEach((pid) => b.update(doc(db, 'products', pid), { is_sold_out: true }));
+                    await b.commit();
+                    $('pfs-tolak').hidden = true; tolakO = null;
+                    tost('Pesanan ' + o.kode + ' ditolak. Admin sudah diberi tahu.' + (habis.length ? ' Menu yang habis disembunyikan dari katalog.' : ''));
+                } catch (er) { console.warn('[Pesanan] tolak', er && er.code); g.textContent = 'Gagal menyimpan. Coba lagi.'; }
+                finally { sibuk = false; }
+            });
+
+            /* ---------- struk (58 mm) ---------- */
+            function teksStruk(o) {
+                const garis = '--------------------------------';
+                const brs = ['PROJEKGO', String(o.vendor_nama || ''), garis, 'Kode  : ' + o.kode, 'Waktu : ' + jam(o.diterima_at || o.diteruskan_at || o.dibuat_at), garis];
+                (o.items || []).forEach((it) => {
+                    brs.push(it.qty + 'x ' + it.nama + (it.varian && it.varian !== '-' ? ' (' + it.varian + ')' : ''));
+                    if (it.catatan) brs.push('   * ' + it.catatan);
+                    brs.push('   ' + rp(it.total));
+                });
+                brs.push(garis, 'TOTAL dibayar rider: ' + rp(o.subtotal));
+                if (o.catatan) brs.push('Catatan: ' + o.catatan);
+                brs.push(garis, 'Serahkan ke rider yang', 'menyebut kode ' + o.kode);
+                return brs.join('\n');
+            }
+            function cetak(o, otomatis) {
+                const t = teksStruk(o);
+                if (window.AndroidInterface && typeof window.AndroidInterface.cetakStruk === 'function') { try { window.AndroidInterface.cetakStruk(t); return; } catch (e) {} }
+                if (otomatis) return;
+                const w = window.open('', '_blank', 'noopener=no,width=380,height=600');
+                if (!w) return tost('Izinkan pop-up untuk mencetak struk.');
+                const pre = w.document.createElement('pre'); pre.textContent = t;
+                w.document.title = 'Struk ' + o.kode;
+                const st = w.document.createElement('style');
+                st.textContent = '@page{size:58mm auto;margin:2mm}body{margin:0}pre{font:12px/1.35 monospace;white-space:pre-wrap;width:54mm;margin:0}';
+                w.document.head.appendChild(st); w.document.body.appendChild(pre);
+                setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 300);
+            }
+            $('pfs-btn-printer').addEventListener('click', () => {
+                if (window.AndroidInterface && typeof window.AndroidInterface.pilihPrinter === 'function') { try { window.AndroidInterface.pilihPrinter(); } catch (e) {} }
+                else tost('Printer Bluetooth tersambung lewat aplikasi Seller Projekgo dari Play Store. Di browser, tombol Struk membuka halaman cetak.');
+            });
+
+            /* ---------- layar penuh pesanan masuk ---------- */
+            function gambarMasuk() {
+                const daftar = masukList(), L = $('pfs-masuk');
+                if (!daftar.length) { if (!L.hidden) { L.hidden = true; } sedang = ''; matikanBunyi(); return; }
+                const o = daftar[0];
+                if (L.hidden) { L.hidden = false; estPilih = 15; }
+                nyalakanBunyi();
+                const batas = (Number(atur.batas_terima_dtk) || 180) * 1000, lewat = Date.now() - ms(o.diteruskan_at);
+                const w = $('pfs-m-waktu');
+                w.textContent = lewat < batas ? 'Terima dalam ' + mmss(batas - lewat) : 'Segera terima! Admin sudah diberi tahu';
+                w.classList.toggle('telat', lewat >= batas);
+                $('pfs-m-warung').textContent = (o.vendor_nama || '') + (vendorRamai ? ' · mode ramai (+10 menit)' : '');
+                $('pfs-m-lain').hidden = daftar.length < 2; $('pfs-m-lain').textContent = '+' + (daftar.length - 1) + ' pesanan lain menunggu';
+                if (sedang === o.id + ':' + estPilih + ':' + vendorRamai) return;   // isi tidak berubah: cukup perbarui hitung mundur
+                sedang = o.id + ':' + estPilih + ':' + vendorRamai;
+                const isi = $('pfs-m-isi'); isi.textContent = '';
+                const atas = el('div', 'pfs-atas');
+                const kiri = el('div'); kiri.append(el('div', 'pfs-kecil', 'Kode pesanan'), el('div', 'pfs-kode', o.kode)); kiri.lastChild.style.color = '#C2410C'; kiri.lastChild.style.fontSize = '28px';
+                atas.append(kiri, el('span', 'pfs-pil hj', o.diteruskan_oleh === 'otomatis' ? 'Pelanggan lama ✓' : 'Sudah dicek admin ✓'));
+                isi.appendChild(atas);
+                const k = el('div', 'pfs-k'); k.style.padding = '6px 12px';
+                (o.items || []).forEach((it, i) => {
+                    const r = el('div', 'pfs-it'); if (!i) r.style.borderTop = '0';
+                    const s = el('span', '', it.nama + (it.varian && it.varian !== '-' ? ' (' + it.varian + ')' : ''));
+                    if (it.catatan) s.appendChild(el('em', '', 'Catatan: ' + it.catatan));
+                    const h = el('span', '', rp(it.total)); h.style.flex = 'none';
+                    r.append(el('b', '', it.qty + '×'), s, h); k.appendChild(r);
+                });
+                const t = el('div', 'pfs-it'); t.style.fontWeight = '800'; const tt = el('span', '', 'Total dibayar rider'); const tn = el('span', '', rp(o.subtotal)); tn.style.flex = 'none'; t.append(tt, tn); k.appendChild(t);
+                isi.appendChild(k);
+                if (o.catatan) { const c = el('div', 'pfs-info', 'Catatan pesanan: ' + o.catatan); isi.appendChild(c); }
+                isi.appendChild(el('b', '', 'Berapa lama pesanan siap?'));
+                const est = el('div', 'pfs-est'); est.setAttribute('role', 'group'); est.setAttribute('aria-label', 'Estimasi siap');
+                [10, 15, 20, 30].forEach((m) => {
+                    const b = el('button', '', (m + (vendorRamai ? 10 : 0)) + ' mnt'); b.type = 'button'; b.setAttribute('aria-pressed', String(m === estPilih));
+                    b.addEventListener('click', () => { estPilih = m; gambarMasuk(); });
+                    est.appendChild(b);
+                });
+                isi.appendChild(est);
+                isi.appendChild(el('div', 'pfs-kecil', 'Rider akan datang sekitar waktu pesanan siap.'));
+                const hb = el('button', 'pfs-habis-link', '⚠ Ada menu yang habis? Ketuk untuk tandai'); hb.type = 'button';
+                hb.addEventListener('click', () => bukaTolak(o, true)); isi.appendChild(hb);
+                $('pfs-m-terima').textContent = 'Terima · ' + estimasiAkhir() + ' menit';
+                $('pfs-m-terima').onclick = () => terima(o);
+                $('pfs-m-tolak').onclick = () => bukaTolak(o, false);
+            }
+
+            /* ---------- tab Pesanan ---------- */
+            function kartu(o) {
+                const k = el('div', 'pfs-k' + (o.status === 'siap' ? ' hijau' : ''));
+                const atas = el('div', 'pfs-atas'); atas.appendChild(el('span', 'pfs-kode', o.kode));
+                let pil = LABEL[o.status] || o.status, kls = 'or';
+                if (o.status === 'siap') kls = 'hj'; if (o.status === 'diantar') kls = 'bi'; if (o.status === 'ke_warung') kls = 'mr';
+                const pe = el('span', 'pfs-pil ' + kls, pil);
+                if (o.status === 'dibuat') { pe.dataset.target = String(ms(o.diterima_at) + (Number(o.estimasi_mnt) || 0) * 60000); hitungPil(pe); }
+                atas.appendChild(pe); k.appendChild(atas);
+                k.appendChild(el('div', 'pfs-kecil', (o.items || []).map((it) => it.qty + '× ' + it.nama + (it.catatan ? ' (' + it.catatan + ')' : '')).join(' · ')));
+                k.appendChild(el('div', 'pfs-kecil', 'Total dibayar rider: ' + rp(o.subtotal) + (Object.keys(warungKu).length > 1 ? ' · ' + (o.vendor_nama || '') : '')));
+                if (o.status === 'ke_warung') {
+                    const b = el('div', 'pfs-tb satu'); const t = el('button', 'pfs-btn or', 'Lihat & terima'); t.type = 'button'; t.addEventListener('click', () => { sedang = ''; gambarMasuk(); }); b.appendChild(t); k.appendChild(b);
+                } else if (o.status === 'dibuat') {
+                    const b = el('div', 'pfs-tb');
+                    const s = el('button', 'pfs-btn', '🖨 Struk'); s.type = 'button'; s.addEventListener('click', () => cetak(o));
+                    const j = el('button', 'pfs-btn or', 'Pesanan sudah jadi'); j.type = 'button'; j.addEventListener('click', () => sudahJadi(o));
+                    b.append(s, j); k.appendChild(b);
+                } else if (o.status === 'siap') {
+                    k.appendChild(el('div', 'pfs-kecil', 'Siap sejak ' + jam(o.siap_at) + '. Serahkan hanya ke rider yang menyebut kode ' + o.kode + '.'));
+                } else if (o.status === 'diantar') k.appendChild(el('div', 'pfs-kecil', 'Dibawa rider' + (o.rider_nama ? ' ' + o.rider_nama : '') + ' · ' + jam(o.diantar_at)));
+                return k;
+            }
+            const warungKu = {};
+            function hitungPil(pe) { const sisa = Number(pe.dataset.target) - Date.now(); pe.textContent = 'Sedang dibuat · ' + (sisa > 0 ? mmss(sisa) : 'lewat estimasi'); }
+            let tandaDaftar = '';
+            function gambarDaftar(paksa) {
+                // gambar ulang hanya kalau isi berubah (supaya tombol tidak hilang saat diketuk); hitung mundur diperbarui di tempat
+                const tanda = JSON.stringify([Object.values(data).map((o) => [o.id, o.status, o.estimasi_mnt || 0, ms(o.diterima_at)]), atur.aktif, (atur.warung || []).length, vendorId()]);
+                if (!paksa && tanda === tandaDaftar) { document.querySelectorAll('#pfs-daftar [data-target]').forEach(hitungPil); return; }
+                tandaDaftar = tanda;
+                const w = $('pfs-daftar'); if (!w) return;
+                w.textContent = '';
+                const semua = Object.values(data);
+                const grup = [['ke_warung', 'Perlu diterima'], ['dibuat', 'Sedang dibuat'], ['siap', 'Siap diambil rider'], ['diantar', 'Dibawa rider']];
+                let ada = false;
+                grup.forEach(([st, judul]) => {
+                    const d = semua.filter((o) => o.status === st).sort(urut);
+                    if (!d.length) return; ada = true;
+                    w.appendChild(el('div', 'pfs-sub', judul + ' (' + d.length + ')'));
+                    d.forEach((o) => w.appendChild(kartu(o)));
+                });
+                if (!ada) w.appendChild(el('div', 'pfs-kosong', 'Belum ada pesanan berjalan. Pesanan baru akan muncul layar penuh dan berbunyi.'));
+                // badge di tab bawah
+                const n = semua.filter((o) => ['ke_warung', 'dibuat', 'siap'].includes(o.status)).length;
+                const bd = $('nav-badge-pesanan'); if (bd) { bd.hidden = !n; bd.textContent = String(n); }
+                const vid = vendorId(), ikut = Array.isArray(atur.warung) && vid && atur.warung.includes(vid);
+                const inf = $('pfs-info-ikut');
+                inf.hidden = !!(ikut && atur.aktif);
+                inf.textContent = !atur.aktif ? 'Pesan langsung lewat aplikasi sedang dinonaktifkan admin. Pesanan tetap lewat WhatsApp seperti biasa.'
+                    : 'Warung ini belum ikut pesan langsung lewat aplikasi (masih uji coba). Pesanan tetap lewat WhatsApp seperti biasa.';
+            }
+
+            /* ---------- laporan ---------- */
+            let rentang = 'hari';
+            async function gambarLaporan() {
+                if (!email) return;
+                const kini = new Date(), hari = [];
+                if (rentang === 'hari') hari.push(tglWib(kini));
+                else if (rentang === 'minggu') for (let i = 0; i < 7; i++) hari.push(tglWib(new Date(kini.getTime() - i * 864e5)));
+                else { const h = Number(tglWib(kini).slice(8, 10)); for (let i = 0; i < h; i++) hari.push(tglWib(new Date(kini.getTime() - i * 864e5))); }
+                $('pfs-l-judul').textContent = { hari: 'Hari ini', minggu: '7 hari terakhir', bulan: 'Bulan ini' }[rentang];
+                $('pfs-l-ket').textContent = 'Memuat...';
+                try {
+                    const potong = []; for (let i = 0; i < hari.length; i += 30) potong.push(hari.slice(i, i + 30));
+                    const hasil = (await Promise.all(potong.map((p) => getDocs(query(collection(db, 'pesanan_food'), where('vendor_email', '==', email), where('tgl', 'in', p)))))).flatMap((s) => s.docs.map((d) => Object.assign({ id: d.id }, d.data())));
+                    const vid = vendorId();
+                    const milik = hasil.filter((o) => !vid || o.vendor_id === vid);
+                    const laku = milik.filter((o) => o.status === 'selesai' || o.status === 'diantar');
+                    const batal = milik.filter((o) => o.status === 'batal' || o.status === 'ditolak').length;
+                    $('pfs-l-omzet').textContent = rp(laku.reduce((a, o) => a + (Number(o.subtotal) || 0), 0));
+                    $('pfs-l-ket').textContent = laku.length + ' pesanan terjual · ' + batal + ' batal/ditolak · potongan Rp0';
+                    const hit = {};
+                    laku.forEach((o) => (o.items || []).forEach((it) => { hit[it.nama] = (hit[it.nama] || 0) + (Number(it.qty) || 0); }));
+                    const lw = $('pfs-l-laris'); lw.textContent = '';
+                    const top = Object.entries(hit).sort((a, b) => b[1] - a[1]).slice(0, 5);
+                    if (!top.length) lw.appendChild(el('div', 'pfs-kecil', 'Belum ada penjualan.'));
+                    top.forEach(([n, q], i) => { const r = el('div', 'pfs-baris'); r.append(el('span', '', ['🥇', '🥈', '🥉', '4.', '5.'][i] + ' ' + n), el('span', 'pfs-kecil', q + ' porsi')); lw.appendChild(r); });
+                    const hw = $('pfs-l-histori'); hw.textContent = '';
+                    const urutBaru = milik.sort((a, b) => ms(b.dibuat_at) - ms(a.dibuat_at)).slice(0, 40);
+                    if (!urutBaru.length) hw.appendChild(el('div', 'pfs-kecil', 'Belum ada pesanan.'));
+                    urutBaru.forEach((o) => {
+                        const r = el('div', 'pfs-baris');
+                        const kiri = el('span'); kiri.append(el('b', '', o.kode), document.createTextNode(' · ' + (rentang === 'hari' ? '' : String(o.tgl || '').slice(5).replace('-', '/') + ' ') + jam(o.dibuat_at) + ' · ' + rp(o.subtotal)));
+                        const kls = { selesai: 'hj', diantar: 'hj', batal: '', ditolak: 'mr' }[o.status] || 'or';
+                        const lab = o.status === 'ditolak' ? 'Ditolak' + (o.tolak && o.tolak.jenis === 'habis' ? ' · menu habis' : '') : (LABEL[o.status] || o.status);
+                        r.append(kiri, el('span', 'pfs-pil ' + kls, lab)); hw.appendChild(r);
+                    });
+                } catch (e) { console.warn('[Laporan]', e && e.code); $('pfs-l-ket').textContent = 'Laporan belum bisa dimuat. Periksa internet.'; }
+            }
+            document.querySelectorAll('#content-laporan .pfs-chip button').forEach((b) => b.addEventListener('click', () => {
+                rentang = b.dataset.r;
+                document.querySelectorAll('#content-laporan .pfs-chip button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+                gambarLaporan();
+            }));
+            // kendala -> WhatsApp admin sesuai jam jaga (06.30-10.00 & 19.00-21.00 Admin 2, 10.00-19.00 Admin 1)
+            function linkKendala() {
+                const x = new Date(Date.now() + 7 * 36e5), m = x.getUTCHours() * 60 + x.getUTCMinutes();
+                const no = (m >= 600 && m < 1140) ? '62882008667068' : '6281292802623';
+                let nm = ''; try { const v = JSON.parse(localStorage.getItem('vendor_user') || 'null'); nm = v && v.name ? String(v.name).slice(0, 60) : ''; } catch (e) {}
+                $('pfs-kendala').href = 'https://wa.me/' + no + '?text=' + encodeURIComponent('Halo admin ProjekGo, saya seller ' + (nm || '') + '. Ada kendala pesanan: ');
+            }
+            $('pfs-kendala').addEventListener('click', linkKendala);
+            // buka tab Laporan -> muat ulang
+            new MutationObserver(() => { const s = $('content-laporan'); if (s && s.classList.contains('active')) { linkKendala(); gambarLaporan(); } })
+                .observe($('content-laporan'), { attributes: true, attributeFilter: ['class'] });
+
+            /* ---------- mode ramai ---------- */
+            $('pfs-ramai').addEventListener('change', async (e) => {
+                const vid = vendorId(), nyala = e.target.checked;
+                if (!vid) { e.target.checked = !nyala; return tost('Pilih warung dulu.'); }
+                try { await updateDoc(doc(db, 'vendors', vid), { ramai: nyala, ramai_at: serverTimestamp() }); tost(nyala ? 'Mode ramai aktif: estimasi +10 menit.' : 'Mode ramai dimatikan.'); }
+                catch (er) { e.target.checked = !nyala; tost('Gagal menyimpan. Coba lagi.'); }
+            });
+            function dengarVendor() {
+                const vid = vendorId();
+                if (vid === vidAktif) return; vidAktif = vid;
+                if (hentiV) { try { hentiV(); } catch (e) {} hentiV = null; }
+                if (!vid) return;
+                hentiV = onSnapshot(doc(db, 'vendors', vid), (s) => { vendorRamai = !!(s.exists() && s.data().ramai === true); $('pfs-ramai').checked = vendorRamai; sedang = ''; gambarMasuk(); }, () => {});
+            }
+
+            /* ---------- data ---------- */
+            function mulai() {
+                berhenti();
+                const kini = new Date(), kemarin = new Date(kini.getTime() - 864e5);
+                henti.push(onSnapshot(query(collection(db, 'pesanan_food'), where('vendor_email', '==', email), where('tgl', 'in', [tglWib(kemarin), tglWib(kini)])), (s) => {
+                    const baru = {};
+                    s.forEach((d) => { if (ID_OK.test(d.id)) { baru[d.id] = Object.assign({ id: d.id }, d.data()); warungKu[d.data().vendor_id] = 1; } });
+                    data = baru;
+                    if (tolakO && (!data[tolakO.id] || data[tolakO.id].status !== 'ke_warung')) { $('pfs-tolak').hidden = true; tolakO = null; }
+                    gambarMasuk(); gambarDaftar();
+                }, (e) => console.warn('[Pesanan] baca', e && e.code)));
+                henti.push(onSnapshot(doc(db, 'pesanan_food_atur', 'umum'), (s) => { atur = Object.assign({ batas_terima_dtk: 180, warung: [], aktif: false }, s.exists() ? s.data() : {}); gambarDaftar(); }, () => {}));
+                dengarVendor();
+            }
+            function berhenti() {
+                henti.forEach((f) => { try { f(); } catch (e) {} }); henti = []; data = {};
+                if (hentiV) { try { hentiV(); } catch (e) {} hentiV = null; } vidAktif = '';
+                $('pfs-masuk').hidden = true; matikanBunyi(); gambarDaftar();
+            }
+            let tglAktif = tglWib(new Date());
+            setInterval(() => {
+                if (!email) return;
+                if (tglWib(new Date()) !== tglAktif) { tglAktif = tglWib(new Date()); mulai(); return; }
+                dengarVendor(); gambarMasuk();
+                const s = $('content-pesanan'); if (s && s.classList.contains('active')) gambarDaftar();
+            }, 1000);
+            onAuthStateChanged(auth, (u) => {
+                const ok = u && u.email && u.providerData.some((p) => p.providerId === 'google.com');
+                const e = ok ? String(u.email).toLowerCase() : '';
+                if (e === email) return;
+                email = e;
+                if (email) mulai(); else berhenti();
+            });
+        })();
+    </script>
+    <!-- ===================== AKHIR PESANAN APLIKASI ===================== -->
 </body>
 
 </html>
