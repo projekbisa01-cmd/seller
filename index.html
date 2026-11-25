@@ -1378,7 +1378,8 @@
         <div id="content-pesanan" class="content-section">
             <div class="pfs-wrap">
                 <div class="pfs-kepala"><div class="pfs-nama">Pesanan berjalan</div>
-                    <button type="button" class="pfs-ghost" id="pfs-btn-printer"><i class="ph-bold ph-printer" aria-hidden="true"></i> <span id="pfs-printer-teks">Struk</span></button></div>
+                    <div style="display:flex;gap:6px;flex:none"><button type="button" class="pfs-ghost" id="pfs-tes-bunyi"><i class="ph-bold ph-speaker-high" aria-hidden="true"></i> Tes bunyi</button>
+                    <button type="button" class="pfs-ghost" id="pfs-btn-printer"><i class="ph-bold ph-printer" aria-hidden="true"></i> <span id="pfs-printer-teks">Struk</span></button></div></div>
                 <div class="pfs-info" id="pfs-info-ikut" hidden></div>
                 <button type="button" class="pfs-bunyi" id="pfs-bunyi" hidden><i class="ph-fill ph-speaker-high" aria-hidden="true"></i> Ketuk sekali supaya bunyi pesanan masuk bisa terdengar</button>
                 <div class="pfs-ramai" id="pfs-ramai-kotak">
@@ -5482,7 +5483,9 @@
             const jam = (t) => { const m = ms(t); if (!m) return '-'; const d = new Date(m); return String(d.getHours()).padStart(2, '0') + '.' + String(d.getMinutes()).padStart(2, '0'); };
             const mmss = (dt) => { dt = Math.max(0, Math.round(dt / 1000)); return Math.floor(dt / 60) + ':' + String(dt % 60).padStart(2, '0'); };
             const tglWib = (d) => { const x = new Date(d.getTime() + 7 * 36e5); return x.getUTCFullYear() + '-' + String(x.getUTCMonth() + 1).padStart(2, '0') + '-' + String(x.getUTCDate()).padStart(2, '0'); };
-            const ID_OK = /^[A-Za-z0-9]{20}$/, PID_OK = /^[A-Za-z0-9_-]{1,64}$/;
+            // (25 Nov 2026 perbaikan) ID warung bisa berupa email (mis. warunguji@gmail.com), jadi titik & @ diizinkan.
+            // Aturan Firestore: tidak boleh mengandung "/", tidak boleh "." atau "..".
+            const ID_OK = /^[A-Za-z0-9]{20}$/, PID_OK = { test: (v) => typeof v === 'string' && v.length >= 1 && v.length <= 150 && v.indexOf('/') < 0 && v !== '.' && v !== '..' };
             const tost = (t) => { try { if (typeof window.showToast === 'function') return window.showToast(t); } catch (e) {} };
             const LABEL = { ke_warung: 'Perlu diterima', dibuat: 'Sedang dibuat', siap: 'Siap diambil', diantar: 'Dibawa rider', selesai: 'Selesai', ditolak: 'Ditolak', batal: 'Batal', cek: 'Dicek admin' };
             let email = '', data = {}, henti = [], atur = { batas_terima_dtk: 180, warung: [] }, vendorRamai = false, hentiV = null, vidAktif = '';
@@ -5511,7 +5514,7 @@
             }
             function nyalakanBunyi() {
                 if (window.AndroidInterface && typeof window.AndroidInterface.pesananMasukBunyi === 'function') { try { window.AndroidInterface.pesananMasukBunyi(true); } catch (e) {} return; }
-                if (!audioGagal) { const p = audio.play(); if (p && p.catch) p.catch(() => { $('pfs-bunyi').hidden = false; }); }
+                if (!audioGagal) { audio.loop = true; const p = audio.play(); if (p && p.catch) p.catch(() => { $('pfs-bunyi').hidden = false; }); }
                 else if (Date.now() - tingJeda > 2500) { tingJeda = Date.now(); ting(); }
                 try { if (navigator.vibrate) navigator.vibrate([600, 300, 600]); } catch (e) {}
             }
@@ -5529,6 +5532,19 @@
             }
             document.addEventListener('pointerdown', buka, true);
             $('pfs-bunyi').addEventListener('click', buka);
+            // (25 Nov 2026 perbaikan) tombol "Tes bunyi": memutar bunyi pesanan sekali supaya seller yakin bunyinya terdengar.
+            // Bunyi sungguhan hanya keluar saat ada pesanan masuk (diulang terus sampai ditekan Terima).
+            $('pfs-tes-bunyi').addEventListener('click', () => {
+                if (window.AndroidInterface && typeof window.AndroidInterface.tesBunyiPesanan === 'function') { try { window.AndroidInterface.tesBunyiPesanan(); return; } catch (e) {} }
+                if (masukList().length) return tost('Sedang ada pesanan masuk, bunyinya sudah berjalan.');
+                const cadangan = () => { ting(); setTimeout(ting, 900); tost('File orderan_masuk.mp3 belum ada di folder aplikasi seller, jadi memakai bunyi cadangan "ting". Upload file itu di folder yang sama dengan index.html.'); };
+                if (audioGagal) return cadangan();
+                try { audio.pause(); audio.loop = false; audio.currentTime = 0; } catch (e) {}
+                const p = audio.play();
+                if (p && p.then) p.then(() => { bolehBunyi = true; $('pfs-bunyi').hidden = true; tost('Bunyi pesanan aktif ✓ Kalau tidak terdengar, besarkan volume media HP dan matikan mode senyap.'); })
+                    .catch(() => { if (audioGagal) cadangan(); else tost('Bunyi belum bisa diputar. Ketuk sekali lagi.'); });
+                audio.onended = () => { audio.loop = true; audio.onended = null; };
+            });
 
             /* ---------- tulis ke server ---------- */
             const PF = (id) => doc(db, 'pesanan_food', id);
