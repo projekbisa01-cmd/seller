@@ -5371,6 +5371,9 @@
     <style id="pfs-css">
         /* (25 Nov perbaikan) kontainer tab Pesanan & Laporan dibuat lebar: jarak tepi layar cukup 12px */
         #content-pesanan, #content-laporan { padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); }
+        /* (perbaikan) pemberitahuan (toast) yang panjang/2-3 baris tidak lagi "nyangkut" di atas layar saat disembunyikan */
+        #toast { max-width: calc(100% - 32px); box-sizing: border-box; }
+        #toast:not(.show) { transform: translateX(-50%) translateY(calc(-100% - 40px)); }
         .pfs-wrap { padding: 14px 0 24px; display: flex; flex-direction: column; gap: 12px; }
         .pfs-kepala { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .pfs-lbl { font-size: 12px; color: var(--teks2, #6B6258); font-weight: 700; }
@@ -5524,7 +5527,7 @@
             }
             function nyalakanBunyi() {
                 if (window.AndroidInterface && typeof window.AndroidInterface.pesananMasukBunyi === 'function') { try { window.AndroidInterface.pesananMasukBunyi(true); } catch (e) {} return; }
-                if (!audioGagal) { audio.loop = true; const p = audio.play(); if (p && p.catch) p.catch(() => { $('pfs-bunyi').hidden = false; }); }
+                if (!audioGagal) { sedangTes = false; audio.onended = null; audio.muted = false; audio.loop = true; const p = audio.play(); if (p && p.catch) p.catch(() => { $('pfs-bunyi').hidden = false; }); }
                 else if (Date.now() - tingJeda > 2500) { tingJeda = Date.now(); ting(); }
                 try { if (navigator.vibrate) navigator.vibrate([600, 300, 600]); } catch (e) {}
             }
@@ -5533,11 +5536,19 @@
                 try { audio.pause(); audio.currentTime = 0; } catch (e) {}
                 try { if (navigator.vibrate) navigator.vibrate(0); } catch (e) {}
             }
-            // browser hanya mengizinkan bunyi setelah layar disentuh sekali
-            function buka() {
-                if (bolehBunyi) return;
+            // browser hanya mengizinkan bunyi setelah layar disentuh sekali.
+            // (perbaikan) pembuka diputar TANPA SUARA, dan tidak memotong bunyi tombol "Tes bunyi"
+            let sedangTes = false;
+            function buka(e) {
+                if (bolehBunyi || sedangTes) return;
+                if (e && e.target && e.target.closest && e.target.closest('#pfs-tes-bunyi')) return;   // tombol tes membuka bunyi sendiri
+                if (masukList().length) { nyalakanBunyi(); return; }
+                audio.muted = true;
                 const p = audio.play();
-                if (p && p.then) p.then(() => { if (!masukList().length) { audio.pause(); audio.currentTime = 0; } bolehBunyi = true; $('pfs-bunyi').hidden = true; }).catch(() => {});
+                if (p && p.then) p.then(() => {
+                    if (!sedangTes && !masukList().length) { audio.pause(); audio.currentTime = 0; }
+                    audio.muted = false; bolehBunyi = true; $('pfs-bunyi').hidden = true;
+                }).catch(() => { audio.muted = false; });
                 try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); ctx.resume(); } catch (e) {}
             }
             document.addEventListener('pointerdown', buka, true);
@@ -5547,13 +5558,14 @@
             $('pfs-tes-bunyi').addEventListener('click', () => {
                 if (window.AndroidInterface && typeof window.AndroidInterface.tesBunyiPesanan === 'function') { try { window.AndroidInterface.tesBunyiPesanan(); return; } catch (e) {} }
                 if (masukList().length) return tost('Sedang ada pesanan masuk, bunyinya sudah berjalan.');
-                const cadangan = () => { ting(); setTimeout(ting, 900); tost('File orderan_masuk.mp3 belum ada di folder aplikasi seller, jadi memakai bunyi cadangan "ting". Upload file itu di folder yang sama dengan index.html.'); };
+                const cadangan = () => { sedangTes = false; ting(); setTimeout(ting, 900); tost('File orderan_masuk.mp3 belum diupload. Memakai bunyi cadangan.'); };
                 if (audioGagal) return cadangan();
-                try { audio.pause(); audio.loop = false; audio.currentTime = 0; } catch (e) {}
+                sedangTes = true;
+                try { audio.pause(); audio.muted = false; audio.loop = false; audio.currentTime = 0; } catch (e) {}
+                audio.onended = () => { sedangTes = false; audio.loop = true; audio.onended = null; };
                 const p = audio.play();
-                if (p && p.then) p.then(() => { bolehBunyi = true; $('pfs-bunyi').hidden = true; tost('Bunyi pesanan aktif ✓ Kalau tidak terdengar, besarkan volume media HP dan matikan mode senyap.'); })
-                    .catch(() => { if (audioGagal) cadangan(); else tost('Bunyi belum bisa diputar. Ketuk sekali lagi.'); });
-                audio.onended = () => { audio.loop = true; audio.onended = null; };
+                if (p && p.then) p.then(() => { bolehBunyi = true; $('pfs-bunyi').hidden = true; tost('Bunyi pesanan aktif ✓'); })
+                    .catch(() => { sedangTes = false; if (audioGagal) cadangan(); else tost('Bunyi belum bisa diputar. Ketuk lagi.'); });
             });
 
             /* ---------- tulis ke server ---------- */
@@ -5644,7 +5656,7 @@
             }
             $('pfs-btn-printer').addEventListener('click', () => {
                 if (window.AndroidInterface && typeof window.AndroidInterface.pilihPrinter === 'function') { try { window.AndroidInterface.pilihPrinter(); } catch (e) {} }
-                else tost('Printer Bluetooth tersambung lewat aplikasi Seller Projekgo dari Play Store. Di browser, tombol Struk membuka halaman cetak.');
+                else tost('Printer Bluetooth tersedia di aplikasi Seller Projekgo (Play Store).');
             });
 
             /* ---------- layar penuh pesanan masuk ---------- */
