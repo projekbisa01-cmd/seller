@@ -5424,8 +5424,54 @@
         .pfs-baris span:first-child { min-width: 0; overflow-wrap: anywhere; }
         .pfs-kendala { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 14px; border: 1.5px solid #BFE3CC; color: #15803D; font-weight: 800; text-decoration: none; background: #fff; }
         /* layar penuh pesanan masuk */
-        .pfs-masuk { position: fixed; inset: 0; z-index: 99990; background: #fff; display: flex; flex-direction: column; font-family: 'Plus Jakarta Sans', sans-serif; color: #1C1C1E; }
+        .pfs-masuk { position: fixed; inset: 0; z-index: 99990; background: rgba(28, 22, 16, .58); display: flex; align-items: center; justify-content: center; padding: 20px; font-family: 'Plus Jakarta Sans', sans-serif; color: #1C1C1E; }
         .pfs-masuk[hidden] { display: none; }
+        /* (26 Nov 2026) pop up pesanan baru */
+        .pfs-m-kotak { width: 100%; max-width: 360px; background: #fff; border-radius: 24px; padding: 22px 18px 18px; text-align: center; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+        .pfs-m-kotak .pfs-gel { background: #FFF0E5; box-shadow: 0 0 0 10px #FFF7F0; margin-bottom: 4px; }
+        .pfs-m-kotak h2 { margin: 0; font-size: 22px; font-weight: 900; color: #C2410C; line-height: 1.25; }
+        .pfs-m-kode { font-size: 32px; font-weight: 900; letter-spacing: .04em; }
+        .pfs-m-info { font-size: 14px; color: #57534E; font-weight: 600; }
+        .pfs-m-kotak .pfs-waktu { margin: 0 auto; background: #FDECEA; color: #B42318; }
+        .pfs-m-kotak .pfs-btn { min-height: 54px; font-size: 16.5px; margin-top: 6px; }
+        /* (26 Nov 2026) kartu pesanan baru */
+        .pfs-k.v2 { padding: 0; gap: 0; overflow: hidden; border-radius: 18px; }
+        .pfs-k.v2.mr { border-color: #F3B8B0; } .pfs-k.v2.hijau { border-color: #BFE3CC; background: #fff; }
+        .pfs-kh { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; background: #FFF7EF; border-bottom: 1px solid #F1E6DA; }
+        .pfs-k.v2.mr .pfs-kh { background: #FDECEA; } .pfs-k.v2.hijau .pfs-kh { background: #EAF7EF; } .pfs-k.v2.bi .pfs-kh { background: #EEF4FF; }
+        .pfs-kh .pfs-kode { font-size: 28px; font-weight: 900; letter-spacing: .04em; color: #C2410C; line-height: 1; }
+        .pfs-k.v2.mr .pfs-kh .pfs-kode { color: #B42318; } .pfs-k.v2.hijau .pfs-kh .pfs-kode { color: #15803D; } .pfs-k.v2.bi .pfs-kh .pfs-kode { color: #1D4ED8; }
+        .pfs-kh small { display: block; font-size: 11.5px; color: #6B6258; font-weight: 700; margin-top: 4px; }
+        .pfs-kb { padding: 6px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+        .pfs-menu { list-style: none; margin: 0; padding: 0; }
+        .pfs-menu li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; padding: 8px 0; border-bottom: 1px dashed #EAE2D9; align-items: start; }
+        .pfs-menu li:last-child { border-bottom: 0; }
+        .pfs-menu .nm { font-size: 16px; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
+        .pfs-menu .nm b { color: #C2410C; }
+        .pfs-menu .var { display: block; font-size: 13px; color: #57534E; font-weight: 600; margin-top: 2px; }
+        .pfs-menu .req { display: flex; gap: 6px; margin-top: 5px; background: #FEF08A; color: #713F12; border-radius: 8px; padding: 5px 8px; font-size: 14px; font-weight: 800; line-height: 1.35; overflow-wrap: anywhere; }
+        .pfs-menu .hrg { font-size: 15px; font-weight: 700; color: #3F3A36; white-space: nowrap; padding-top: 1px; font-variant-numeric: tabular-nums; }
+        .pfs-catk { display: flex; gap: 8px; background: #FEF3C7; border: 2px solid #F59E0B; color: #78350F; border-radius: 12px; padding: 9px 10px; font-size: 14px; font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; }
+        .pfs-catk b { display: block; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: #B45309; }
+        .pfs-tot { display: flex; justify-content: space-between; align-items: baseline; border-top: 1.5px solid #EAE2D9; padding-top: 8px; font-size: 13px; color: #57534E; font-weight: 700; }
+        .pfs-tot b { font-size: 18px; color: #1C1C1E; font-variant-numeric: tabular-nums; }
+        .pfs-cekinfo { font-size: 13px; color: #57534E; background: #F6F1EA; border-radius: 10px; padding: 8px 10px; line-height: 1.45; }
+        .pfs-cekinfo b { color: #1C1C1E; }
+        .pfs-lbl { font-size: 11px; font-weight: 800; color: #8A8178; letter-spacing: .06em; text-transform: uppercase; }
+        .pfs-k.kedip { animation: pfsKedip 1s ease-in-out infinite; border-color: #F97316; }
+        @keyframes pfsKedip { 0%, 100% { box-shadow: 0 0 0 3px #F97316, 0 0 18px 4px rgba(249,115,22,.55); } 50% { box-shadow: 0 0 0 1px #FDBA74, 0 0 0 0 rgba(249,115,22,0); } }
+        @media (prefers-reduced-motion: reduce) { .pfs-k.kedip { animation: none; box-shadow: 0 0 0 3px #F97316; } }
+        /* (26 Nov 2026) ceklis sudah jadi */
+        .pfs-cek { position: fixed; inset: 0; z-index: 99996; background: rgba(28, 22, 16, .55); display: flex; align-items: center; justify-content: center; padding: 18px; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .pfs-cek[hidden] { display: none; }
+        .pfs-c-kotak { width: 100%; max-width: 380px; max-height: 88vh; overflow-y: auto; background: #fff; border-radius: 22px; padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+        .pfs-c-kotak h3 { margin: 0; font-size: 19px; font-weight: 900; text-align: center; color: #1C1C1E; }
+        .pfs-c-kotak > .pfs-kecil { text-align: center; }
+        .pfs-c-daftar { display: flex; flex-direction: column; gap: 8px; margin: 4px 0; }
+        .pfs-c-it { display: flex; gap: 10px; align-items: flex-start; border: 1.5px solid #E2D8CC; border-radius: 12px; padding: 10px; font-size: 14.5px; font-weight: 700; cursor: pointer; color: #1C1C1E; line-height: 1.4; }
+        .pfs-c-it input { width: 22px; height: 22px; flex: none; margin: 1px 0 0; accent-color: #15803D; }
+        .pfs-c-it small { display: block; color: #78716C; font-size: 12px; font-weight: 700; }
+        .pfs-c-it:has(input:checked) { border-color: #86EFAC; background: #F0FDF4; }
         .pfs-m-atas { background: linear-gradient(160deg, #F97316, #E8590C); color: #fff; text-align: center; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 16px; }
         .pfs-gel { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 8px; display: grid; place-items: center; font-size: 30px; background: rgba(255,255,255,.22); box-shadow: 0 0 0 10px rgba(255,255,255,.12), 0 0 0 22px rgba(255,255,255,.07); animation: pfsDenyut 1s ease-in-out infinite; }
         @keyframes pfsDenyut { 50% { transform: scale(1.08); } }
@@ -5454,18 +5500,29 @@
         .pfs-tolak textarea { width: 100%; box-sizing: border-box; min-height: 64px; border-radius: 12px; border: 1.5px solid var(--garis, #E2D8CC); padding: 10px; font: inherit; font-size: 14px; resize: vertical; }
         .pfs-galat { color: #B42318; font-size: 13px; font-weight: 800; min-height: 16px; }
     </style>
-    <div class="pfs-masuk" id="pfs-masuk" hidden role="alertdialog" aria-modal="true" aria-labelledby="pfs-m-judul">
-        <div class="pfs-m-atas">
+    <!-- (26 Nov 2026) pesanan baru: POP UP (bukan layar penuh). "Lihat pesanan" -> halaman Pesanan, kartu baru berkedip.
+         Bunyi tetap berulang sampai pesanan diterima / ditolak. -->
+    <div class="pfs-masuk" id="pfs-masuk" hidden role="alertdialog" aria-modal="true" aria-labelledby="pfs-m-judul" aria-describedby="pfs-m-info">
+        <div class="pfs-m-kotak">
             <div class="pfs-gel" aria-hidden="true">🔔</div>
-            <h2 id="pfs-m-judul">Orderan masuk!</h2>
-            <div style="font-size:13px;opacity:.95" id="pfs-m-warung"></div>
+            <h2 id="pfs-m-judul">Ada pesanan baru masuk!!</h2>
+            <div class="pfs-m-kode" id="pfs-m-kode">PF</div>
+            <div class="pfs-m-info" id="pfs-m-info"></div>
             <div class="pfs-waktu" id="pfs-m-waktu">Terima dalam 3:00</div>
+            <div class="pfs-lain" id="pfs-m-lain" hidden></div>
+            <button type="button" class="pfs-btn or" id="pfs-m-lihat">Lihat pesanan</button>
         </div>
-        <div class="pfs-m-isi" id="pfs-m-isi"></div>
-        <div class="pfs-lain" id="pfs-m-lain" hidden></div>
-        <div class="pfs-m-bawah">
-            <button type="button" class="pfs-btn mr" id="pfs-m-tolak">Tolak</button>
-            <button type="button" class="pfs-btn hj" id="pfs-m-terima">Terima</button>
+    </div>
+    <!-- (26 Nov 2026) ceklis request saat "Pesanan sudah jadi" -->
+    <div class="pfs-cek" id="pfs-cek" hidden role="dialog" aria-modal="true" aria-labelledby="pfs-c-judul">
+        <div class="pfs-c-kotak">
+            <h3 id="pfs-c-judul">Cek pesanan dulu ya</h3>
+            <div class="pfs-kecil" id="pfs-c-sub">Centang kalau sudah sesuai</div>
+            <div class="pfs-c-daftar" id="pfs-c-daftar"></div>
+            <div class="pfs-tb">
+                <button type="button" class="pfs-btn" id="pfs-c-batal">Kembali</button>
+                <button type="button" class="pfs-btn or" id="pfs-c-ok" disabled>Sudah jadi</button>
+            </div>
         </div>
     </div>
     <div class="pfs-tolak" id="pfs-tolak" hidden role="dialog" aria-modal="true" aria-labelledby="pfs-t-judul">
@@ -5503,6 +5560,9 @@
             const LABEL = { ke_warung: 'Perlu diterima', dibuat: 'Sedang dibuat', siap: 'Siap diambil', diantar: 'Dibawa rider', selesai: 'Selesai', ditolak: 'Ditolak', batal: 'Batal', cek: 'Dicek admin' };
             let email = '', data = {}, henti = [], atur = { batas_terima_dtk: 180, warung: [] }, vendorRamai = false, hentiV = null, vidAktif = '';
             let estPilih = 15, sedang = '', sibuk = false;
+            // (26 Nov 2026) pop up pesanan baru: id yang pop up-nya sudah diketuk; id yang kartunya berkedip; estimasi per kartu
+            const sudahDilihat = new Set(), kedipId = new Set(), estPer = {};
+            let berbunyi = false;
 
             const vendorId = () => { try { const v = JSON.parse(localStorage.getItem('vendor_user') || 'null'); return v && PID_OK.test(String(v.id || '')) ? String(v.id) : ''; } catch (e) { return ''; } };
             const urut = (a, b) => ms(a.diteruskan_at || a.dibuat_at) - ms(b.diteruskan_at || b.dibuat_at);
@@ -5583,10 +5643,40 @@
                     if (window.AndroidInterface && typeof window.AndroidInterface.cetakStrukOtomatis === 'function') { try { cetak(o, true); } catch (e) {} }
                 }
             }
-            async function sudahJadi(o) {
-                if (!window.confirm('Pesanan ' + o.kode + ' sudah jadi dan siap diambil rider?')) return;
-                await simpan(o, { status: 'siap', siap_at: serverTimestamp() }, 'Ditandai siap. Serahkan ke rider yang menyebut kode ' + o.kode + '.');
+            // (26 Nov 2026) "Pesanan sudah jadi": pop up ceklis (request per menu, catatan pelanggan, jumlah porsi)
+            const hitungPorsi = (o) => (o.items || []).reduce((a, it) => a + (Number(it.qty) || 0), 0);
+            const teksJumlah = (o) => (o.items || []).length + ' menu · ' + hitungPorsi(o) + ' porsi';
+            let cekO = null;
+            function sudahJadi(o) {
+                cekO = o;
+                const w = $('pfs-c-daftar'); w.textContent = '';
+                const tambah = (judul, isi) => {
+                    const l = el('label', 'pfs-c-it'); const c = el('input'); c.type = 'checkbox';
+                    const d = el('div'); d.append(el('small', '', judul), document.createTextNode(isi));
+                    l.append(c, d); w.appendChild(l);
+                };
+                let nReq = 0;
+                (o.items || []).forEach((it) => { if (it.catatan) { nReq++; tambah(it.qty + '× ' + it.nama, it.catatan); } });
+                if (o.catatan) { nReq++; tambah('Catatan pelanggan', o.catatan); }
+                tambah('Jumlah', teksJumlah(o) + ' sudah lengkap');
+                $('pfs-c-judul').textContent = nReq ? 'Cek request pelanggan dulu ya' : 'Pesanan ' + o.kode + ' sudah jadi?';
+                $('pfs-c-sub').textContent = nReq ? 'Centang kalau sudah sesuai' : 'Centang kalau jumlahnya sudah lengkap';
+                perbaruiCek();
+                $('pfs-cek').hidden = false;
+                setTimeout(() => { const c = w.querySelector('input'); if (c) c.focus(); }, 50);
             }
+            function perbaruiCek() {
+                const cb = Array.from(document.querySelectorAll('#pfs-c-daftar input')), n = cb.filter((c) => c.checked).length, b = $('pfs-c-ok');
+                b.disabled = n < cb.length;
+                b.textContent = n < cb.length ? 'Sudah jadi (' + n + '/' + cb.length + ')' : 'Sudah jadi';
+            }
+            $('pfs-c-daftar').addEventListener('change', perbaruiCek);
+            $('pfs-c-batal').addEventListener('click', () => { $('pfs-cek').hidden = true; cekO = null; });
+            $('pfs-c-ok').addEventListener('click', async () => {
+                const o = cekO; if (!o || $('pfs-c-ok').disabled) return;
+                $('pfs-cek').hidden = true; cekO = null;
+                await simpan(o, { status: 'siap', siap_at: serverTimestamp() }, 'Ditandai siap. Serahkan ke rider yang menyebut kode ' + o.kode + '.');
+            });
 
             /* ---------- tolak ---------- */
             let tolakO = null;
@@ -5659,85 +5749,118 @@
                 else tost('Printer Bluetooth tersedia di aplikasi Seller Projekgo (Play Store).');
             });
 
-            /* ---------- layar penuh pesanan masuk ---------- */
+            /* ---------- (26 Nov 2026) pesanan masuk: POP UP + bunyi berulang sampai diterima / ditolak ---------- */
             function gambarMasuk() {
                 const daftar = masukList(), L = $('pfs-masuk');
-                // (perbaikan) bunyi dimatikan SEKALI saat layar pesanan masuk ditutup, bukan tiap detik
-                // (dulu ini ikut memotong bunyi tombol "Tes bunyi" sehingga hanya nada pembukanya yang terdengar)
-                if (!daftar.length) { if (!L.hidden) { L.hidden = true; matikanBunyi(); } sedang = ''; return; }
-                const o = daftar[0];
-                if (L.hidden) { L.hidden = false; estPilih = 15; }
-                nyalakanBunyi();
+                daftar.forEach((o) => { if (!sudahDilihat.has(o.id)) kedipId.add(o.id); });
+                if (!daftar.length) {
+                    if (!L.hidden) L.hidden = true;
+                    if (berbunyi) { berbunyi = false; matikanBunyi(); }
+                    sedang = ''; return;
+                }
+                // bunyi TETAP berulang selama masih ada pesanan yang belum diterima / ditolak
+                if (!berbunyi) { berbunyi = true; nyalakanBunyi(); }
+                else if (!window.AndroidInterface && !audioGagal && audio.paused && !sedangTes) nyalakanBunyi();
+                else if (audioGagal) nyalakanBunyi();
+                const baru = daftar.filter((o) => !sudahDilihat.has(o.id));
+                if (!baru.length) { if (!L.hidden) L.hidden = true; return; }
+                const o = baru[0];
+                L.hidden = false;
                 const batas = (Number(atur.batas_terima_dtk) || 180) * 1000, lewat = Date.now() - ms(o.diteruskan_at);
                 const w = $('pfs-m-waktu');
                 w.textContent = lewat < batas ? 'Terima dalam ' + mmss(batas - lewat) : 'Segera terima! Admin sudah diberi tahu';
                 w.classList.toggle('telat', lewat >= batas);
-                $('pfs-m-warung').textContent = (o.vendor_nama || '') + (vendorRamai ? ' · mode ramai (+10 menit)' : '');
-                $('pfs-m-lain').hidden = daftar.length < 2; $('pfs-m-lain').textContent = '+' + (daftar.length - 1) + ' pesanan lain menunggu';
-                if (sedang === o.id + ':' + estPilih + ':' + vendorRamai) return;   // isi tidak berubah: cukup perbarui hitung mundur
-                sedang = o.id + ':' + estPilih + ':' + vendorRamai;
-                const isi = $('pfs-m-isi'); isi.textContent = '';
-                const atas = el('div', 'pfs-atas');
-                const kiri = el('div'); kiri.append(el('div', 'pfs-kecil', 'Kode pesanan'), el('div', 'pfs-kode', o.kode)); kiri.lastChild.style.color = '#C2410C'; kiri.lastChild.style.fontSize = '28px';
-                atas.append(kiri, el('span', 'pfs-pil hj', o.diteruskan_oleh === 'otomatis' ? 'Pelanggan lama ✓' : 'Sudah dicek admin ✓'));
-                isi.appendChild(atas);
-                const k = el('div', 'pfs-k'); k.style.padding = '6px 12px';
-                (o.items || []).forEach((it, i) => {
-                    const r = el('div', 'pfs-it'); if (!i) r.style.borderTop = '0';
-                    const s = el('span', '', it.nama + (it.varian && it.varian !== '-' ? ' (' + it.varian + ')' : ''));
-                    if (it.catatan) s.appendChild(el('em', '', 'Catatan: ' + it.catatan));
-                    const h = el('span', '', rp(it.total)); h.style.flex = 'none';
-                    r.append(el('b', '', it.qty + '×'), s, h); k.appendChild(r);
-                });
-                const t = el('div', 'pfs-it'); t.style.fontWeight = '800'; const tt = el('span', '', 'Total dibayar rider'); const tn = el('span', '', rp(o.subtotal)); tn.style.flex = 'none'; t.append(tt, tn); k.appendChild(t);
-                isi.appendChild(k);
-                if (o.catatan) { const c = el('div', 'pfs-info', 'Catatan pesanan: ' + o.catatan); isi.appendChild(c); }
-                isi.appendChild(el('b', '', 'Berapa lama pesanan siap?'));
-                const est = el('div', 'pfs-est'); est.setAttribute('role', 'group'); est.setAttribute('aria-label', 'Estimasi siap');
-                [10, 15, 20, 30].forEach((m) => {
-                    const b = el('button', '', (m + (vendorRamai ? 10 : 0)) + ' mnt'); b.type = 'button'; b.setAttribute('aria-pressed', String(m === estPilih));
-                    b.addEventListener('click', () => { estPilih = m; gambarMasuk(); });
-                    est.appendChild(b);
-                });
-                isi.appendChild(est);
-                isi.appendChild(el('div', 'pfs-kecil', 'Rider akan datang sekitar waktu pesanan siap.'));
-                const hb = el('button', 'pfs-habis-link', '⚠ Ada menu yang habis? Ketuk untuk tandai'); hb.type = 'button';
-                hb.addEventListener('click', () => bukaTolak(o, true)); isi.appendChild(hb);
-                $('pfs-m-terima').textContent = 'Terima · ' + estimasiAkhir() + ' menit';
-                $('pfs-m-terima').onclick = () => terima(o);
-                $('pfs-m-tolak').onclick = () => bukaTolak(o, false);
+                $('pfs-m-kode').textContent = o.kode || 'PF';
+                $('pfs-m-info').textContent = hitungPorsi(o) + ' porsi · ' + rp(o.subtotal) + (Object.keys(warungKu).length > 1 && o.vendor_nama ? ' · ' + o.vendor_nama : '');
+                $('pfs-m-lain').hidden = baru.length < 2; $('pfs-m-lain').textContent = '+' + (baru.length - 1) + ' pesanan baru lainnya';
             }
+            $('pfs-m-lihat').addEventListener('click', () => {
+                masukList().forEach((o) => sudahDilihat.add(o.id));
+                $('pfs-masuk').hidden = true;
+                if (typeof window.switchTab === 'function') window.switchTab('pesanan');
+                gambarDaftar(true);
+                setTimeout(() => {
+                    const k = document.querySelector('#pfs-daftar .pfs-k.kedip');
+                    if (k) { try { k.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} const t = k.querySelector('.pfs-btn.or'); if (t) try { t.focus({ preventScroll: true }); } catch (e) {} }
+                }, 80);
+            });
 
             /* ---------- tab Pesanan ---------- */
+            // (26 Nov 2026) kartu pesanan: kode besar, menu per baris + harga di kanan, request kuning, catatan pelanggan, jumlah porsi
             function kartu(o) {
-                const k = el('div', 'pfs-k' + (o.status === 'siap' ? ' hijau' : ''));
-                const atas = el('div', 'pfs-atas'); atas.appendChild(el('span', 'pfs-kode', o.kode));
-                let pil = LABEL[o.status] || o.status, kls = 'or';
-                if (o.status === 'siap') kls = 'hj'; if (o.status === 'diantar') kls = 'bi'; if (o.status === 'ke_warung') kls = 'mr';
-                const pe = el('span', 'pfs-pil ' + kls, pil);
+                const kls = { ke_warung: ' mr', siap: ' hijau', diantar: ' bi' }[o.status] || '';
+                const k = el('div', 'pfs-k v2' + kls + (o.status === 'ke_warung' && kedipId.has(o.id) ? ' kedip' : ''));
+                k.dataset.id = o.id;
+                const kh = el('div', 'pfs-kh'), kiri = el('div');
+                kiri.appendChild(el('div', 'pfs-kode', o.kode));
+                const banyakWarung = Object.keys(warungKu).length > 1;
+                const meta = o.status === 'ke_warung' ? 'Masuk ' + jam(o.diteruskan_at || o.dibuat_at)
+                    : o.status === 'siap' ? 'Siap sejak ' + jam(o.siap_at)
+                    : o.status === 'diantar' ? 'Dibawa rider ' + jam(o.diantar_at)
+                    : 'Diterima ' + jam(o.diterima_at);
+                kiri.appendChild(el('small', '', meta + (banyakWarung && o.vendor_nama ? ' · ' + o.vendor_nama : '')));
+                let pil = LABEL[o.status] || o.status, pk = 'or';
+                if (o.status === 'siap') { pk = 'hj'; pil = '✓ Siap diambil'; } if (o.status === 'diantar') pk = 'bi'; if (o.status === 'ke_warung') pk = 'mr';
+                const pe = el('span', 'pfs-pil ' + pk, pil);
                 if (o.status === 'dibuat') { pe.dataset.target = String(ms(o.diterima_at) + (Number(o.estimasi_mnt) || 0) * 60000); hitungPil(pe); }
-                atas.appendChild(pe); k.appendChild(atas);
-                k.appendChild(el('div', 'pfs-kecil', (o.items || []).map((it) => it.qty + '× ' + it.nama + (it.catatan ? ' (' + it.catatan + ')' : '')).join(' · ')));
-                k.appendChild(el('div', 'pfs-kecil', 'Total dibayar rider: ' + rp(o.subtotal) + (Object.keys(warungKu).length > 1 ? ' · ' + (o.vendor_nama || '') : '')));
+                if (o.status === 'ke_warung') { pe.dataset.masuk = String(ms(o.diteruskan_at)); hitungTerima(pe); }
+                kh.append(kiri, pe); k.appendChild(kh);
+                const kb = el('div', 'pfs-kb');
+                const ul = el('ul', 'pfs-menu');
+                (o.items || []).forEach((it) => {
+                    const li = el('li'), d = el('div'), nm = el('div', 'nm');
+                    nm.append(el('b', '', it.qty + '×'), document.createTextNode(' ' + it.nama));
+                    d.appendChild(nm);
+                    if (it.varian && it.varian !== '-') d.appendChild(el('span', 'var', 'Varian: ' + it.varian));
+                    if (it.catatan) d.appendChild(el('div', 'req', '📝 ' + it.catatan));
+                    li.append(d, el('div', 'hrg', rp(it.total))); ul.appendChild(li);
+                });
+                kb.appendChild(ul);
+                if (o.catatan) { const c = el('div', 'pfs-catk'); const ik = el('span', '', '⚠'); ik.style.fontSize = '18px'; ik.setAttribute('aria-hidden', 'true'); const d = el('div'); d.append(el('b', '', 'Catatan pelanggan'), document.createTextNode(o.catatan)); c.append(ik, d); kb.appendChild(c); }
+                const tot = el('div', 'pfs-tot'); tot.append(el('span', '', 'Total dibayar rider'), el('b', '', rp(o.subtotal))); kb.appendChild(tot);
+                if (o.status === 'ke_warung' || o.status === 'dibuat') {
+                    const ci = el('div', 'pfs-cekinfo'); ci.append('🧾 ', el('b', '', teksJumlah(o)), document.createTextNode(' dipesan. Mohon dicek kembali jumlahnya saat pesanan sudah jadi ya 🙏')); kb.appendChild(ci);
+                }
                 if (o.status === 'ke_warung') {
-                    const b = el('div', 'pfs-tb satu'); const t = el('button', 'pfs-btn or', 'Lihat & terima'); t.type = 'button'; t.addEventListener('click', () => { sedang = ''; gambarMasuk(); }); b.appendChild(t); k.appendChild(b);
+                    const est = estPer[o.id] || 15;
+                    kb.appendChild(el('div', 'pfs-lbl', 'Berapa lama siap?'));
+                    const g = el('div', 'pfs-est'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Estimasi siap ' + o.kode);
+                    [10, 15, 20, 30].forEach((m) => {
+                        const b = el('button', '', (m + (vendorRamai ? 10 : 0)) + ' mnt'); b.type = 'button'; b.setAttribute('aria-pressed', String(m === est));
+                        b.addEventListener('click', () => { estPer[o.id] = m; gambarDaftar(true); });
+                        g.appendChild(b);
+                    });
+                    kb.appendChild(g);
+                    const b = el('div', 'pfs-tb');
+                    const t = el('button', 'pfs-btn mr', 'Tolak'); t.type = 'button'; t.addEventListener('click', () => bukaTolak(o, false));
+                    const y = el('button', 'pfs-btn or', 'Terima · ' + (est + (vendorRamai ? 10 : 0)) + ' menit'); y.type = 'button';
+                    y.addEventListener('click', () => { estPilih = est; terima(o); });
+                    b.append(t, y); kb.appendChild(b);
+                    const hb = el('button', 'pfs-habis-link', '⚠ Ada menu yang habis? Ketuk untuk tandai'); hb.type = 'button';
+                    hb.addEventListener('click', () => bukaTolak(o, true)); kb.appendChild(hb);
                 } else if (o.status === 'dibuat') {
                     const b = el('div', 'pfs-tb');
-                    const s = el('button', 'pfs-btn', '🖨 Struk'); s.type = 'button'; s.addEventListener('click', () => cetak(o));
+                    const s2 = el('button', 'pfs-btn', '🖨 Struk'); s2.type = 'button'; s2.addEventListener('click', () => cetak(o));
                     const j = el('button', 'pfs-btn or', 'Pesanan sudah jadi'); j.type = 'button'; j.addEventListener('click', () => sudahJadi(o));
-                    b.append(s, j); k.appendChild(b);
+                    b.append(s2, j); kb.appendChild(b);
                 } else if (o.status === 'siap') {
-                    k.appendChild(el('div', 'pfs-kecil', 'Siap sejak ' + jam(o.siap_at) + '. Serahkan hanya ke rider yang menyebut kode ' + o.kode + '.'));
-                } else if (o.status === 'diantar') k.appendChild(el('div', 'pfs-kecil', 'Dibawa rider' + (o.rider_nama ? ' ' + o.rider_nama : '') + ' · ' + jam(o.diantar_at)));
+                    const inf = el('div', 'pfs-cekinfo'); inf.style.background = '#F2FAF5'; inf.style.color = '#15803D'; inf.style.fontWeight = '700';
+                    inf.append('Serahkan hanya ke rider yang menyebut kode ', el('b', '', o.kode), document.createTextNode('.')); kb.appendChild(inf);
+                } else if (o.status === 'diantar') kb.appendChild(el('div', 'pfs-kecil', 'Dibawa rider' + (o.rider_nama ? ' ' + o.rider_nama : '') + ' · ' + jam(o.diantar_at)));
+                k.appendChild(kb);
                 return k;
+            }
+            function hitungTerima(pe) {
+                const batas = (Number(atur.batas_terima_dtk) || 180) * 1000, lewat = Date.now() - Number(pe.dataset.masuk || 0);
+                pe.textContent = lewat < batas ? 'Terima dalam ' + mmss(batas - lewat) : 'Segera terima!';
             }
             const warungKu = {};
             function hitungPil(pe) { const sisa = Number(pe.dataset.target) - Date.now(); pe.textContent = 'Sedang dibuat · ' + (sisa > 0 ? mmss(sisa) : 'lewat estimasi'); }
             let tandaDaftar = '';
             function gambarDaftar(paksa) {
                 // gambar ulang hanya kalau isi berubah (supaya tombol tidak hilang saat diketuk); hitung mundur diperbarui di tempat
-                const tanda = JSON.stringify([Object.values(data).map((o) => [o.id, o.status, o.estimasi_mnt || 0, ms(o.diterima_at)]), atur.aktif, (atur.warung || []).length, vendorId()]);
-                if (!paksa && tanda === tandaDaftar) { document.querySelectorAll('#pfs-daftar [data-target]').forEach(hitungPil); return; }
+                const tanda = JSON.stringify([Object.values(data).map((o) => [o.id, o.status, o.estimasi_mnt || 0, ms(o.diterima_at), kedipId.has(o.id) ? 1 : 0]), atur.aktif, (atur.warung || []).length, vendorId(), vendorRamai]);
+                if (!paksa && tanda === tandaDaftar) { document.querySelectorAll('#pfs-daftar [data-target]').forEach(hitungPil); document.querySelectorAll('#pfs-daftar [data-masuk]').forEach(hitungTerima); return; }
                 tandaDaftar = tanda;
                 const w = $('pfs-daftar'); if (!w) return;
                 w.textContent = '';
@@ -5838,6 +5961,8 @@
                     const baru = {};
                     s.forEach((d) => { if (ID_OK.test(d.id)) { baru[d.id] = Object.assign({ id: d.id }, d.data()); warungKu[d.data().vendor_id] = 1; } });
                     data = baru;
+                    kedipId.forEach((id) => { if (!data[id] || data[id].status !== 'ke_warung') { kedipId.delete(id); delete estPer[id]; } });
+                    if (cekO && (!data[cekO.id] || data[cekO.id].status !== 'dibuat')) { $('pfs-cek').hidden = true; cekO = null; }
                     if (tolakO && (!data[tolakO.id] || data[tolakO.id].status !== 'ke_warung')) { $('pfs-tolak').hidden = true; tolakO = null; }
                     gambarMasuk(); gambarDaftar();
                 }, (e) => console.warn('[Pesanan] baca', e && e.code)));
@@ -5847,7 +5972,7 @@
             function berhenti() {
                 henti.forEach((f) => { try { f(); } catch (e) {} }); henti = []; data = {};
                 if (hentiV) { try { hentiV(); } catch (e) {} hentiV = null; } vidAktif = '';
-                $('pfs-masuk').hidden = true; matikanBunyi(); gambarDaftar();
+                $('pfs-masuk').hidden = true; $('pfs-cek').hidden = true; berbunyi = false; matikanBunyi(); gambarDaftar();
             }
             let tglAktif = tglWib(new Date());
             setInterval(() => {
