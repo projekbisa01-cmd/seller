@@ -986,10 +986,10 @@
                         <span class="modern-slider"></span>
                     </label>
                 </div>
-                <div class="mx-jam-ringkas mx-hanya-warung" id="mx-jam-ringkas"><i class="ph-bold ph-clock-clockwise" aria-hidden="true"></i><span id="mx-jam-teks">Atur jam buka, warung buka-tutup otomatis</span><button type="button" onclick="window.bukaAturJam()">Atur jam</button></div>
+                <div class="mx-jam-ringkas mx-hanya-warung" id="mx-jam-ringkas"><i class="ph-bold ph-clock-clockwise" aria-hidden="true"></i><span id="mx-jam-teks">Buka / tutup pakai tombol di atas</span><button type="button" onclick="window.bukaAturJam()">Atur jam</button></div>
                 <div id="home-status-info-badge" class="home-status-info hidden">
                     <i class="ph-fill ph-whatsapp-logo"></i>
-                    <div>Jika ada pesanan, Admin Projekgo akan memesan melalui <b>WHATSAPP</b> Anda.</div>
+                    <div>Warungmu <b>tampil</b> di aplikasi pelanggan. Pesanan masuk ke tab <b>Pesanan</b> (atau lewat WhatsApp dari admin). Matikan saat warung tutup / istirahat.</div>
                 </div>
             </div>
 
@@ -997,9 +997,9 @@
             <div class="ij-card" id="info-jam-otomatis">
                 <div class="ij-ikon"><i class="ph-fill ph-clock-clockwise"></i></div>
                 <div style="flex: 1; min-width: 0;">
-                    <div class="ij-judul" id="ij-judul">Warung bisa buka-tutup otomatis</div>
-                    <p class="ij-teks">Isi <b>jam buka</b> di halaman Toko sekali saja. Setelah itu, warungmu otomatis tampil <b>BUKA</b> atau <b>TUTUP</b> di aplikasi pelanggan sesuai jadwal. Tidak perlu menyalakan tombol setiap hari.</p>
-                    <p class="ij-teks kecil">Buka aplikasi ini lagi hanya kalau jam buka berubah, mau libur, atau ada perubahan menu.</p>
+                    <div class="ij-judul" id="ij-judul">Buka / tutup warung pakai tombol</div>
+                    <p class="ij-teks">Warungmu hanya tampil di aplikasi pelanggan saat tombol <b>BUKA</b> menyala. Nyalakan saat warung siap melayani, matikan (<b>TUTUP</b>) saat warung tutup, libur, atau istirahat.</p>
+                    <p class="ij-teks kecil">Jam buka di halaman Toko sekarang hanya sebagai catatan, tidak lagi membuka / menutup warung otomatis.</p>
                     <button type="button" class="ij-btn" id="ij-btn" onclick="window.bukaAturJam()"><i class="ph-bold ph-clock"></i> <span>Atur Jam Buka</span></button>
                 </div>
             </div>
@@ -1381,6 +1381,11 @@
                     <div style="display:flex;gap:6px;flex:none"><button type="button" class="pfs-ghost" id="pfs-tes-bunyi"><i class="ph-bold ph-speaker-high" aria-hidden="true"></i> Tes bunyi</button>
                     <button type="button" class="pfs-ghost" id="pfs-btn-printer"><i class="ph-bold ph-printer" aria-hidden="true"></i> <span id="pfs-printer-teks">Struk</span></button></div></div>
                 <div class="pfs-info" id="pfs-info-ikut" hidden></div>
+                <!-- (28 Nov 2026) warung menyalakan sendiri pesanan langsung dari aplikasi pelanggan -->
+                <div class="pfs-ramai pfs-ikut" id="pfs-ikut-kotak">
+                    <div><b id="pfs-ikut-j">Status warung</b><small id="pfs-ikut-ket">Memuat...</small></div>
+                    <label class="modern-toggle" aria-label="Buka atau tutup warung"><input type="checkbox" id="pfs-ikut"><span class="modern-slider"></span></label>
+                </div>
                 <button type="button" class="pfs-bunyi" id="pfs-bunyi" hidden><i class="ph-fill ph-speaker-high" aria-hidden="true"></i> Ketuk sekali supaya bunyi pesanan masuk bisa terdengar</button>
                 <div class="pfs-ramai" id="pfs-ramai-kotak">
                     <div><b>Mode warung ramai</b><small>Estimasi otomatis +10 menit · badge "Sedang ramai" tampil di aplikasi pelanggan</small></div>
@@ -2296,14 +2301,15 @@
             if (tj) {
                 const ini = terisi ? jadwal[hari[(new Date().getDay() + 6) % 7]] : null;
                 const jamOk = (v) => typeof v === 'string' && /^\d{1,2}[:.]\d{2}$/.test(v) ? v.replace(':', '.') : '';
-                tj.textContent = !terisi ? 'Atur jam buka, warung buka-tutup otomatis'
-                    : (ini && ini.libur === true) ? 'Otomatis · hari ini libur'
-                    : (ini && jamOk(ini.buka) && jamOk(ini.tutup)) ? 'Otomatis ' + jamOk(ini.buka) + '–' + jamOk(ini.tutup)
-                    : 'Buka-tutup otomatis aktif';
+                // (28 Nov 2026) jam buka hanya catatan; buka/tutup pakai tombol
+                tj.textContent = !terisi ? 'Buka / tutup pakai tombol di atas'
+                    : (ini && ini.libur === true) ? 'Biasanya libur hari ini · buka/tutup pakai tombol'
+                    : (ini && jamOk(ini.buka) && jamOk(ini.tutup)) ? 'Biasanya buka ' + jamOk(ini.buka) + '–' + jamOk(ini.tutup) + ' · pakai tombol di atas'
+                    : 'Buka / tutup pakai tombol di atas';
             }
             kartu.classList.toggle('sudah', !!terisi);
-            document.getElementById('ij-judul').textContent = terisi ? 'Buka-tutup otomatis sudah aktif ✓' : 'Warung bisa buka-tutup otomatis';
-            document.querySelector('#ij-btn span').textContent = terisi ? 'Lihat / Ubah Jam Buka' : 'Atur Jam Buka';
+            document.getElementById('ij-judul').textContent = 'Buka / tutup warung pakai tombol';
+            document.querySelector('#ij-btn span').textContent = terisi ? 'Lihat / Ubah Jam Buka' : 'Isi Jam Buka (catatan)';
         };
 
         const aturBadge = (id, teks) => {
@@ -5386,6 +5392,11 @@
         .pfs-ramai b { display: block; font-size: 14.5px; }
         .pfs-ramai small { display: block; font-size: 12px; color: var(--teks2, #6B6258); line-height: 1.4; }
         .pfs-ramai > div { min-width: 0; }
+        .pfs-ramai[hidden] { display: none; }
+        .pfs-ramai.pfs-ikut { background: #F2FAF5; border-color: #BFE3CC; }
+        .pfs-ramai.pfs-ikut.mati { background: #F6F1EA; border-color: #E2D8CC; }
+        .pfs-ramai.pfs-ikut b { color: #15803D; }
+        .pfs-ramai.pfs-ikut.mati b { color: #1C1C1E; }
         /* (25 Nov perbaikan) saklar mode ramai: ukuran tetap (tidak gepeng), warna oranye saat aktif */
         .pfs-ramai .modern-toggle { flex: none; width: 56px; height: 32px; }
         .pfs-ramai .modern-slider { background-color: #D9D2CA; border-color: #D9D2CA; }
@@ -5542,7 +5553,7 @@
     <script type="module">
         import { getApps } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, doc, onSnapshot, query, where, getDocs, updateDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, onSnapshot, query, where, getDocs, updateDoc, setDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         (function pesananSeller() {
             const app = getApps()[0]; if (!app) return;
             const auth = getAuth(app), db = getFirestore(app);
@@ -5559,6 +5570,7 @@
             const tost = (t) => { try { if (typeof window.showToast === 'function') return window.showToast(t); } catch (e) {} };
             const LABEL = { ke_warung: 'Perlu diterima', dibuat: 'Sedang dibuat', siap: 'Siap diambil', diantar: 'Dibawa rider', selesai: 'Selesai', ditolak: 'Ditolak', batal: 'Batal', cek: 'Dicek admin' };
             let email = '', data = {}, henti = [], atur = { batas_terima_dtk: 180, warung: [] }, vendorRamai = false, hentiV = null, vidAktif = '';
+            let ikutW = null, hentiW = null, tulisW = 0, vendorBuka = null;   // (28 Nov 2026) pesanan_food_warung/{vid}: ikut + tanda online
             let estPilih = 15, sedang = '', sibuk = false;
             // (26 Nov 2026) pop up pesanan baru: id yang pop up-nya sudah diketuk; id yang kartunya berkedip; estimasi per kartu
             const sudahDilihat = new Set(), kedipId = new Set(), estPer = {};
@@ -5859,7 +5871,7 @@
             let tandaDaftar = '';
             function gambarDaftar(paksa) {
                 // gambar ulang hanya kalau isi berubah (supaya tombol tidak hilang saat diketuk); hitung mundur diperbarui di tempat
-                const tanda = JSON.stringify([Object.values(data).map((o) => [o.id, o.status, o.estimasi_mnt || 0, ms(o.diterima_at), kedipId.has(o.id) ? 1 : 0]), atur.aktif, (atur.warung || []).length, vendorId(), vendorRamai]);
+                const tanda = JSON.stringify([Object.values(data).map((o) => [o.id, o.status, o.estimasi_mnt || 0, ms(o.diterima_at), kedipId.has(o.id) ? 1 : 0]), atur.aktif, (atur.warung || []).length, vendorId(), vendorRamai, vendorBuka, ikutW && ikutW.ikut, ikutW === null, (atur.warung_blokir || []).join(',')]);
                 if (!paksa && tanda === tandaDaftar) { document.querySelectorAll('#pfs-daftar [data-target]').forEach(hitungPil); document.querySelectorAll('#pfs-daftar [data-masuk]').forEach(hitungTerima); return; }
                 tandaDaftar = tanda;
                 const w = $('pfs-daftar'); if (!w) return;
@@ -5877,11 +5889,13 @@
                 // badge di tab bawah
                 const n = semua.filter((o) => ['ke_warung', 'dibuat', 'siap'].includes(o.status)).length;
                 const bd = $('nav-badge-pesanan'); if (bd) { bd.hidden = !n; bd.textContent = String(n); }
-                const vid = vendorId(), ikut = Array.isArray(atur.warung) && vid && atur.warung.includes(vid);
+                // (28 Nov 2026) warung ikut kalau menyalakan "Terima pesanan lewat aplikasi" sendiri (tidak dicentang admin lagi)
+                const vid = vendorId(), ikut = !!(ikutW && ikutW.ikut === true), blok = !!(vid && Array.isArray(atur.warung_blokir) && atur.warung_blokir.includes(vid));
                 const inf = $('pfs-info-ikut');
-                inf.hidden = !!(ikut && atur.aktif);
+                inf.hidden = !(!atur.aktif || blok);
                 inf.textContent = !atur.aktif ? 'Pesan langsung lewat aplikasi sedang dinonaktifkan admin. Pesanan tetap lewat WhatsApp seperti biasa.'
-                    : 'Warung ini belum ikut pesan langsung lewat aplikasi (masih uji coba). Pesanan tetap lewat WhatsApp seperti biasa.';
+                    : 'Warung ini sedang tidak bisa menerima pesanan langsung dari aplikasi. Hubungi admin ProjekGo. Pesanan tetap lewat WhatsApp seperti biasa.';
+                gambarIkut(ikut, blok);
             }
 
             /* ---------- laporan ---------- */
@@ -5938,6 +5952,51 @@
             new MutationObserver(() => { const s = $('content-laporan'); if (s && s.classList.contains('active')) { linkKendala(); gambarLaporan(); } })
                 .observe($('content-laporan'), { attributes: true, attributeFilter: ['class'] });
 
+            /* ---------- (28 Nov 2026) SATU tombol BUKA / TUTUP warung ----------
+               BUKA  = warung tampil di aplikasi pelanggan + bisa dipesan langsung (vendors.status = 'BUKA')
+               TUTUP = warung tidak tampil di aplikasi pelanggan. Jam buka tidak lagi menentukan buka/tutup.
+               pesanan_food_warung/{vid}.ikut disamakan otomatis dengan BUKA/TUTUP; online_at = tanda aplikasi terbuka
+               (pesanan langsung hanya kalau aplikasi seller dibuka dalam 15 menit terakhir; kalau tidak, lewat admin). */
+            function gambarIkut(ikut, blok) {
+                const k = $('pfs-ikut-kotak'), c = $('pfs-ikut'), ket = $('pfs-ikut-ket'), j = $('pfs-ikut-j'); if (!k) return;
+                const buka = vendorBuka === true;
+                if (document.activeElement !== c) c.checked = buka;
+                k.classList.toggle('mati', !buka);
+                j.textContent = vendorBuka === null ? 'Status warung' : buka ? 'Warung BUKA' : 'Warung TUTUP';
+                ket.textContent = vendorBuka === null ? (vendorId() ? 'Memuat...' : 'Pilih toko dulu.')
+                    : !buka ? 'Warungmu TIDAK tampil di aplikasi pelanggan. Nyalakan saat warung siap melayani.'
+                    : (!atur.aktif || blok) ? 'Warungmu tampil di aplikasi pelanggan. Pesanan lewat WhatsApp admin seperti biasa.'
+                    : 'Warungmu tampil di aplikasi pelanggan dan bisa dipesan langsung. Biarkan aplikasi ini terbuka, dan matikan saat warung tutup / istirahat.';
+            }
+            async function tulisIkut(ikut) {
+                const vid = vendorId();
+                if (!vid || !email) return false;
+                await setDoc(doc(db, 'pesanan_food_warung', vid), { ikut: ikut === true, email, online_at: serverTimestamp() });
+                tulisW = Date.now(); return true;
+            }
+            $('pfs-ikut').addEventListener('change', async (e) => {
+                const nyala = e.target.checked, vid = vendorId();
+                if (!vid) { e.target.checked = !nyala; return tost('Pilih warung dulu.'); }
+                try {
+                    await updateDoc(doc(db, 'vendors', vid), { status: nyala ? 'BUKA' : 'TUTUP' });
+                    tost(nyala ? 'Warung BUKA: tampil di aplikasi pelanggan.' : 'Warung TUTUP: tidak tampil di aplikasi pelanggan.');
+                } catch (er) { e.target.checked = !nyala; tost('Gagal menyimpan. Coba lagi.'); }
+            });
+            // samakan pesanan_food_warung dengan BUKA/TUTUP (juga kalau diubah dari Beranda / halaman Toko)
+            function samakanIkut() {
+                if (vendorBuka === null || ikutW === null || !email) return;
+                if (ikutW.ikut !== vendorBuka && Date.now() - tulisW > 3000) { tulisW = Date.now(); tulisIkut(vendorBuka).catch(() => { tulisW = 0; }); }
+            }
+            // tanda "aplikasi terbuka": tiap 4 menit selama BUKA
+            function detak(paksa) {
+                if (!email || vendorBuka !== true || !ikutW || ikutW.ikut !== true) return;
+                if (!paksa && Date.now() - tulisW < 4 * 60 * 1000) return;
+                tulisW = Date.now();
+                tulisIkut(true).catch(() => { tulisW = 0; });
+            }
+            setInterval(() => detak(false), 30 * 1000);
+            document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Date.now() - tulisW > 60 * 1000) detak(true); });
+
             /* ---------- mode ramai ---------- */
             $('pfs-ramai').addEventListener('change', async (e) => {
                 const vid = vendorId(), nyala = e.target.checked;
@@ -5949,8 +6008,20 @@
                 const vid = vendorId();
                 if (vid === vidAktif) return; vidAktif = vid;
                 if (hentiV) { try { hentiV(); } catch (e) {} hentiV = null; }
+                if (hentiW) { try { hentiW(); } catch (e) {} hentiW = null; } ikutW = null; tulisW = 0; vendorBuka = null;
                 if (!vid) return;
-                hentiV = onSnapshot(doc(db, 'vendors', vid), (s) => { vendorRamai = !!(s.exists() && s.data().ramai === true); $('pfs-ramai').checked = vendorRamai; sedang = ''; gambarMasuk(); }, () => {});
+                hentiW = onSnapshot(doc(db, 'pesanan_food_warung', vid), (s) => {
+                    const d = s.exists() ? s.data() : {};
+                    ikutW = { ikut: d.ikut === true && String(d.email || '').toLowerCase() === email, online: ms(d.online_at) };
+                    // baru buka aplikasi & tanda online sudah lama -> segarkan sekarang
+                    if (ikutW.ikut && Date.now() - ikutW.online > 2 * 60 * 1000 && Date.now() - tulisW > 60 * 1000) detak(true);
+                    samakanIkut(); gambarDaftar();
+                }, () => { ikutW = { ikut: false, online: 0 }; gambarDaftar(); });
+                hentiV = onSnapshot(doc(db, 'vendors', vid), (s) => {
+                    vendorRamai = !!(s.exists() && s.data().ramai === true); $('pfs-ramai').checked = vendorRamai; sedang = '';
+                    vendorBuka = s.exists() ? String(s.data().status || 'BUKA').toUpperCase() !== 'TUTUP' : false;   // (28 Nov 2026)
+                    samakanIkut(); gambarMasuk(); gambarDaftar(true);
+                }, () => {});
             }
 
             /* ---------- data ---------- */
@@ -5972,6 +6043,7 @@
             function berhenti() {
                 henti.forEach((f) => { try { f(); } catch (e) {} }); henti = []; data = {};
                 if (hentiV) { try { hentiV(); } catch (e) {} hentiV = null; } vidAktif = '';
+                if (hentiW) { try { hentiW(); } catch (e) {} hentiW = null; } ikutW = null; vendorBuka = null;
                 $('pfs-masuk').hidden = true; $('pfs-cek').hidden = true; berbunyi = false; matikanBunyi(); gambarDaftar();
             }
             let tglAktif = tglWib(new Date());
